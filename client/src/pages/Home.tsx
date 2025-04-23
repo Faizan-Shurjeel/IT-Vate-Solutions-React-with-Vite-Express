@@ -11,12 +11,12 @@ const Home = () => {
     <main>
       {/* Hero Section */}
       <Hero
-        title="Welcome to IT-vate Solutions"
-        subtitle="Embedded with Excellence!"
-        description="We provide end-to-end electronic and embedded system design solutions. From concept to deployment, we specialize in engineering services that power advanced devices. Our expert team delivers innovation through precision, performance, and reliability."
-        primaryButtonText="Explore Our Services"
+        title="Empowering Innovation in Embedded & IoT"
+        subtitle="Engineering Tomorrow, Today"
+        description="From concept to deployment, IT-vate Solutions delivers world-class embedded systems, IoT development, and professional training. We turn ideas into reality with precision, performance, and a passion for excellence."
+        primaryButtonText="Discover Our Services"
         primaryButtonLink="/services"
-        secondaryButtonText="Contact Us"
+        secondaryButtonText="Let's Connect"
         secondaryButtonLink="/contact"
       />
 
@@ -24,7 +24,7 @@ const Home = () => {
       <section className="py-16 bg-white">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center text-neutral-800 mb-12">
-            Explore Our Expertise
+            Our Core Expertise
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -47,7 +47,7 @@ const Home = () => {
           <div className="flex flex-col lg:flex-row items-center gap-12">
             <div className="lg:w-1/2">
               <img
-                src="https://images.unsplash.com/photo-1581092921461-39b079cc8d77?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
+                src="https://images.unsplash.com/photo-1729008667798-d75368ac1dc5?q=80&w=1486&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 alt="IT-vate Solutions team"
                 className="rounded-lg shadow-xl w-full h-auto object-cover"
                 style={{ maxHeight: "500px" }}
@@ -59,11 +59,11 @@ const Home = () => {
                 Who We Are
               </h2>
               <p className="text-neutral-700 mb-6">
-                Established in 2022 in Lahore, Pakistan, IT-vate Solutions is a
-                specialized engineering firm offering embedded systems, IoT
-                development, and professional training services. Our goal is to
-                transform ideas into cutting-edge products with a focus on
-                innovation, quality, and efficiency.
+                Founded in 2022 in Lahore, Pakistan, IT-vate Solutions is your
+                partner for advanced embedded systems, IoT innovation, and
+                transformative training. We help visionaries and businesses
+                worldwide bring breakthrough products to life—efficiently,
+                reliably, and sustainably.
               </p>
 
               <div className="mb-8">
@@ -71,8 +71,8 @@ const Home = () => {
                   Our Mission
                 </h3>
                 <p className="text-neutral-700 mb-4">
-                  To empower innovation through precision, performance, and
-                  partnership in embedded and IoT solutions.
+                  To ignite progress through engineering mastery—delivering
+                  solutions that empower, connect, and inspire.
                 </p>
               </div>
 
@@ -81,8 +81,8 @@ const Home = () => {
                   Vision
                 </h3>
                 <p className="text-neutral-700 mb-4">
-                  To be a global leader in embedded systems development and
-                  training by delivering reliable and scalable technology.
+                  To set the global benchmark for embedded and IoT excellence,
+                  shaping a smarter, more connected world.
                 </p>
               </div>
 
@@ -104,7 +104,7 @@ const Home = () => {
       <section className="py-16 bg-neutral-50">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center text-neutral-800 mb-12">
-            Client Testimonials
+            What Our Clients Say
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
@@ -125,7 +125,7 @@ const Home = () => {
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-baseline mb-12">
             <h2 className="text-3xl font-bold text-neutral-800">
-              Latest Articles
+              Insights & Updates
             </h2>
             <Link
               href="/blog"

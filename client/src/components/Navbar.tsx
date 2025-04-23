@@ -73,7 +73,7 @@ const Navbar = () => {
 
         {/* CTA Button */}
         <Link href="/contact" className="hidden md:block">
-          <Button variant="custom" className="bg-accent hover:bg-accent/90 text-white font-medium px-6 py-2 rounded-md transition-colors shadow-md">
+          <Button className="bg-accent hover:bg-accent/90 text-white font-medium px-6 py-2 rounded-md transition-colors shadow-md">
             Get a Quote
           </Button>
         </Link>

@@ -22,16 +22,14 @@ const About = () => {
           <div className="max-w-4xl mx-auto">
             <h2 className="text-3xl font-bold text-primary mb-8">Who We Are</h2>
             <p className="text-lg text-neutral-700 mb-8">
-              Established in 2022 in Lahore, Pakistan, IT-vate Solutions is a
-              specialized engineering firm offering embedded systems, IoT
-              development, and professional training services. Our goal is to
-              transform ideas into cutting-edge products with a focus on
-              innovation, quality, and efficiency.
+              Founded in 2022 in Lahore, IT-vate Solutions is a passionate team
+              of engineers and innovators. We specialize in embedded systems,
+              IoT, and professional training—helping clients worldwide turn bold
+              ideas into reality.
             </p>
             <p className="text-lg text-neutral-700 mb-8">
-              We proudly work with clients around the world, delivering
-              globally-focused engineering solutions tailored to diverse market
-              needs.
+              Our solutions are trusted by startups and enterprises alike,
+              tailored to diverse markets and future-ready needs.
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mt-16">
@@ -40,13 +38,12 @@ const About = () => {
                   Our Mission
                 </h3>
                 <p className="text-neutral-700 mb-6">
-                  To empower innovation through precision, performance, and
-                  partnership in embedded and IoT solutions.
+                  To drive innovation and excellence in every project—empowering
+                  our clients and communities through technology.
                 </p>
                 <p className="text-neutral-700">
-                  We strive to be the catalyst that transforms technological
-                  ideas into reality, providing solutions that not only meet
-                  current demands but anticipate future needs.
+                  We’re committed to being the spark that transforms challenges
+                  into opportunities and ideas into impact.
                 </p>
               </div>
 
@@ -55,13 +52,13 @@ const About = () => {
                   Vision
                 </h3>
                 <p className="text-neutral-700 mb-6">
-                  To be a global leader in embedded systems development and
-                  training by delivering reliable and scalable technology.
+                  To be the global reference for embedded and IoT
+                  engineering—delivering solutions that are reliable, scalable,
+                  and sustainable.
                 </p>
                 <p className="text-neutral-700">
-                  We envision a world where our embedded systems and IoT
-                  solutions contribute to smarter, more efficient, and
-                  sustainable technologies across industries.
+                  We envision a world where technology uplifts industries,
+                  communities, and the environment.
                 </p>
               </div>
             </div>
@@ -74,7 +71,7 @@ const About = () => {
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             <h2 className="text-3xl font-bold text-center text-primary mb-12">
-              Core Values
+              Our Core Values
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -86,9 +83,8 @@ const About = () => {
                   </h3>
                 </div>
                 <p className="text-neutral-700">
-                  We believe in honest communication and ethical business
-                  practices. Our clients receive clear information about project
-                  timelines, costs, and potential challenges.
+                  We build trust through open communication and ethical
+                  practices—ensuring clarity at every step.
                 </p>
               </div>
 
@@ -100,9 +96,8 @@ const About = () => {
                   </h3>
                 </div>
                 <p className="text-neutral-700">
-                  We are committed to the highest standards of engineering
-                  quality. Every line of code, every circuit design, and every
-                  component is selected with precision and purpose.
+                  We set the bar high—delivering quality, precision, and
+                  reliability in every design and solution.
                 </p>
               </div>
 
@@ -114,9 +109,8 @@ const About = () => {
                   </h3>
                 </div>
                 <p className="text-neutral-700">
-                  We work closely with our clients, understanding their needs
-                  and combining their industry expertise with our technical
-                  knowledge to create meaningful solutions.
+                  We co-create with our clients—combining expertise to solve
+                  real-world problems and unlock new possibilities.
                 </p>
               </div>
 
@@ -128,9 +122,8 @@ const About = () => {
                   </h3>
                 </div>
                 <p className="text-neutral-700">
-                  We believe in sharing knowledge and building capabilities. Our
-                  training programs aim to empower individuals and organizations
-                  with practical skills and confidence.
+                  We share knowledge generously—helping individuals and
+                  organizations grow with confidence and skill.
                 </p>
               </div>
             </div>

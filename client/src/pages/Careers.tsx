@@ -22,21 +22,23 @@ const Careers = () => {
               Current Openings
             </h2>
             <p className="text-neutral-600 mb-8">
-              We are currently not hiring, but we are always on the lookout for
-              passionate professionals. Stay tuned for future openings.
+              We’re not hiring right now, but we’re always eager to connect with
+              passionate innovators. Join our talent pool and be the first to
+              know about new opportunities!
             </p>
             <div className="bg-neutral-50 p-8 rounded-lg shadow-md">
               <h3 className="text-xl font-semibold mb-4">
-                Join Our Talent Pool
+                Join Our Talent Community
               </h3>
               <p className="text-neutral-600 mb-6">
-                Send your CV to:{" "}
+                Share your CV with us at{" "}
                 <a
                   href="mailto:careers@itvatesolutions.com"
                   className="text-secondary hover:text-secondary/80"
                 >
                   careers@itvatesolutions.com
                 </a>
+                . We’ll reach out when the perfect role opens up!
               </p>
               <div className="flex flex-wrap justify-center gap-4">
                 <a href="mailto:careers@itvatesolutions.com">
@@ -62,7 +64,7 @@ const Careers = () => {
       <section className="py-16 bg-neutral-50">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center text-neutral-800 mb-12">
-            Why Join IT-vate Solutions?
+            Why Grow with IT-vate Solutions?
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">

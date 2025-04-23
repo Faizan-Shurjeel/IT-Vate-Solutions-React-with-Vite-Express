@@ -13,79 +13,202 @@ const Footer = () => {
           <div>
             <div className="flex items-center mb-6">
               <span className="text-2xl font-bold text-white">IT-vate</span>
-              <span className="text-2xl font-medium text-secondary ml-1">Solutions</span>
+              <span className="text-2xl font-medium text-secondary ml-1">
+                Solutions
+              </span>
             </div>
             <p className="text-neutral-400 mb-6">
-              We provide end-to-end electronic and embedded system design solutions. From concept to deployment, we specialize in engineering services that power advanced devices.
+              We provide end-to-end electronic and embedded system design
+              solutions. From concept to deployment, we specialize in
+              engineering services that power advanced devices.
             </p>
             <div className="flex space-x-4">
-              <a href="https://linkedin.com" className="w-10 h-10 rounded-full bg-neutral-700 flex items-center justify-center hover:bg-primary transition-colors" aria-label="LinkedIn">
+              <a
+                href="https://www.linkedin.com/company/itvate/"
+                className="w-10 h-10 rounded-full bg-neutral-700 flex items-center justify-center hover:bg-primary transition-colors"
+                aria-label="LinkedIn"
+              >
                 <Linkedin size={20} className="text-white" />
               </a>
-              <a href="https://twitter.com" className="w-10 h-10 rounded-full bg-neutral-700 flex items-center justify-center hover:bg-primary transition-colors" aria-label="Twitter">
+              <a
+                href="https://twitter.com"
+                className="w-10 h-10 rounded-full bg-neutral-700 flex items-center justify-center hover:bg-primary transition-colors"
+                aria-label="Twitter"
+              >
                 <Twitter size={20} className="text-white" />
               </a>
-              <a href="https://facebook.com" className="w-10 h-10 rounded-full bg-neutral-700 flex items-center justify-center hover:bg-primary transition-colors" aria-label="Facebook">
+              <a
+                href="https://facebook.com"
+                className="w-10 h-10 rounded-full bg-neutral-700 flex items-center justify-center hover:bg-primary transition-colors"
+                aria-label="Facebook"
+              >
                 <Facebook size={20} className="text-white" />
               </a>
-              <a href="https://instagram.com" className="w-10 h-10 rounded-full bg-neutral-700 flex items-center justify-center hover:bg-primary transition-colors" aria-label="Instagram">
+              <a
+                href="https://instagram.com"
+                className="w-10 h-10 rounded-full bg-neutral-700 flex items-center justify-center hover:bg-primary transition-colors"
+                aria-label="Instagram"
+              >
                 <Instagram size={20} className="text-white" />
               </a>
             </div>
           </div>
-          
+
           <div>
             <h3 className="text-lg font-semibold mb-6">Quick Links</h3>
             <ul className="space-y-3">
-              <li><Link href="/" className="text-neutral-400 hover:text-secondary transition-colors">Home</Link></li>
-              <li><Link href="/about" className="text-neutral-400 hover:text-secondary transition-colors">About Us</Link></li>
-              <li><Link href="/services" className="text-neutral-400 hover:text-secondary transition-colors">Services</Link></li>
-              <li><Link href="/blog" className="text-neutral-400 hover:text-secondary transition-colors">Blog</Link></li>
-              <li><Link href="/careers" className="text-neutral-400 hover:text-secondary transition-colors">Careers</Link></li>
-              <li><Link href="/contact" className="text-neutral-400 hover:text-secondary transition-colors">Contact</Link></li>
+              <li>
+                <Link
+                  href="/"
+                  className="text-neutral-400 hover:text-secondary transition-colors"
+                >
+                  Home
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/about"
+                  className="text-neutral-400 hover:text-secondary transition-colors"
+                >
+                  About
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/services"
+                  className="text-neutral-400 hover:text-secondary transition-colors"
+                >
+                  Services
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/blog"
+                  className="text-neutral-400 hover:text-secondary transition-colors"
+                >
+                  Blog
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/careers"
+                  className="text-neutral-400 hover:text-secondary transition-colors"
+                >
+                  Careers
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/contact"
+                  className="text-neutral-400 hover:text-secondary transition-colors"
+                >
+                  Contact
+                </Link>
+              </li>
             </ul>
           </div>
-          
+
           <div>
             <h3 className="text-lg font-semibold mb-6">Services</h3>
             <ul className="space-y-3">
-              <li><Link href="/services" className="text-neutral-400 hover:text-secondary transition-colors">Embedded Systems Development</Link></li>
-              <li><Link href="/services" className="text-neutral-400 hover:text-secondary transition-colors">IoT Development</Link></li>
-              <li><Link href="/services" className="text-neutral-400 hover:text-secondary transition-colors">Consultancy Services</Link></li>
-              <li><Link href="/services" className="text-neutral-400 hover:text-secondary transition-colors">Training & Certification</Link></li>
-              <li><Link href="/services" className="text-neutral-400 hover:text-secondary transition-colors">PCB Design</Link></li>
-              <li><Link href="/services" className="text-neutral-400 hover:text-secondary transition-colors">Firmware Development</Link></li>
+              <li>
+                <Link
+                  href="/services"
+                  className="text-neutral-400 hover:text-secondary transition-colors"
+                >
+                  Embedded Systems Development
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/services"
+                  className="text-neutral-400 hover:text-secondary transition-colors"
+                >
+                  IoT Development
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/services"
+                  className="text-neutral-400 hover:text-secondary transition-colors"
+                >
+                  Consultancy Services
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/services"
+                  className="text-neutral-400 hover:text-secondary transition-colors"
+                >
+                  Training & Certification
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/services"
+                  className="text-neutral-400 hover:text-secondary transition-colors"
+                >
+                  PCB Design
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/services"
+                  className="text-neutral-400 hover:text-secondary transition-colors"
+                >
+                  Firmware Development
+                </Link>
+              </li>
             </ul>
           </div>
-          
+
           <div>
             <h3 className="text-lg font-semibold mb-6">Newsletter</h3>
             <p className="text-neutral-400 mb-4">
-              Subscribe to our newsletter for the latest updates and industry insights.
+              Get the latest news, insights, and opportunities—straight to your
+              inbox.
             </p>
             <form className="flex flex-col sm:flex-row gap-2">
               <Input
                 type="email"
-                placeholder="Your email address"
+                placeholder="Enter your email"
                 className="bg-neutral-700 text-white placeholder-neutral-500 px-4 py-2 rounded-md focus:ring-2 focus:ring-secondary focus:outline-none flex-grow"
               />
-              <Button type="submit" className="bg-secondary hover:bg-secondary/80 text-white font-medium px-4 py-2 rounded-md transition-colors">
+              <Button
+                type="submit"
+                className="bg-secondary hover:bg-secondary/80 text-white font-medium px-4 py-2 rounded-md transition-colors"
+              >
                 <Send size={16} className="mr-2" />
                 Subscribe
               </Button>
             </form>
           </div>
         </div>
-        
+
         <div className="border-t border-neutral-700 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-neutral-500 mb-4 md:mb-0">
               &copy; {currentYear} IT-vate Solutions. All rights reserved.
             </p>
             <div className="flex space-x-6">
-              <a href="#" className="text-neutral-500 hover:text-neutral-300 transition-colors">Privacy Policy</a>
-              <a href="#" className="text-neutral-500 hover:text-neutral-300 transition-colors">Terms of Service</a>
-              <a href="#" className="text-neutral-500 hover:text-neutral-300 transition-colors">Cookie Policy</a>
+              <a
+                href="#"
+                className="text-neutral-500 hover:text-neutral-300 transition-colors"
+              >
+                Privacy Policy
+              </a>
+              <a
+                href="#"
+                className="text-neutral-500 hover:text-neutral-300 transition-colors"
+              >
+                Terms of Service
+              </a>
+              <a
+                href="#"
+                className="text-neutral-500 hover:text-neutral-300 transition-colors"
+              >
+                Cookie Policy
+              </a>
             </div>
           </div>
         </div>
