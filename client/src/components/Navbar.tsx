@@ -27,6 +27,11 @@ const Navbar = () => {
     };
   }, []);
 
+  // Scroll to top on route change
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+  }, [location]);
+
   const navLinks = [
     { path: "/", label: "Home" },
     { path: "/about", label: "About Us" },
@@ -37,12 +42,18 @@ const Navbar = () => {
   ];
 
   return (
-    <header className={`sticky top-0 z-50 bg-white shadow-md transition-all duration-300 ${isScrolled ? 'py-2' : 'py-4'}`}>
+    <header
+      className={`sticky top-0 z-50 bg-white shadow-md transition-all duration-300 ${
+        isScrolled ? "py-2" : "py-4"
+      }`}
+    >
       <nav className="container mx-auto px-4 flex flex-wrap items-center justify-between">
         <div className="flex items-center">
           <Link href="/" className="flex items-center">
             <span className="text-2xl font-bold text-primary">IT-vate</span>
-            <span className="text-2xl font-medium text-secondary ml-1">Solutions</span>
+            <span className="text-2xl font-medium text-secondary ml-1">
+              Solutions
+            </span>
           </Link>
         </div>
 
@@ -56,13 +67,19 @@ const Navbar = () => {
         </button>
 
         {/* Desktop Navigation */}
-        <div className={`${isMenuOpen ? 'block' : 'hidden'} md:flex md:items-center w-full md:w-auto mt-4 md:mt-0`}>
+        <div
+          className={`${
+            isMenuOpen ? "block" : "hidden"
+          } md:flex md:items-center w-full md:w-auto mt-4 md:mt-0`}
+        >
           <ul className="flex flex-col md:flex-row md:space-x-8 space-y-2 md:space-y-0 font-medium text-neutral-600">
             {navLinks.map((link) => (
               <li key={link.path}>
-                <Link 
-                  href={link.path} 
-                  className={`nav-link hover:text-primary transition-colors ${location === link.path ? 'active-nav' : ''}`}
+                <Link
+                  href={link.path}
+                  className={`nav-link hover:text-primary transition-colors ${
+                    location === link.path ? "active-nav" : ""
+                  }`}
                 >
                   {link.label}
                 </Link>
