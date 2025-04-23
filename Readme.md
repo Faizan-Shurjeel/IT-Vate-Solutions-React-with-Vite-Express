@@ -2,7 +2,6 @@
 
 A modern, responsive portfolio website for IT-vate Solutions, a company specializing in embedded systems, IoT development, and professional training services.
 
-![IT-vate Solutions Website]
 
 ## Features
 
