@@ -1,0 +1,117 @@
+I wanna Build this Website In Nextjs.
+The following are the details on different pages and sections.
+IT-vate Solutions - Website Content
+Home
+Welcome to IT-vate Solutions
+Embedded with Excellence!
+We provide end-to-end electronic and embedded system design solutions. From concept to
+deployment, we specialize in engineering services that power advanced devices. Our expert
+team delivers innovation through precision, performance, and reliability.
+Explore Our Expertise:
+- Embedded Systems Development
+- IoT Development
+- Consultancy
+- Training & Certification
+About Us
+Who We Are
+Established in 2022 in Lahore, Pakistan, IT-vate Solutions is a specialized engineering firm
+offering embedded systems, IoT development, and professional training services. Our goal
+is to transform ideas into cutting-edge products with a focus on innovation, quality, and
+efficiency.
+Our Mission
+To empower innovation through precision, performance, and partnership in embedded and
+IoT solutions.
+Vision
+To be a global leader in embedded systems development and training by delivering reliable
+and scalable technology.
+Core Values
+- Integrity & Transparency
+- Excellence in Engineering
+- Collaborative Innovation
+- Empowerment through Training
+We proudly work with clients around the world, delivering globally-focused engineering
+solutions tailored to diverse market needs.
+Sustainability Focus
+At IT-vate Solutions, we believe in building a sustainable technological future. Our work
+aligns with the United Nations Sustainable Development Goals (SDGs), particularly:
+SDG 9 – Industry, Innovation and Infrastructure:
+We foster innovation through robust, future-ready embedded systems and IoT technologies
+that help modernize industries and create smarter infrastructure.
+SDG 11 – Sustainable Cities and Communities:
+Our IoT solutions contribute to more sustainable urban environments—enabling energy
+efficiency, smart monitoring, and improved quality of life.
+Corporate Social Responsibility (CSR)
+We are committed to giving back to the community through:
+- Free and subsidized training for underrepresented groups
+- Technical workshops in local universities
+- Open-source contributions and student mentorships
+- Supporting eco-friendly electronics design practices
+Services
+1. Embedded Systems Development
+We design, develop, and test embedded systems tailored to client needs. From circuit
+schematics to firmware integration, we ensure performance and reliability.
+- Schematic Design
+- PCB Design
+- Microcontroller Integration
+- FPGA Development
+- Firmware Development
+- System Testing & Validation
+2. IoT Development
+We build smart connected systems using the latest wireless technologies and cloud
+platforms to enable automation and data-driven decision-making.
+- IoT Hardware Design
+- Sensor Integration
+- Connectivity (WiFi, BLE, LoRa, Zigbee)
+- Cloud Integration (MQTT, HTTP, APIs)
+- Dashboard & App Integration
+- Remote Monitoring Systems
+3. Consultancy Services
+We help clients overcome technical challenges through expert guidance and feasibility
+reviews.
+- Embedded System Architecture Review
+- Design Optimization & Debugging
+- IoT Project Feasibility Studies
+- Product Prototyping Advice
+4. Training & Certification
+Our hands-on learning programs prepare students and professionals for industry demands.
+Certified PCB Designer Programme
+A 3-level course to build real-world PCB design expertise. A separate certificate is awarded
+at each level:
+- Certified PCB Designer (Level 1: Foundation)
+ - Electronic Basics
+ - Schematic Capture
+ - PCB Layout Introduction
+- Certified PCB Designer (Level 2: Intermediate)
+ - Multi-layer Design
+ - Signal Integrity
+ - Design for Manufacturing (DFM)
+- Certified PCB Designer (Level 3: Advanced)
+ - High-Speed Routing
+ - EMI/EMC Compliance
+ - Industry Project
+Contact Us
+Have a project or need guidance? Let’s talk.
+Location:
+226-B, Nai Abadi Rehmatpura, Near Garrison Garden, G.T. Road, Lahore, Punjab 54000,
+Pakistan
+Email: info@itvatesolutions.com
+Phone: +92-XXX-XXXXXXX
+Contact Form:
+- Name (Text Field)
+- Email Address (Email Field)
+- Subject (Dropdown: General Inquiry, Project Quote, Training, Certification, Other)
+- Message (Textarea)
+- Submit Button
+Client Testimonials
+"Their PCB design exceeded our expectations and was delivered ahead of time."
+— Ammar Raza, Founder, TechStart
+"The IoT solution they built has transformed our operations. Great team!"
+— Dr. Sara Mehmood, Operations Head, SmartAgro
+Careers
+We are currently not hiring, but we are always on the lookout for passionate professionals.
+Stay tuned for future openings.
+Send your CV to: careers@itvatesolutions.com
+Blog / Updates
+- Why PCB Design Is the Heart of Your Product
+- Choosing the Right Microcontroller for Your Application
+- IoT vs. Embedded: Understanding the Difference
