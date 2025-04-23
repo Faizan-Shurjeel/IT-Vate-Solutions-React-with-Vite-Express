@@ -49,8 +49,7 @@ const Home = () => {
               <img
                 src="https://images.unsplash.com/photo-1729008667798-d75368ac1dc5?q=80&w=1486&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 alt="IT-vate Solutions team"
-                className="rounded-lg shadow-xl w-full h-auto object-cover"
-                style={{ maxHeight: "500px" }}
+                className="rounded-lg shadow-xl w-full h-auto object-cover max-h-[300px] md:max-h-[500px]"
               />
             </div>
 

@@ -14,11 +14,13 @@ import Contact from "@/pages/Contact";
 import NotFound from "@/pages/not-found";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import BackToTop from "@/components/BackToTop";
 
 function Router() {
   return (
     <>
       <Navbar />
+      <BackToTop />
       <Switch>
         <Route path="/" component={Home} />
         <Route path="/about" component={About} />

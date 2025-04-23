@@ -61,7 +61,7 @@ const Navbar = () => {
         <button
           className="md:hidden text-neutral-700 hover:text-primary focus:outline-none"
           onClick={toggleMenu}
-          aria-label="Toggle menu"
+          aria-label={isMenuOpen ? "Close menu" : "Open menu"}
         >
           {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>

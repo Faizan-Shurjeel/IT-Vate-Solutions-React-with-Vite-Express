@@ -176,9 +176,9 @@ const Footer = () => {
               />
               <Button
                 type="submit"
-                className="bg-secondary hover:bg-secondary/80 text-white font-medium px-4 py-2 rounded-md transition-colors"
+                className="bg-secondary hover:bg-secondary/80 text-white font-medium px-4 py-2 rounded-md transition-colors flex items-center gap-2"
               >
-                <Send size={16} className="mr-2" />
+                <Send size={16} />
                 Subscribe
               </Button>
             </form>

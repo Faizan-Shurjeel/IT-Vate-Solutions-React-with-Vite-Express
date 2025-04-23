@@ -80,6 +80,10 @@
   .nav-link:hover::after {
     width: 100%;
   }
+  .nav-link:focus {
+    outline: 2px solid var(--secondary);
+    outline-offset: 2px;
+  }
   .active-nav::after {
     width: 100%;
   }
