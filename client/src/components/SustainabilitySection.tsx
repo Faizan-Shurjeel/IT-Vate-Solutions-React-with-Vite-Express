@@ -26,8 +26,9 @@ const SustainabilitySection = () => {
               </h3>
             </div>
             <p className="text-black/80">
-              We modernize industries with future-ready embedded and IoT
-              solutions—fueling innovation and resilient infrastructure.
+              We foster innovation through robust, future-ready embedded systems
+              and IoT technologies that help modernize industries and create
+              smarter infrastructure.
             </p>
           </div>
 
@@ -41,8 +42,9 @@ const SustainabilitySection = () => {
               </h3>
             </div>
             <p className="text-black/80">
-              Our IoT platforms enable smarter, greener cities—boosting energy
-              efficiency, safety, and quality of life.
+              Our IoT solutions contribute to more sustainable urban
+              environments—enabling energy efficiency, smart monitoring, and
+              improved quality of life.
             </p>
           </div>
         </div>

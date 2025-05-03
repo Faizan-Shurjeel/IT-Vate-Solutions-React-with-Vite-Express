@@ -1,7 +1,7 @@
 import Hero from "@/components/Hero";
 import ExpertiseArea from "@/components/ExpertiseArea";
 import SustainabilitySection from "@/components/SustainabilitySection";
-import TestimonialCard from "@/components/TestimonialCard";
+//import TestimonialCard from "@/components/TestimonialCard";
 import BlogCard from "@/components/BlogCard";
 import { Link } from "wouter";
 import { expertiseAreas, blogPosts, testimonials } from "@/lib/data";
@@ -93,7 +93,7 @@ const Home = () => {
       {/* Sustainability Section */}
       <SustainabilitySection />
 
-      {/* Testimonials */}
+      {/* Testimonials
       <section className="py-16 bg-neutral-50">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center text-neutral-800 mb-12">
@@ -111,7 +111,7 @@ const Home = () => {
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Blog Highlights */}
       <section className="py-20 bg-white">
