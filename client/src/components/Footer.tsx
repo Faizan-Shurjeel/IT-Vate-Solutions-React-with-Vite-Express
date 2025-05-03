@@ -30,27 +30,27 @@ const Footer = () => {
               >
                 <Linkedin size={20} className="text-white" />
               </a>
-              <a
+              {/* <a
                 href="https://twitter.com"
                 className="w-10 h-10 rounded-full bg-neutral-700 flex items-center justify-center hover:bg-primary transition-colors"
                 aria-label="Twitter"
               >
                 <Twitter size={20} className="text-white" />
-              </a>
+              </a> */}
               <a
-                href="https://facebook.com"
+                href="https://www.facebook.com/share/1ATMcbX2MK/?mibextid=qi2Omg"
                 className="w-10 h-10 rounded-full bg-neutral-700 flex items-center justify-center hover:bg-primary transition-colors"
                 aria-label="Facebook"
               >
                 <Facebook size={20} className="text-white" />
               </a>
-              <a
+              {/* <a
                 href="https://instagram.com"
                 className="w-10 h-10 rounded-full bg-neutral-700 flex items-center justify-center hover:bg-primary transition-colors"
                 aria-label="Instagram"
               >
                 <Instagram size={20} className="text-white" />
-              </a>
+              </a> */}
             </div>
           </div>
 

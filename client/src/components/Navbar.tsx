@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { Menu, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
+//import { Button } from "@/components/ui/button";
 
 const Navbar = () => {
   const [location] = useLocation();
@@ -88,12 +88,12 @@ const Navbar = () => {
           </ul>
         </div>
 
-        {/* CTA Button */}
+        {/* CTA Button
         <Link href="/contact" className="hidden md:block">
           <Button className="bg-accent hover:bg-accent/90 text-white font-medium px-6 py-2 rounded-md transition-colors shadow-md">
             Get a Quote
           </Button>
-        </Link>
+        </Link> */}
       </nav>
     </header>
   );
