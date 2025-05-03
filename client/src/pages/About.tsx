@@ -21,7 +21,12 @@ const About = () => {
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             <h2 className="text-3xl font-bold text-primary mb-8">Who We Are</h2>
-            <p className="text-lg text-neutral-700 mb-8">Founded in 2022.</p>
+            <p className="text-lg text-neutral-700 mb-8">
+              Founded in 2022, IT-vate Solutions is a passionate team of
+              engineers and innovators. We specialize in embedded systems, IoT,
+              and professional training—helping clients worldwide turn bold
+              ideas into reality.
+            </p>
             <p className="text-lg text-neutral-700 mb-8">
               Our solutions are trusted by startups and enterprises alike,
               tailored to diverse markets and future-ready needs.

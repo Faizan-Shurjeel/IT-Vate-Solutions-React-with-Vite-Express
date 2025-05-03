@@ -57,7 +57,12 @@ const Home = () => {
               <h2 className="text-3xl font-bold text-primary mb-6">
                 Who We Are
               </h2>
-              <p className="text-neutral-700 mb-6">Founded in 2022.</p>
+              <p className="text-neutral-700 mb-6">
+                Founded in 2022, IT-vate Solutions is a passionate team of
+                engineers and innovators. We specialize in embedded systems,
+                IoT, and professional training—helping clients worldwide turn
+                bold ideas into reality.
+              </p>
 
               <div className="mb-8">
                 <h3 className="text-xl font-semibold text-primary-dark mb-3">
