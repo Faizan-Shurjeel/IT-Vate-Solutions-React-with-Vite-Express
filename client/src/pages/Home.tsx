@@ -11,7 +11,7 @@ const Home = () => {
     <main>
       {/* Hero Section */}
       <Hero
-        title="Empowering Innovation in Embedded & IoT"
+        title="Empowering Innovation in IoT & Embedded Systems"
         subtitle="Engineering Tomorrow, Today"
         description="From concept to deployment, IT-vate Solutions delivers world-class embedded systems, IoT development, and professional training. We turn ideas into reality with precision, performance, and a passion for excellence."
         primaryButtonText="Discover Our Services"
