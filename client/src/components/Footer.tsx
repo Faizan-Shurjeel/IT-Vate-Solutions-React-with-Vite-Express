@@ -135,14 +135,14 @@ const Footer = () => {
                   Consultancy Services
                 </Link>
               </li>
-              <li>
+              {/* <li>
                 <Link
                   href="/services"
                   className="text-neutral-400 hover:text-secondary transition-colors"
                 >
                   Training & Certification
                 </Link>
-              </li>
+              </li> */}
               <li>
                 <Link
                   href="/services"
