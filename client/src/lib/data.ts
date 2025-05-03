@@ -12,7 +12,7 @@ export interface BlogPost {
 export const expertiseAreas: ExpertiseArea[] = [
   {
     title: "Embedded Systems Development",
-    description: "Robust hardware and firmware for next-generation products.",
+    description: "Reliable hardware and firmware for innovative products.",
     icon: "cpu",
     borderColor: "border-primary",
   },
