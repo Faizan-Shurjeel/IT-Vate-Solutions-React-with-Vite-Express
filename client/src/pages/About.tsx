@@ -21,12 +21,7 @@ const About = () => {
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             <h2 className="text-3xl font-bold text-primary mb-8">Who We Are</h2>
-            <p className="text-lg text-neutral-700 mb-8">
-              Founded in 2022 in Lahore, IT-vate Solutions is a passionate team
-              of engineers and innovators. We specialize in embedded systems,
-              IoT, and professional training—helping clients worldwide turn bold
-              ideas into reality.
-            </p>
+            <p className="text-lg text-neutral-700 mb-8">Founded in 2022.</p>
             <p className="text-lg text-neutral-700 mb-8">
               Our solutions are trusted by startups and enterprises alike,
               tailored to diverse markets and future-ready needs.
@@ -38,8 +33,8 @@ const About = () => {
                   Our Mission
                 </h3>
                 <p className="text-neutral-700 mb-6">
-                  To drive innovation and excellence in every project—empowering
-                  our clients and communities through technology.
+                  To empower innovation through precision, performance, and
+                  partnership in embedded and IoT solutions.
                 </p>
                 <p className="text-neutral-700">
                   We’re committed to being the spark that transforms challenges
@@ -52,9 +47,8 @@ const About = () => {
                   Vision
                 </h3>
                 <p className="text-neutral-700 mb-6">
-                  To be the global reference for embedded and IoT
-                  engineering—delivering solutions that are reliable, scalable,
-                  and sustainable.
+                  To be a global leader in embedded systems development and
+                  training by delivering reliable and scalable technology.
                 </p>
                 <p className="text-neutral-700">
                   We envision a world where technology uplifts industries,

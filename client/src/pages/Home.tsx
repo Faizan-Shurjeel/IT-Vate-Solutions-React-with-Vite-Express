@@ -57,21 +57,15 @@ const Home = () => {
               <h2 className="text-3xl font-bold text-primary mb-6">
                 Who We Are
               </h2>
-              <p className="text-neutral-700 mb-6">
-                Founded in 2022 in Lahore, Pakistan, IT-vate Solutions is your
-                partner for advanced embedded systems, IoT innovation, and
-                transformative training. We help visionaries and businesses
-                worldwide bring breakthrough products to life—efficiently,
-                reliably, and sustainably.
-              </p>
+              <p className="text-neutral-700 mb-6">Founded in 2022.</p>
 
               <div className="mb-8">
                 <h3 className="text-xl font-semibold text-primary-dark mb-3">
                   Our Mission
                 </h3>
                 <p className="text-neutral-700 mb-4">
-                  To ignite progress through engineering mastery—delivering
-                  solutions that empower, connect, and inspire.
+                  To empower innovation through precision, performance, and
+                  partnership in embedded and IoT solutions.
                 </p>
               </div>
 
@@ -80,8 +74,8 @@ const Home = () => {
                   Vision
                 </h3>
                 <p className="text-neutral-700 mb-4">
-                  To set the global benchmark for embedded and IoT excellence,
-                  shaping a smarter, more connected world.
+                  To be a global leader in embedded systems development and
+                  training by delivering reliable and scalable technology.
                 </p>
               </div>
 
