@@ -81,11 +81,11 @@ const Contact = () => {
                     </a>
                   </p>
                   <p className="text-neutral-600">
-                    <span className="font-medium">Phone:</span> +92-XXX-XXXXXXX
+                    <span className="font-medium">Phone:</span> +92 303 8411166
                   </p>
                 </div>
 
-                <div className="bg-neutral-50 p-6 rounded-lg shadow-md md:col-span-2">
+                {/* <div className="bg-neutral-50 p-6 rounded-lg shadow-md md:col-span-2">
                   <div className="flex items-center mb-4">
                     <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center mr-4">
                       <Clock className="w-5 h-5 text-primary" />
@@ -104,7 +104,7 @@ const Contact = () => {
                       9:00 AM - 1:00 PM
                     </p>
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
