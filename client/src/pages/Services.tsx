@@ -122,7 +122,7 @@ const Services = () => {
               </div>
 
               {/* Training */}
-              {/* <div className="bg-neutral-50 rounded-lg p-8 shadow-md">
+              <div className="bg-neutral-50 rounded-lg p-8 shadow-md">
                 <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-6">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -139,9 +139,9 @@ const Services = () => {
                     <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
                     <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
                   </svg>
-                </div> */}
-                {/* <h3 className="text-2xl font-bold text-primary mb-4">
-                  Training & Certification
+                </div>
+                <h3 className="text-2xl font-bold text-primary mb-4">
+                  Training{/*  & Certification */}
                 </h3>
                 <p className="text-neutral-700 mb-6">
                   Gain real-world skills with our immersive, industry-focused
@@ -149,11 +149,11 @@ const Services = () => {
                   lead.
                 </p>
                 <h4 className="text-lg font-semibold mb-3">
-                  Certified PCB Designer Programme
+                  PCB Designer Programme{/* Certified  */}
                 </h4>
                 <p className="text-neutral-700 mb-4">
                   Master PCB design in three progressive levels—each with
-                  hands-on projects and a recognized certificate.
+                  hands-on projects.{/*  and a recognized certificate. */}
                 </p>
                 <ul className="space-y-3 mb-6">
                   <li className="flex items-start">
@@ -184,18 +184,18 @@ const Services = () => {
                         High-speed routing, EMI/EMC compliance, and an industry
                         project.
                       </p>
-                    </div> */}
-                  {/* </li> */}
-                {/* </ul> */}
-                {/* <Link href="/contact">
+                    </div>
+                  </li>
+                </ul>
+                <Link href="/contact">
                   <Button className="bg-primary hover:bg-primary/90 text-white font-medium px-6 py-2 rounded-md transition-colors shadow-md">
                     Enroll Now
                   </Button>
-                </Link> */}
+                </Link>
               </div>
             </div>
           </div>
-        {/* </div> */}
+        </div>
       </section>
     </main>
   );

@@ -29,7 +29,7 @@ export const expertiseAreas: ExpertiseArea[] = [
     borderColor: "border-accent",
   },
   {
-    title: "Training & Certification",
+    title: "Training ", //& Certification
     description: "Industry-leading courses to empower future engineers.",
     icon: "graduation-cap",
     borderColor: "border-primary-dark",

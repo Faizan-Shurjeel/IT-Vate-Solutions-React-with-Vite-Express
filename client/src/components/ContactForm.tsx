@@ -148,7 +148,7 @@ const ContactForm = () => {
                     </SelectItem>
                     <SelectItem value="Project Quote">Project Quote</SelectItem>
                     <SelectItem value="Training">Training</SelectItem>
-                    <SelectItem value="Certification">Certification</SelectItem>
+                    {/* <SelectItem value="Certification">Certification</SelectItem> */}
                     <SelectItem value="Other">Other</SelectItem>
                   </SelectContent>
                 </Select>
