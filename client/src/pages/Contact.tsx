@@ -36,7 +36,7 @@ const Contact = () => {
               <div className="h-64 mb-8 rounded-lg overflow-hidden shadow-md">
                 {/* Map embed */}
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3399.3724032781376!2d74.3679991!3d31.567898!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39191b5c0efa01c1%3A0xaf5588c8e2c1ed1!2sG.T.%20Road%2C%20Lahore%2C%20Pakistan!5e0!3m2!1sen!2sus!4v1650000000000!5m2!1sen!2sus"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3399.3724032781376!2d74.3679991!3d31.567898!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39191b5c0efa01c1%3A0xaf5588c8e2c1ed1!2sJubilee%20Town%20Housing%20Scheme%2C%20Lahore%2C%20Pakistan!5e0!3m2!1sen!2sus!4v1650000000000!5m2!1sen!2sus"
                   width="100%"
                   height="100%"
                   style={{ border: 0 }}
@@ -56,11 +56,11 @@ const Contact = () => {
                     <h3 className="text-lg font-semibold">Our Location</h3>
                   </div>
                   <p className="text-neutral-600">
-                    226-B, Nai Abadi Rehmatpura
+                    MZ-20, Future Tower, Main Boulevard
                     <br />
-                    Near Garrison Garden, G.T. Road
+                    Jubilee Town Housing Scheme
                     <br />
-                    Lahore, Punjab 54000, Pakistan
+                    Lahore, Pakistan
                   </p>
                 </div>
 
