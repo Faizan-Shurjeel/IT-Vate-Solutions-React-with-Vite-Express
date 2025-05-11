@@ -56,11 +56,23 @@ const Contact = () => {
                     <h3 className="text-lg font-semibold">Our Location</h3>
                   </div>
                   <p className="text-neutral-600">
-                    MZ-20, Future Tower, Main Boulevard
+                    MZ-20, Future Tower, 48-49, Main Boulevard,
                     <br />
-                    Jubilee Town Housing Scheme
+                    Jubilee Town Housing Scheme, Lahore
+                  </p>
+                </div>
+
+                <div className="bg-neutral-50 p-6 rounded-lg shadow-md">
+                  <div className="flex items-center mb-4">
+                    <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center mr-4">
+                      <MapPin className="w-5 h-5 text-primary" />
+                    </div>
+                    <h3 className="text-lg font-semibold">Head Office</h3>
+                  </div>
+                  <p className="text-neutral-600">
+                    226-B, Rehmat Town, Batapur,
                     <br />
-                    Lahore, Pakistan
+                    G. T. Road, Lahore
                   </p>
                 </div>
 
@@ -100,27 +112,6 @@ const Contact = () => {
                     Chat on WhatsApp
                   </a>
                 </div>
-
-                {/* <div className="bg-neutral-50 p-6 rounded-lg shadow-md md:col-span-2">
-                  <div className="flex items-center mb-4">
-                    <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center mr-4">
-                      <Clock className="w-5 h-5 text-primary" />
-                    </div>
-                    <h3 className="text-lg font-semibold">Business Hours</h3>
-                  </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    <p className="text-neutral-600">
-                      <span className="font-medium">Monday - Friday:</span>
-                      <br />
-                      9:00 AM - 6:00 PM
-                    </p>
-                    <p className="text-neutral-600">
-                      <span className="font-medium">Saturday:</span>
-                      <br />
-                      9:00 AM - 1:00 PM
-                    </p>
-                  </div>
-                </div> */}
               </div>
             </div>
           </div>
