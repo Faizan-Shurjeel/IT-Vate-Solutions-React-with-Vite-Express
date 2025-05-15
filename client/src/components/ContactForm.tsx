@@ -51,31 +51,48 @@ const ContactForm = () => {
   const onSubmit = async (data: FormValues) => {
     setIsSubmitting(true);
     try {
-      // Using Formspree as a static form solution - replace YOUR_FORM_ID with your actual formspree form ID
-      const response = await fetch("https://formspree.io/f/YOUR_FORM_ID", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
+      // Build WhatsApp message
+      const phoneNumber = "923038411166"; // e.g., "1234567890" (no + or spaces)
+      const message = `Name: ${data.name}%0AEmail: ${data.email}%0ASubject: ${
+        data.subject
+      }%0AMessage: ${encodeURIComponent(data.message)}`;
+      const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
 
-      if (response.ok) {
-        toast({
-          title: "Message sent!",
-          description:
-            "Thank you for contacting us. We will get back to you soon.",
-          variant: "default",
-        });
-        form.reset();
-      } else {
-        throw new Error("Form submission failed");
-      }
+      // Optionally, still submit to Formspree
+      // const response = await fetch("https://formspree.io/f/YOUR_FORM_ID", {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify(data),
+      // });
+
+      // if (response.ok) {
+      //   toast({
+      //     title: "Message sent!",
+      //     description:
+      //       "Thank you for contacting us. We will get back to you soon.",
+      //     variant: "default",
+      //   });
+      //   form.reset();
+      // } else {
+      //   throw new Error("Form submission failed");
+      // }
+
+      // Open WhatsApp chat with prefilled message
+      window.open(whatsappUrl, "_blank");
+
+      toast({
+        title: "WhatsApp chat opened!",
+        description:
+          "Your details have been prefilled. Please send the message in WhatsApp.",
+        variant: "default",
+      });
+      form.reset();
     } catch (error) {
       toast({
-        title: "Failed to send message",
-        description:
-          "There was an error sending your message. Please try again later.",
+        title: "Failed to open WhatsApp",
+        description: "There was an error. Please try again later.",
         variant: "destructive",
       });
     } finally {
