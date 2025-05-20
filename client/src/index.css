@@ -13,15 +13,15 @@
   --card-foreground: 20 14.3% 4.1%;
   --border: 20 5.9% 90%;
   --input: 20 5.9% 90%;
-  --primary: 210 100% 32%;
-  --primary-foreground: 211 100% 99%;
-  --secondary: 199 100% 45%;
+  --primary: 30 95% 40%;
+  --primary-foreground: 30 5% 98%;
+  --secondary: 35 90% 55%;
   --secondary-foreground: 0 0% 100%;
-  --accent: 14 100% 57%;
+  --accent: 15 85% 50%;
   --accent-foreground: 0 0% 100%;
   --destructive: 0 84.2% 60.2%;
   --destructive-foreground: 60 9.1% 97.8%;
-  --ring: 20 14.3% 4.1%;
+  --ring: 25 95% 40%;
   --radius: 0.5rem;
 }
 
@@ -36,15 +36,15 @@
   --card-foreground: 0 0% 98%;
   --border: 240 3.7% 15.9%;
   --input: 240 3.7% 15.9%;
-  --primary: 210 100% 32%;
-  --primary-foreground: 211 100% 99%;
-  --secondary: 199 100% 45%;
+  --primary: 30 95% 45%;
+  --primary-foreground: 30 5% 98%;
+  --secondary: 35 90% 60%;
   --secondary-foreground: 0 0% 98%;
-  --accent: 14 100% 57%;
+  --accent: 15 85% 55%;
   --accent-foreground: 0 0% 98%;
   --destructive: 0 62.8% 30.6%;
   --destructive-foreground: 0 0% 98%;
-  --ring: 240 4.9% 83.9%;
+  --ring: 35 90% 50%;
   --radius: 0.5rem;
 }
 
@@ -89,7 +89,7 @@
   }
   .gradient-bg {
     @apply bg-primary;
-    background: linear-gradient(90deg, rgba(0,85,164,0.95) 0%, rgba(0,85,164,0.8) 100%);
+    background: linear-gradient(90deg, rgba(204,102,0,0.95) 0%, rgba(204,102,0,0.8) 100%);
   }
   .service-card:hover {
     transform: translateY(-5px);
