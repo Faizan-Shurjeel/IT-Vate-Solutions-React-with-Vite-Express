@@ -51,7 +51,7 @@ const Navbar = () => {
         <div className="flex items-center">
           <Link href="/" className="flex items-center gap-3">
             <img
-              src="/public/assets/IT-VATE Logo (Horizontal)  colors.jpg"
+              src="/assets/IT-VATE Logo (Horizontal)  colors.jpg"
               alt="IT-vate Solutions Logo"
               className={`transition-all duration-300 ${
                 isScrolled ? "h-8" : "h-10"
