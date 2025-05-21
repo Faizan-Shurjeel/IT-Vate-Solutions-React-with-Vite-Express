@@ -58,7 +58,7 @@ const Navbar = () => {
               }`}
             />
             <div className="flex items-center">
-              <span className="text-2xl font-bold text-primary">IT-vate</span>
+              <span className="text-2xl font-bold text-black">IT-vate</span>
               <span className="text-2xl font-medium text-secondary ml-1">
                 Solutions
               </span>
