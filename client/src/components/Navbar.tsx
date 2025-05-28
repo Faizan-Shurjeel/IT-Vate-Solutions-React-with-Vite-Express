@@ -49,20 +49,11 @@ const Navbar = () => {
     >
       <nav className="container mx-auto px-4 flex flex-wrap items-center justify-between">
         <div className="flex items-center">
-          <Link href="/" className="flex items-center gap-3">
-            <img
-              src="/assets/IT-VATE Logo (Horizontal)  colors.jpg"
-              alt="IT-vate Solutions Logo"
-              className={`transition-all duration-300 ${
-                isScrolled ? "h-8" : "h-10"
-              }`}
-            />
-            <div className="flex items-center">
-              <span className="text-2xl font-bold text-black">IT-vate</span>
-              <span className="text-2xl font-medium text-secondary ml-1">
-                Solutions
-              </span>
-            </div>
+          <Link href="/" className="flex items-center">
+            <span className="text-2xl font-bold text-primary">IT-vate</span>
+            <span className="text-2xl font-medium text-secondary ml-1">
+              Solutions
+            </span>
           </Link>
         </div>
 

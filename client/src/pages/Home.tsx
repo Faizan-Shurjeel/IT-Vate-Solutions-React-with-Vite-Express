@@ -13,11 +13,9 @@ const Home = () => {
       <Hero
         title="Empowering Innovation in IoT & Embedded Systems"
         subtitle="Embedded with Excellence"
-        subtitleClassName="text-white"
         description="From concept to deployment, IT-vate Solutions delivers world-class embedded systems and IoT development. We turn ideas into reality with precision, performance, and a passion for excellence."
         primaryButtonText="Discover Our Services"
         primaryButtonLink="/services"
-        primaryButtonClassName="bg-[#FF6B00] hover:bg-[#FF5500] text-white"
         secondaryButtonText="Let's Connect"
         secondaryButtonLink="/contact"
       />
