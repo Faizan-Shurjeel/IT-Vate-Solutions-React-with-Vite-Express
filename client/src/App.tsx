@@ -15,6 +15,7 @@ import NotFound from "@/pages/not-found";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import BackToTop from "@/components/BackToTop";
+import Register from "@/pages/Register";
 
 function Router() {
   return (
@@ -29,6 +30,7 @@ function Router() {
         <Route path="/blog/:id" component={BlogDetail} />
         <Route path="/careers" component={Careers} />
         <Route path="/contact" component={Contact} />
+        <Route path="/register" component={Register} />
         <Route component={NotFound} />
       </Switch>
       <Footer />
