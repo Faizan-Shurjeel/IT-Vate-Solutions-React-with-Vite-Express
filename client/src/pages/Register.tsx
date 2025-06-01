@@ -1,11 +1,15 @@
 import React, { useState } from "react";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { auth, db } from "@/utils/firebase";
 import { Button } from "@/components/ui/button";
-import { UserPlus, Mail, Phone, User, Lock } from "lucide-react";
+import { UserPlus, Mail, Phone, User, Lock, LogIn } from "lucide-react";
+import { useLocation } from "wouter";
+
 
 const Register = () => {
+    const [, setLocation] = useLocation();
+    const [isLogin, setIsLogin] = useState(false);
     const [form, setForm] = useState({
         firstName: "",
         lastName: "",
@@ -21,37 +25,75 @@ const Register = () => {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
 
+    const handleToggle = () => {
+        setIsLogin(!isLogin);
+        setError("");
+        // Clear form when switching modes
+        setForm({
+            firstName: "",
+            lastName: "",
+            email: "",
+            password: "",
+            phone: ""
+        });
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError("");
         setLoading(true);
 
-        if (!form.firstName || !form.lastName || !form.email || !form.password) {
-            setError("Please fill in all required fields.");
-            setLoading(false);
-            return;
-        }
-        if (form.password.length < 6) {
-            setError("Password should be at least 6 characters.");
-            setLoading(false);
-            return;
-        }
+        if (isLogin) {
+            // Login logic
+            if (!form.email || !form.password) {
+                setError("Please fill in all required fields.");
+                setLoading(false);
+                return;
+            }
 
-        try {
-            const { user } = await createUserWithEmailAndPassword(auth, form.email, form.password);
-            await setDoc(doc(db, "users", user.uid), {
-                firstName: form.firstName,
-                lastName: form.lastName,
-                email: form.email,
-                phone: form.phone || null,
-                createdAt: new Date()
-            });
-            alert("Registration successful!");
-            setForm({ firstName: "", lastName: "", email: "", password: "", phone: "" });
-        } catch (error: any) {
-            setError(error.message);
-        } finally {
-            setLoading(false);
+            try {
+                await signInWithEmailAndPassword(auth, form.email, form.password);
+                alert("Login successful!");
+                setForm({ firstName: "", lastName: "", email: "", password: "", phone: "" });
+                setLocation("/assessment");
+            } catch (error: any) {
+                setError(error.message);
+            } finally {
+                setLoading(false);
+            }
+        } else {
+            // Registration logic
+            if (!form.firstName || !form.lastName || !form.email || !form.password) {
+                setError("Please fill in all required fields.");
+                setLoading(false);
+                return;
+            }
+            if (form.password.length < 6) {
+                setError("Password should be at least 6 characters.");
+                setLoading(false);
+                return;
+            }
+
+            try {
+                const { user } = await createUserWithEmailAndPassword(auth, form.email, form.password);
+                await setDoc(doc(db, "users", user.uid), {
+                    firstName: form.firstName,
+                    lastName: form.lastName,
+                    email: form.email,
+                    phone: form.phone || null,
+                    createdAt: new Date(),
+                    testCompleted: false,
+                    level: "undetermined",
+                });
+                
+                alert("Registration successful!");
+                setForm({ firstName: "", lastName: "", email: "", password: "", phone: "" });
+                setLocation("/assessment");
+            } catch (error: any) {
+                setError(error.message);
+            } finally {
+                setLoading(false);
+            }
         }
     };
 
@@ -59,9 +101,14 @@ const Register = () => {
         <main>
             <section className="py-20 bg-primary text-white">
                 <div className="container mx-auto px-4 text-center">
-                    <h1 className="text-4xl md:text-5xl font-bold mb-6">Training Registration</h1>
+                    <h1 className="text-4xl md:text-5xl font-bold mb-6">
+                        {isLogin ? "Welcome Back" : "Training Registration"}
+                    </h1>
                     <p className="text-xl max-w-3xl mx-auto">
-                        Gain real-world skills with our immersive, industry-focused programs—designed for students and professionals ready to lead.
+                        {isLogin 
+                            ? "Sign in to continue your PCB design journey and access your training materials."
+                            : "Gain real-world skills with our immersive, industry-focused programs—designed for students and professionals ready to lead."
+                        }
                     </p>
                 </div>
             </section>
@@ -72,35 +119,69 @@ const Register = () => {
                         <div className="bg-neutral-50 p-8 rounded-lg shadow-md">
                             <div className="text-center mb-8">
                                 <h2 className="text-3xl font-bold text-neutral-800 mb-4">
-                                    Register for the Program
+                                    {isLogin ? "Sign In" : "Register for the Program"}
                                 </h2>
                                 <p className="text-neutral-600">
-                                    Fill in your details to enroll in our PCB Designer Programme
+                                    {isLogin 
+                                        ? "Enter your credentials to access your account"
+                                        : "Fill in your details to enroll in our PCB Designer Programme"
+                                    }
                                 </p>
                             </div>
 
-                            <form onSubmit={handleSubmit} className="space-y-6">
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div className="relative">
-                                        <User size={18} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400" />
-                                        <input
-                                            name="firstName"
-                                            placeholder="First Name"
-                                            onChange={handleChange}
-                                            value={form.firstName}
-                                            required
-                                            className="w-full pl-10 pr-4 py-3 border border-neutral-300 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
-                                        />
+                            {/* Toggle Button */}
+                            <div className="text-center mb-6">
+                                <p className="text-neutral-600 mb-3">
+                                    {isLogin ? "Don't have an account?" : "Already have an account?"}
+                                </p>
+                                <button
+                                    type="button"
+                                    onClick={handleToggle}
+                                    className="text-primary hover:text-primary/80 font-medium underline transition-colors"
+                                >
+                                    {isLogin ? "Create Account" : "Sign In"}
+                                </button>
+                            </div>
+
+                            <div className="space-y-6">
+                                <div 
+                                    className={`transition-all duration-300 ease-in-out ${
+                                        isLogin ? 'opacity-0 max-h-0 overflow-hidden' : 'opacity-100 max-h-96'
+                                    }`}
+                                >
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                                        <div className="relative">
+                                            <User size={18} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400" />
+                                            <input
+                                                name="firstName"
+                                                placeholder="First Name"
+                                                onChange={handleChange}
+                                                value={form.firstName}
+                                                required={!isLogin}
+                                                className="w-full pl-10 pr-4 py-3 border border-neutral-300 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
+                                            />
+                                        </div>
+
+                                        <div className="relative">
+                                            <User size={18} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400" />
+                                            <input
+                                                name="lastName"
+                                                placeholder="Last Name"
+                                                onChange={handleChange}
+                                                value={form.lastName}
+                                                required={!isLogin}
+                                                className="w-full pl-10 pr-4 py-3 border border-neutral-300 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
+                                            />
+                                        </div>
                                     </div>
 
-                                    <div className="relative">
-                                        <User size={18} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400" />
+                                    <div className="relative mb-6">
+                                        <Phone size={18} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400" />
                                         <input
-                                            name="lastName"
-                                            placeholder="Last Name"
+                                            name="phone"
+                                            placeholder="Phone Number (Optional)"
                                             onChange={handleChange}
-                                            value={form.lastName}
-                                            required
+                                            value={form.phone}
                                             className="w-full pl-10 pr-4 py-3 border border-neutral-300 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
                                         />
                                     </div>
@@ -132,30 +213,31 @@ const Register = () => {
                                     />
                                 </div>
 
-                                <div className="relative">
-                                    <Phone size={18} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400" />
-                                    <input
-                                        name="phone"
-                                        placeholder="Phone Number (Optional)"
-                                        onChange={handleChange}
-                                        value={form.phone}
-                                        className="w-full pl-10 pr-4 py-3 border border-neutral-300 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
-                                    />
-                                </div>
-
                                 {error && <p className="text-red-600 text-center">{error}</p>}
 
                                 <div className="flex justify-center pt-4">
                                     <Button
-                                        type="submit"
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            handleSubmit(e);
+                                        }}
                                         disabled={loading}
                                         className="bg-primary hover:bg-primary/90 text-white font-medium px-8 py-3 rounded-md transition-colors shadow-md"
                                     >
-                                        <UserPlus size={18} className="mr-2" />
-                                        {loading ? "Registering..." : "Enroll Now"}
+                                        {isLogin ? (
+                                            <>
+                                                <LogIn size={18} className="mr-2" />
+                                                {loading ? "Signing In..." : "Sign In"}
+                                            </>
+                                        ) : (
+                                            <>
+                                                <UserPlus size={18} className="mr-2" />
+                                                {loading ? "Registering..." : "Enroll Now"}
+                                            </>
+                                        )}
                                     </Button>
                                 </div>
-                            </form>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -167,28 +249,28 @@ const Register = () => {
                         PCB Designer Programme
                     </h2>
                     <p className="text-center max-w-2xl mx-auto mb-12 text-neutral-600">
-                        Master PCB design in three progressive levels—each with hands-on projects.
+                        Kickstart your journey into PCB design with a structured and practical training program.
                     </p>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
                         <div className="bg-white p-6 rounded-lg shadow-md text-center">
-                            <h3 className="text-xl font-semibold mb-3">Level 1: Foundation</h3>
+                            <h3 className="text-xl font-semibold mb-3">Step 1: Register</h3>
                             <p className="text-neutral-600">
-                                Electronics basics, schematic capture, and PCB layout essentials.
+                                Create your account and fill in your basic details to get started.
                             </p>
                         </div>
 
                         <div className="bg-white p-6 rounded-lg shadow-md text-center">
-                            <h3 className="text-xl font-semibold mb-3">Level 2: Intermediate</h3>
+                            <h3 className="text-xl font-semibold mb-3">Step 2: Confirm Your Slot</h3>
                             <p className="text-neutral-600">
-                                Multi-layer design, signal integrity, and design for manufacturing.
+                                Complete any necessary verification and intermediary steps.
                             </p>
                         </div>
 
                         <div className="bg-white p-6 rounded-lg shadow-md text-center">
-                            <h3 className="text-xl font-semibold mb-3">Level 3: Advanced</h3>
+                            <h3 className="text-xl font-semibold mb-3">Step 3: Begin Training</h3>
                             <p className="text-neutral-600">
-                                High-speed routing, EMI/EMC compliance, and an industry project.
+                                Access your training and start learning with real-world projects and expert guidance.
                             </p>
                         </div>
                     </div>

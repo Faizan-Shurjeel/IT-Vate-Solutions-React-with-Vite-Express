@@ -4,6 +4,8 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
+import ProtectedRoute from "./components/ProtectedRoute";
+
 import Home from "@/pages/Home";
 import About from "@/pages/About";
 import Services from "@/pages/Services";
@@ -16,6 +18,8 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import BackToTop from "@/components/BackToTop";
 import Register from "@/pages/Register";
+import WelcomeAssessment from "@/pages/WelcomeAssessment";
+import AssessmentWrapper from "./components/AssessmentWrapper";
 
 function Router() {
   return (
@@ -31,6 +35,11 @@ function Router() {
         <Route path="/careers" component={Careers} />
         <Route path="/contact" component={Contact} />
         <Route path="/register" component={Register} />
+        <Route path="/assessment">
+          <ProtectedRoute>
+          <AssessmentWrapper />
+          </ProtectedRoute>
+        </Route>
         <Route component={NotFound} />
       </Switch>
       <Footer />

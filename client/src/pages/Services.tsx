@@ -141,7 +141,7 @@ const Services = () => {
                   </svg>
                 </div>
                 <h3 className="text-2xl font-bold text-primary mb-4">
-                  Training{/*  & Certification */}
+                  Training
                 </h3>
                 <p className="text-neutral-700 mb-6">
                   Gain real-world skills with our immersive, industry-focused
@@ -149,40 +149,37 @@ const Services = () => {
                   lead.
                 </p>
                 <h4 className="text-lg font-semibold mb-3">
-                  PCB Designer Programme{/* Certified  */}
+                  PCB Designer Programme
                 </h4>
                 <p className="text-neutral-700 mb-4">
-                  Master PCB design in three progressive levels—each with
-                  hands-on projects.{/*  and a recognized certificate. */}
+                  Build expertise in PCB design through structured, hands-on
+                  learning—from fundamentals to advanced practices.
                 </p>
                 <ul className="space-y-3 mb-6">
                   <li className="flex items-start">
                     <CheckCircle2 className="text-secondary mt-1 mr-2 w-5 h-5" />
                     <div>
-                      <span className="font-medium">Level 1: Foundation</span>
+                      <span className="font-medium">Core Concepts</span>
                       <p className="text-sm text-neutral-600">
-                        Electronics basics, schematic capture, and PCB layout
-                        essentials.
+                        Electronics principles, schematic capture, and PCB layout basics.
                       </p>
                     </div>
                   </li>
                   <li className="flex items-start">
                     <CheckCircle2 className="text-secondary mt-1 mr-2 w-5 h-5" />
                     <div>
-                      <span className="font-medium">Level 2: Intermediate</span>
+                      <span className="font-medium">Professional Practices</span>
                       <p className="text-sm text-neutral-600">
-                        Multi-layer design, signal integrity, and design for
-                        manufacturing.
+                        Design for manufacturing, signal integrity, and layout optimization.
                       </p>
                     </div>
                   </li>
                   <li className="flex items-start">
                     <CheckCircle2 className="text-secondary mt-1 mr-2 w-5 h-5" />
                     <div>
-                      <span className="font-medium">Level 3: Advanced</span>
+                      <span className="font-medium">Advanced Techniques</span>
                       <p className="text-sm text-neutral-600">
-                        High-speed routing, EMI/EMC compliance, and an industry
-                        project.
+                        High-speed routing, EMI/EMC strategies, and real-world project work.
                       </p>
                     </div>
                   </li>
@@ -193,6 +190,7 @@ const Services = () => {
                   </Button>
                 </Link>
               </div>
+
             </div>
           </div>
         </div>
