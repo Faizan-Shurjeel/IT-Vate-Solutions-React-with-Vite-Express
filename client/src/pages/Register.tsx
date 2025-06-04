@@ -1,103 +1,119 @@
 import React, { useState } from "react";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { auth, db } from "@/utils/firebase";
 import { Button } from "@/components/ui/button";
-import { UserPlus, Mail, Phone, User, Lock, LogIn } from "lucide-react";
+import {
+  UserPlus,
+  Mail,
+  Phone,
+  User,
+  Lock,
+  LogIn,
+} from "lucide-react";
 import { useLocation } from "wouter";
-
+import { useEffect } from "react";
+import { useAuth } from "@/context/AuthContext"; // adjust if needed
 
 const Register = () => {
-    const [, setLocation] = useLocation();
-    const [isLogin, setIsLogin] = useState(false);
-    const [form, setForm] = useState({
-        firstName: "",
-        lastName: "",
-        email: "",
-        password: "",
-        phone: ""
+  const { user, loading: authLoading } = useAuth();
+  const [, setLocation] = useLocation();
+  const [isLogin, setIsLogin] = useState(false);
+
+  useEffect(() => {
+    if (!authLoading && user) {
+      setLocation("/assessment");
+    }
+  }, [authLoading, user, setLocation]);
+
+  const [form, setForm] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    phone: "",
+  });
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleToggle = () => {
+    setIsLogin(!isLogin);
+    setError("");
+    setForm({
+      firstName: "",
+      lastName: "",
+      email: "",
+      password: "",
+      phone: "",
     });
+  };
 
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState("");
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setForm({ ...form, [e.target.name]: e.target.value });
-    };
+    if (isLogin) {
+      if (!form.email || !form.password) {
+        setError("Please fill in all required fields.");
+        setLoading(false);
+        return;
+      }
 
-    const handleToggle = () => {
-        setIsLogin(!isLogin);
-        setError("");
-        // Clear form when switching modes
-        setForm({
-            firstName: "",
-            lastName: "",
-            email: "",
-            password: "",
-            phone: ""
+      try {
+        await signInWithEmailAndPassword(auth, form.email, form.password);
+        alert("Login successful!");
+        setForm({ firstName: "", lastName: "", email: "", password: "", phone: "" });
+        setLocation("/assessment");
+      } catch (error: any) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      if (!form.firstName || !form.lastName || !form.email || !form.password) {
+        setError("Please fill in all required fields.");
+        setLoading(false);
+        return;
+      }
+      if (form.password.length < 6) {
+        setError("Password should be at least 6 characters.");
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const { user } = await createUserWithEmailAndPassword(auth, form.email, form.password);
+        await setDoc(doc(db, "users", user.uid), {
+          firstName: form.firstName,
+          lastName: form.lastName,
+          email: form.email,
+          phone: form.phone || null,
+          createdAt: new Date(),
+          testCompleted: false,
+          level: "undetermined",
         });
-    };
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setError("");
-        setLoading(true);
+        alert("Registration successful!");
+        setForm({ firstName: "", lastName: "", email: "", password: "", phone: "" });
+        setLocation("/assessment");
+      } catch (error: any) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
 
-        if (isLogin) {
-            // Login logic
-            if (!form.email || !form.password) {
-                setError("Please fill in all required fields.");
-                setLoading(false);
-                return;
-            }
-
-            try {
-                await signInWithEmailAndPassword(auth, form.email, form.password);
-                alert("Login successful!");
-                setForm({ firstName: "", lastName: "", email: "", password: "", phone: "" });
-                setLocation("/assessment");
-            } catch (error: any) {
-                setError(error.message);
-            } finally {
-                setLoading(false);
-            }
-        } else {
-            // Registration logic
-            if (!form.firstName || !form.lastName || !form.email || !form.password) {
-                setError("Please fill in all required fields.");
-                setLoading(false);
-                return;
-            }
-            if (form.password.length < 6) {
-                setError("Password should be at least 6 characters.");
-                setLoading(false);
-                return;
-            }
-
-            try {
-                const { user } = await createUserWithEmailAndPassword(auth, form.email, form.password);
-                await setDoc(doc(db, "users", user.uid), {
-                    firstName: form.firstName,
-                    lastName: form.lastName,
-                    email: form.email,
-                    phone: form.phone || null,
-                    createdAt: new Date(),
-                    testCompleted: false,
-                    level: "undetermined",
-                });
-                
-                alert("Registration successful!");
-                setForm({ firstName: "", lastName: "", email: "", password: "", phone: "" });
-                setLocation("/assessment");
-            } catch (error: any) {
-                setError(error.message);
-            } finally {
-                setLoading(false);
-            }
-        }
-    };
-
-    return (
+  return (
         <main>
             <section className="py-20 bg-primary text-white">
                 <div className="container mx-auto px-4 text-center">
