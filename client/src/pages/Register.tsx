@@ -269,40 +269,53 @@ const Register = () => {
 
                     <div className="grid grid-cols-1 md:grid-cols-6 gap-8 max-w-5xl mx-auto">
   {/* Step 1 */}
-  <div className="bg-white p-6 rounded-lg shadow-md text-center md:col-span-2">
-    <h3 className="text-xl font-semibold mb-3">Step 1: Register</h3>
-    <p className="text-neutral-600">
-      Create your account and fill in your basic details to get started.
-    </p>
-  </div>
-  {/* Step 2 */}
-  <div className="bg-white p-6 rounded-lg shadow-md text-center md:col-span-2">
-    <h3 className="text-xl font-semibold mb-3">Step 2: Begin Training Process</h3>
-    <p className="text-neutral-600">
-      Complete your signup process to begin the training flow.
-    </p>
-  </div>
-  {/* Step 3 */}
-  <div className="bg-white p-6 rounded-lg shadow-md text-center md:col-span-2">
-    <h3 className="text-xl font-semibold mb-3">Step 3: Assessment</h3>
-    <p className="text-neutral-600">
-      Go through an assessment so we can get an idea of your existing knowledge.
-    </p>
-  </div>
-  {/* Step 4 - Positioned between Step 1 and 2 */}
-  <div className="bg-white p-6 rounded-lg shadow-md text-center md:col-start-2 md:col-span-2">
-    <h3 className="text-xl font-semibold mb-3">Step 4: Finalize Registration</h3>
-    <p className="text-neutral-600">
-      Complete the payment and verification process to begin training.
-    </p>
-  </div>
-  {/* Step 5 - Positioned between Step 2 and 3 */}
-  <div className="bg-white p-6 rounded-lg shadow-md text-center md:col-start-4 md:col-span-2">
-    <h3 className="text-xl font-semibold mb-3">Step 5: Begin Training</h3>
-    <p className="text-neutral-600">
-      Access your training and start learning with real-world projects and experience guidance.
-    </p>
-  </div>
+<div className="bg-white p-6 rounded-lg shadow-md text-center md:col-span-2">
+  <h3 className="text-xl font-semibold mb-3">Step 1: Create Your Account</h3>
+  <p className="text-neutral-600">
+    Register by providing your basic details to get started.
+  </p>
+</div>
+
+{/* Step 2 */}
+<div className="bg-white p-6 rounded-lg shadow-md text-center md:col-span-2">
+  <h3 className="text-xl font-semibold mb-3">Step 2: Training Overview</h3>
+  <p className="text-neutral-600">
+    Review the course structure, objectives, and expectations to prepare.
+  </p>
+</div>
+
+{/* Step 3 */}
+<div className="bg-white p-6 rounded-lg shadow-md text-center md:col-span-2">
+  <h3 className="text-xl font-semibold mb-3">Step 3: Self-Assessment Test</h3>
+  <p className="text-neutral-600">
+    Complete a skills evaluation to help us understand your current proficiency.
+  </p>
+</div>
+
+{/* Step 4 */}
+<div className="bg-white p-6 rounded-lg shadow-md text-center md:col-start-2 md:col-span-2">
+  <h3 className="text-xl font-semibold mb-3">Step 4: Results & Recommendation</h3>
+  <p className="text-neutral-600">
+    Receive your test results, recommended training level, and fee details.
+  </p>
+</div>
+
+{/* Step 5 */}
+<div className="bg-white p-6 rounded-lg shadow-md text-center md:col-start-4 md:col-span-2">
+  <h3 className="text-xl font-semibold mb-3">Step 5: Payment & Receipt Upload</h3>
+  <p className="text-neutral-600">
+    Pay the program fee and upload your payment receipt to confirm enrollment.
+  </p>
+</div>
+
+{/* Step 6 */}
+{/* <div className="bg-white p-6 rounded-lg shadow-md text-center md:col-start-3 md:col-span-2">
+  <h3 className="text-xl font-semibold mb-3">Step 6: Final Submission</h3>
+  <p className="text-neutral-600">
+    Submit all required information to complete your registration process.
+  </p>
+</div> */}
+
 </div>
 
                 </div>

@@ -20,6 +20,7 @@ import BackToTop from "@/components/BackToTop";
 import Register from "@/pages/Register";
 import WelcomeAssessment from "@/pages/WelcomeAssessment";
 import AssessmentWrapper from "./components/AssessmentWrapper";
+import Exam from "@/pages/Exam";
 
 function Router() {
   return (
@@ -35,6 +36,7 @@ function Router() {
         <Route path="/careers" component={Careers} />
         <Route path="/contact" component={Contact} />
         <Route path="/register" component={Register} />
+        <Route path="/exam" component={Exam} />
         <Route path="/assessment">
           <ProtectedRoute>
           <AssessmentWrapper />

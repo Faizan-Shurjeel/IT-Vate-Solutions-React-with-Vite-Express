@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { CheckCircle, BookOpen, Target, Clock, Award, FileText, ChevronRight } from "lucide-react";
+import { navigate } from "wouter/use-browser-location";
 
 const WelcomeAssessment = () => {
     const [showTerms, setShowTerms] = useState(false);
@@ -14,11 +15,7 @@ const WelcomeAssessment = () => {
         }
         
         setLoading(true);
-        // Simulate navigation to test
-        setTimeout(() => {
-            alert("Redirecting to skills assessment test...");
-            setLoading(false);
-        }, 1000);
+        navigate("/exam");
     };
 
     const termsContent = `
