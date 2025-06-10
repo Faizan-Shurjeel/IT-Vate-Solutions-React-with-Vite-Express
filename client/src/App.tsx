@@ -21,6 +21,8 @@ import Register from "@/pages/Register";
 import WelcomeAssessment from "@/pages/WelcomeAssessment";
 import AssessmentWrapper from "./components/AssessmentWrapper";
 import Exam from "@/pages/Exam";
+import ExamResults from "@/pages/ExamResults";
+import Payment from "@/pages/Payment";
 
 function Router() {
   return (
@@ -37,6 +39,8 @@ function Router() {
         <Route path="/contact" component={Contact} />
         <Route path="/register" component={Register} />
         <Route path="/exam" component={Exam} />
+        <Route path="/exam-results" component={ExamResults} />
+        <Route path="/payment" component={Payment} />
         <Route path="/assessment">
           <ProtectedRoute>
           <AssessmentWrapper />

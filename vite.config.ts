@@ -25,7 +25,8 @@ export default defineConfig({
   // 🔽 ADD THIS SECTION
   server: {
     allowedHosts: [
-      "6cb6-160-250-51-17.ngrok-free.app", // your tunnel host
+      "2abf-160-250-51-17.ngrok-free.app", // your tunnel host
+      "it-vate.microcloud.tech"
     ],
   },
 });

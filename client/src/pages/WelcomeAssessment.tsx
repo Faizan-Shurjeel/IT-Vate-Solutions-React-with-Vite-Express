@@ -68,6 +68,75 @@ By agreeing to these terms, you confirm that you understand the assessment proce
                     </div>
                 </div>
             </section>
+<section className="py-8 bg-white border-b border-neutral-200">
+  <div className="container mx-auto px-4">
+    <div className="flex justify-center items-center space-x-8 overflow-x-auto">
+      {/* Step 1 - Completed */}
+      <div className="flex flex-col items-center min-w-[140px]">
+        <div className="flex items-center justify-center w-12 h-12 rounded-full bg-green-500 text-white font-bold text-lg mb-3 shadow-lg">
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
+        <h3 className="text-sm font-semibold text-green-600 text-center">Create Account</h3>
+        <p className="text-xs text-neutral-600 text-center mt-1">Register your details</p>
+      </div>
+
+      {/* Connector Line */}
+      <div className="hidden md:block w-16 h-0.5 bg-green-500 -mt-8"></div>
+
+      {/* Step 2 - Current */}
+      <div className="flex flex-col items-center min-w-[140px]">
+        <div className="relative flex items-center justify-center w-12 h-12 rounded-full bg-primary text-white font-bold text-lg mb-3 shadow-lg">
+          2
+          <div className="absolute -top-8 left-1/2 transform -translate-x-1/2">
+            <span className="bg-primary text-white text-xs px-2 py-1 rounded-full whitespace-nowrap">
+              Current Step
+            </span>
+          </div>
+        </div>
+        <h3 className="text-sm font-semibold text-primary text-center">Training Overview</h3>
+        <p className="text-xs text-neutral-600 text-center mt-1">Course structure</p>
+      </div>
+
+      {/* Connector Line */}
+      <div className="hidden md:block w-16 h-0.5 bg-neutral-300 -mt-8"></div>
+
+      {/* Step 3 - Pending */}
+      <div className="flex flex-col items-center min-w-[140px]">
+        <div className="flex items-center justify-center w-12 h-12 rounded-full bg-neutral-200 text-neutral-500 font-bold text-lg mb-3">
+          3
+        </div>
+        <h3 className="text-sm font-medium text-neutral-500 text-center">Assessment Test</h3>
+        <p className="text-xs text-neutral-400 text-center mt-1">Skills evaluation</p>
+      </div>
+
+      {/* Connector Line */}
+      <div className="hidden md:block w-16 h-0.5 bg-neutral-300 -mt-8"></div>
+
+      {/* Step 4 - Pending */}
+      <div className="flex flex-col items-center min-w-[140px]">
+        <div className="flex items-center justify-center w-12 h-12 rounded-full bg-neutral-200 text-neutral-500 font-bold text-lg mb-3">
+          4
+        </div>
+        <h3 className="text-sm font-medium text-neutral-500 text-center">Results</h3>
+        <p className="text-xs text-neutral-400 text-center mt-1">Recommendations</p>
+      </div>
+
+      {/* Connector Line */}
+      <div className="hidden md:block w-16 h-0.5 bg-neutral-300 -mt-8"></div>
+
+      {/* Step 5 - Pending */}
+      <div className="flex flex-col items-center min-w-[140px]">
+        <div className="flex items-center justify-center w-12 h-12 rounded-full bg-neutral-200 text-neutral-500 font-bold text-lg mb-3">
+          5
+        </div>
+        <h3 className="text-sm font-medium text-neutral-500 text-center">Payment</h3>
+        <p className="text-xs text-neutral-400 text-center mt-1">Complete enrollment</p>
+      </div>
+    </div>
+  </div>
+</section>
 
             {/* Next Steps Section */}
             <section className="py-16 bg-white">

@@ -5,87 +5,135 @@ import {
     ChevronRight,
     CheckCircle,
     AlertCircle,
+    Loader,
 } from "lucide-react";
 import { useLocation } from "wouter";
 import { useAuth } from "@/context/AuthContext";
+import { 
+    collection, 
+    getDocs, 
+    doc, 
+    updateDoc, 
+    setDoc,
+    query,
+    orderBy 
+} from "firebase/firestore";
+import { db } from "@/utils/firebase";
 
-// Sample questions - replace with Firestore data later
-const sampleQuestions = [
-    {
-        id: 1,
-        question: "What does PCB stand for in electronics?",
-        options: [
-            "Printed Circuit Board",
-            "Personal Computer Base",
-            "Power Control Block",
-            "Processor Control Board"
-        ],
-        correctAnswer: 0
-    },
-    {
-        id: 2,
-        question: "Which layer is typically used for ground connections in a multi-layer PCB?",
-        options: [
-            "Top layer only",
-            "Bottom layer only",
-            "Dedicated ground plane layer",
-            "Signal layer"
-        ],
-        correctAnswer: 2
-    },
-    {
-        id: 3,
-        question: "What is the purpose of via in PCB design?",
-        options: [
-            "To add decorative elements",
-            "To connect different layers of the PCB",
-            "To increase board thickness",
-            "To reduce manufacturing cost"
-        ],
-        correctAnswer: 1
-    },
-    {
-        id: 4,
-        question: "Which file format is commonly used for PCB manufacturing?",
-        options: [
-            "PDF files",
-            "Gerber files",
-            "Word documents",
-            "PowerPoint files"
-        ],
-        correctAnswer: 1
-    },
-    {
-        id: 5,
-        question: "What is the typical thickness of a standard PCB?",
-        options: [
-            "0.8mm",
-            "1.6mm",
-            "2.4mm",
-            "3.2mm"
-        ],
-        correctAnswer: 1
-    }
-];
+// Types
+interface Question {
+    id: string;
+    questionId: number;
+    question: string;
+    options: string[];
+    correctAnswer: number;
+}
+
+interface ExamResult {
+    score: number;
+    totalQuestions: number;
+    answers: (number | null)[];
+    completedAt: Date;
+    timeTaken: number;
+}
 
 const Exam = () => {
     const { user, loading: authLoading } = useAuth();
     const [, setLocation] = useLocation();
     
+    // State management
+    const [allQuestions, setAllQuestions] = useState<Question[]>([]);
+    const [questions, setQuestions] = useState<Question[]>([]);
     const [currentQuestion, setCurrentQuestion] = useState(0);
     const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
-    const [answers, setAnswers] = useState<(number | null)[]>(new Array(sampleQuestions.length).fill(null));
-    const [timeLeft, setTimeLeft] = useState(1800); // 30 minutes in seconds
+    const [answers, setAnswers] = useState<(number | null)[]>([]);
+    const [timeLeft, setTimeLeft] = useState(900); // 15 minutes for 5 questions
     const [loading, setLoading] = useState(false);
+    const [questionsLoading, setQuestionsLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+    const [examStartTime] = useState(Date.now());
 
+    // Function to shuffle array using Fisher-Yates algorithm
+    const shuffleArray = <T,>(array: T[]): T[] => {
+        const shuffled = [...array];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        return shuffled;
+    };
+
+    // Function to get random subset of questions
+    const getRandomQuestions = (allQuestions: Question[], count: number = 5): Question[] => {
+        if (allQuestions.length <= count) {
+            return shuffleArray(allQuestions);
+        }
+        
+        const shuffled = shuffleArray(allQuestions);
+        return shuffled.slice(0, count);
+    };
+
+    // Redirect if not authenticated
     useEffect(() => {
         if (!authLoading && !user) {
             setLocation("/register");
         }
     }, [authLoading, user, setLocation]);
 
-    // Timer effect
+    // Fetch questions from Firestore
     useEffect(() => {
+        const fetchQuestions = async () => {
+            try {
+                setQuestionsLoading(true);
+                setError(null);
+                
+                const questionsRef = collection(db, "questions");
+                const q = query(questionsRef, orderBy("questionId", "asc"));
+                const querySnapshot = await getDocs(q);
+                
+                if (querySnapshot.empty) {
+                    throw new Error("No questions found in the database");
+                }
+                
+                const fetchedQuestions: Question[] = [];
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    fetchedQuestions.push({
+                        id: doc.id,
+                        questionId: data.questionId || 0,
+                        question: data.question || "",
+                        options: data.options || [],
+                        correctAnswer: data.correctAnswer || 0,
+                    });
+                });
+                
+                if (fetchedQuestions.length === 0) {
+                    throw new Error("No valid questions found");
+                }
+                
+                // Store all questions and select 5 random ones
+                setAllQuestions(fetchedQuestions);
+                const randomQuestions = getRandomQuestions(fetchedQuestions, 5);
+                setQuestions(randomQuestions);
+                setAnswers(new Array(5).fill(null)); // Always 5 questions
+                
+            } catch (error) {
+                console.error("Error fetching questions:", error);
+                setError(error instanceof Error ? error.message : "Failed to load questions");
+            } finally {
+                setQuestionsLoading(false);
+            }
+        };
+
+        if (user && !authLoading) {
+            fetchQuestions();
+        }
+    }, [user, authLoading]);
+
+    // Timer effect - reduced time for 5 questions
+    useEffect(() => {
+        if (questionsLoading || questions.length === 0) return;
+
         const timer = setInterval(() => {
             setTimeLeft((prev) => {
                 if (prev <= 1) {
@@ -97,7 +145,13 @@ const Exam = () => {
         }, 1000);
 
         return () => clearInterval(timer);
-    }, []);
+    }, [questionsLoading, questions.length]);
+
+    // Update selected answer when changing questions
+    useEffect(() => {
+        const ans = answers[currentQuestion];
+        setSelectedAnswer(ans !== undefined ? ans : null);
+    }, [currentQuestion, answers]);
 
     const formatTime = (seconds: number) => {
         const minutes = Math.floor(seconds / 60);
@@ -113,33 +167,172 @@ const Exam = () => {
     };
 
     const handleNext = () => {
-        if (currentQuestion < sampleQuestions.length - 1) {
+        if (currentQuestion < questions.length - 1) {
             setCurrentQuestion(currentQuestion + 1);
-            setSelectedAnswer(answers[currentQuestion + 1]);
         } else {
             handleSubmitExam();
         }
     };
 
-    const handleSubmitExam = async () => {
-        setLoading(true);
-        // TODO: Submit answers to Firestore
-        // Calculate score, update user profile, etc.
-        
-        // For now, just show alert and redirect
-        const score = answers.reduce((acc, answer, index) => {
-            return answer === sampleQuestions[index].correctAnswer ? acc + 1 : acc;
+    const calculateScore = () => {
+        return answers.reduce((acc, answer, index) => {
+            if (answer === null) return acc;
+            return answer === questions[index].correctAnswer ? acc + 1 : acc;
         }, 0);
+    };
+
+    const handleSubmitExam = async () => {
+        if (loading) return;
         
-        alert(`Exam completed! Your score: ${score}/${sampleQuestions.length}`);
-        setLocation("/dashboard"); // or wherever you want to redirect
-        setLoading(false);
+        setLoading(true);
+        
+        try {
+            const score = calculateScore();
+            const timeTaken = Math.floor((Date.now() - examStartTime) / 1000);
+            
+            const examResult: ExamResult = {
+                score,
+                totalQuestions: questions.length,
+                answers,
+                completedAt: new Date(),
+                timeTaken
+            };
+
+            // Save exam results to user's document
+            if (user) {
+                const userRef = doc(db, "users", user.uid);
+                await updateDoc(userRef, {
+                    testCompleted: true,
+                    examResult,
+                    level: determineLevel(score, questions.length),
+                    lastExamDate: new Date()
+                });
+
+                // Save detailed exam attempt with the specific questions used
+                const examAttemptRef = doc(db, "examAttempts", `${user.uid}_${Date.now()}`);
+                await setDoc(examAttemptRef, {
+                    userId: user.uid,
+                    userEmail: user.email,
+                    ...examResult,
+                    questions: questions.map((q, index) => ({
+                        questionId: q.questionId,
+                        question: q.question,
+                        options: q.options,
+                        selectedAnswer: answers[index],
+                        correctAnswer: q.correctAnswer,
+                        isCorrect: answers[index] === q.correctAnswer
+                    }))
+                });
+            }
+            
+            // Store results in sessionStorage for results page
+            sessionStorage.setItem('examResults', JSON.stringify({
+                score,
+                totalQuestions: questions.length,
+                percentage: Math.round((score / questions.length) * 100),
+                level: determineLevel(score, questions.length),
+                timeTaken
+            }));
+            
+            setLocation("/exam-results");
+            
+        } catch (error) {
+            console.error("Error submitting exam:", error);
+            setError("Failed to submit exam. Please try again.");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const determineLevel = (score: number, total: number): string => {
+        const percentage = (score / total) * 100;
+        if (percentage >= 75) return "Level 3";
+        if (percentage >= 50) return "Level 2";
+        if (percentage < 50) return "Level 1";
+    };
+
+    // Function to restart with new random questions
+    const handleNewQuestions = () => {
+        if (allQuestions.length > 0) {
+            const newRandomQuestions = getRandomQuestions(allQuestions, 5);
+            setQuestions(newRandomQuestions);
+            setAnswers(new Array(5).fill(null));
+            setCurrentQuestion(0);
+            setSelectedAnswer(null);
+            setTimeLeft(900); // Reset timer
+            setError(null);
+        }
     };
 
     const answeredQuestions = answers.filter(answer => answer !== null).length;
 
-    if (authLoading) {
-        return <div>Loading...</div>;
+    // Loading state
+    if (authLoading || questionsLoading) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-neutral-50">
+                <div className="text-center">
+                    <Loader className="w-12 h-12 animate-spin text-primary mx-auto mb-4" />
+                    <h2 className="text-xl font-semibold text-neutral-700 mb-2">
+                        {authLoading ? "Authenticating..." : "Loading Questions..."}
+                    </h2>
+                    <p className="text-neutral-500">Please wait while we prepare your assessment.</p>
+                </div>
+            </div>
+        );
+    }
+
+    // Error state
+    if (error) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-neutral-50">
+                <div className="text-center max-w-md mx-auto p-6">
+                    <AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
+                    <h2 className="text-2xl font-bold text-neutral-800 mb-4">
+                        Unable to Load Assessment
+                    </h2>
+                    <p className="text-neutral-600 mb-6">{error}</p>
+                    <div className="flex gap-4 justify-center">
+                        <Button 
+                            onClick={() => window.location.reload()}
+                            className="bg-primary hover:bg-primary/90"
+                        >
+                            Try Again
+                        </Button>
+                        {allQuestions.length > 0 && (
+                            <Button 
+                                onClick={handleNewQuestions}
+                                variant="outline"
+                            >
+                                New Questions
+                            </Button>
+                        )}
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    // No questions found
+    if (questions.length === 0) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-neutral-50">
+                <div className="text-center max-w-md mx-auto p-6">
+                    <AlertCircle className="w-16 h-16 text-orange-500 mx-auto mb-4" />
+                    <h2 className="text-2xl font-bold text-neutral-800 mb-4">
+                        No Questions Available
+                    </h2>
+                    <p className="text-neutral-600 mb-6">
+                        The assessment is currently unavailable. Please contact support or try again later.
+                    </p>
+                    <Button 
+                        onClick={() => setLocation("/dashboard")}
+                        className="bg-primary hover:bg-primary/90"
+                    >
+                        Go to Dashboard
+                    </Button>
+                </div>
+            </div>
+        );
     }
 
     return (
@@ -150,8 +343,73 @@ const Exam = () => {
                         PCB Design Assessment
                     </h1>
                     <p className="text-xl max-w-3xl mx-auto">
-                        Test your knowledge of PCB design fundamentals. This assessment will help us understand your current skill level and customize your training accordingly.
+                        Test your knowledge with 5 randomly selected PCB design questions. This focused assessment will help us understand your current skill level.
                     </p>
+                </div>
+            </section>
+
+            {/* Step Indicator */}
+            <section className="py-8 bg-white border-b border-neutral-200">
+                <div className="container mx-auto px-4">
+                    <div className="flex justify-center items-center space-x-8 overflow-x-auto">
+                        {/* Step 1 - Completed */}
+                        <div className="flex flex-col items-center min-w-[140px]">
+                            <div className="flex items-center justify-center w-12 h-12 rounded-full bg-green-500 text-white font-bold text-lg mb-3 shadow-lg">
+                                <CheckCircle size={24} />
+                            </div>
+                            <h3 className="text-sm font-semibold text-green-600 text-center">Create Account</h3>
+                            <p className="text-xs text-neutral-600 text-center mt-1">Register your details</p>
+                        </div>
+
+                        <div className="hidden md:block w-16 h-0.5 bg-green-500 -mt-8"></div>
+
+                        {/* Step 2 - Completed */}
+                        <div className="flex flex-col items-center min-w-[140px]">
+                            <div className="flex items-center justify-center w-12 h-12 rounded-full bg-green-500 text-white font-bold text-lg mb-3 shadow-lg">
+                                <CheckCircle size={24} />
+                            </div>
+                            <h3 className="text-sm font-semibold text-green-600 text-center">Training Overview</h3>
+                            <p className="text-xs text-neutral-600 text-center mt-1">Course structure</p>
+                        </div>
+
+                        <div className="hidden md:block w-16 h-0.5 bg-green-500 -mt-8"></div>
+
+                        {/* Step 3 - Current */}
+                        <div className="flex flex-col items-center min-w-[140px]">
+                            <div className="relative flex items-center justify-center w-12 h-12 rounded-full bg-primary text-white font-bold text-lg mb-3 shadow-lg">
+                                3
+                                <div className="absolute -top-8 left-1/2 transform -translate-x-1/2">
+                                    <span className="bg-primary text-white text-xs px-2 py-1 rounded-full whitespace-nowrap">
+                                        Current Step
+                                    </span>
+                                </div>
+                            </div>
+                            <h3 className="text-sm font-semibold text-primary text-center">Assessment Test</h3>
+                            <p className="text-xs text-neutral-600 text-center mt-1">Skills evaluation</p>
+                        </div>
+
+                        <div className="hidden md:block w-16 h-0.5 bg-neutral-300 -mt-8"></div>
+
+                        {/* Step 4 - Pending */}
+                        <div className="flex flex-col items-center min-w-[140px]">
+                            <div className="flex items-center justify-center w-12 h-12 rounded-full bg-neutral-200 text-neutral-500 font-bold text-lg mb-3">
+                                4
+                            </div>
+                            <h3 className="text-sm font-medium text-neutral-500 text-center">Results</h3>
+                            <p className="text-xs text-neutral-400 text-center mt-1">Recommendations</p>
+                        </div>
+
+                        <div className="hidden md:block w-16 h-0.5 bg-neutral-300 -mt-8"></div>
+
+                        {/* Step 5 - Pending */}
+                        <div className="flex flex-col items-center min-w-[140px]">
+                            <div className="flex items-center justify-center w-12 h-12 rounded-full bg-neutral-200 text-neutral-500 font-bold text-lg mb-3">
+                                5
+                            </div>
+                            <h3 className="text-sm font-medium text-neutral-500 text-center">Payment</h3>
+                            <p className="text-xs text-neutral-400 text-center mt-1">Complete enrollment</p>
+                        </div>
+                    </div>
                 </div>
             </section>
 
@@ -165,22 +423,29 @@ const Exam = () => {
                                     <div className="flex items-center text-neutral-600">
                                         <Clock size={20} className="mr-2" />
                                         <span className="font-medium">Time Remaining: </span>
-                                        <span className="ml-2 font-bold text-primary text-lg">
+                                        <span className={`ml-2 font-bold text-lg ${
+                                            timeLeft <= 180 ? 'text-red-500' : 'text-primary'
+                                        }`}>
                                             {formatTime(timeLeft)}
                                         </span>
                                     </div>
+                                    {timeLeft <= 180 && (
+                                        <div className="text-red-500 text-sm font-medium">
+                                            ⚠️ Less than 3 minutes remaining!
+                                        </div>
+                                    )}
                                 </div>
                                 <div className="flex items-center space-x-4">
                                     <div className="text-neutral-600">
                                         <span className="font-medium">Progress: </span>
                                         <span className="font-bold text-primary">
-                                            {answeredQuestions}/{sampleQuestions.length}
+                                            {answeredQuestions}/5
                                         </span>
                                     </div>
                                     <div className="text-neutral-600">
                                         <span className="font-medium">Question: </span>
                                         <span className="font-bold text-primary">
-                                            {currentQuestion + 1}/{sampleQuestions.length}
+                                            {currentQuestion + 1}/5
                                         </span>
                                     </div>
                                 </div>
@@ -191,33 +456,28 @@ const Exam = () => {
                                 <div className="w-full bg-neutral-200 rounded-full h-2">
                                     <div 
                                         className="bg-primary h-2 rounded-full transition-all duration-300"
-                                        style={{ width: `${(answeredQuestions / sampleQuestions.length) * 100}%` }}
+                                        style={{ width: `${(answeredQuestions / 5) * 100}%` }}
                                     ></div>
                                 </div>
                             </div>
                         </div>
 
-                        {/* Question Card */}
-                        <div className="bg-neutral-50 p-8 rounded-lg shadow-md">
-                            <div className="mb-8">
-                                <div className="flex items-center mb-4">
-                                    <span className="bg-primary text-white px-3 py-1 rounded-full text-sm font-medium mr-3">
-                                        Question {currentQuestion + 1}
-                                    </span>
-                                    {answers[currentQuestion] !== null && (
-                                        <CheckCircle size={20} className="text-green-500" />
-                                    )}
-                                </div>
-                                <h2 className="text-2xl font-bold text-neutral-800 mb-6">
-                                    {sampleQuestions[currentQuestion].question}
+                        {/* Question Card - THIS WAS MISSING */}
+                        <div className="bg-white p-8 rounded-lg shadow-lg border border-neutral-200 mb-8">
+                            <div className="mb-6">
+                                <h2 className="text-2xl font-bold text-neutral-800 mb-4">
+                                    Question {currentQuestion + 1} of 5
                                 </h2>
+                                <p className="text-lg text-neutral-700 leading-relaxed">
+                                    {questions[currentQuestion]?.question}
+                                </p>
                             </div>
 
                             {/* Answer Options */}
-                            <div className="space-y-4 mb-8">
-                                {sampleQuestions[currentQuestion].options.map((option, index) => (
+                            <div className="space-y-4">
+                                {questions[currentQuestion]?.options.map((option, index) => (
                                     <label
-                                        key={index}
+                                        key={`${currentQuestion}-${index}`}
                                         className={`flex items-center p-4 border-2 rounded-lg cursor-pointer transition-all hover:bg-neutral-100 ${
                                             selectedAnswer === index
                                                 ? 'border-primary bg-primary/5'
@@ -238,45 +498,39 @@ const Exam = () => {
                                     </label>
                                 ))}
                             </div>
+                        </div>
 
-                            {/* Navigation */}
-                            <div className="flex justify-between items-center">
-                                <div className="text-sm text-neutral-500">
-                                    {selectedAnswer === null ? (
-                                        <div className="flex items-center">
-                                            <AlertCircle size={16} className="mr-1 text-orange-500" />
-                                            Please select an answer
-                                        </div>
-                                    ) : (
-                                        <div className="flex items-center">
-                                            <CheckCircle size={16} className="mr-1 text-green-500" />
-                                            Answer selected
-                                        </div>
-                                    )}
-                                </div>
-                                
-                                <Button
-                                    onClick={handleNext}
-                                    disabled={selectedAnswer === null || loading}
-                                    className="bg-primary hover:bg-primary/90 text-white font-medium px-6 py-3 rounded-md transition-colors shadow-md"
-                                >
-                                    {currentQuestion === sampleQuestions.length - 1 ? (
-                                        <>
-                                            {loading ? "Submitting..." : "Submit Exam"}
-                                        </>
-                                    ) : (
-                                        <>
-                                            Next Question
-                                            <ChevronRight size={18} className="ml-2" />
-                                        </>
-                                    )}
-                                </Button>
+                        {/* Navigation */}
+                        <div className="flex justify-between items-center">
+                            <div className="text-neutral-600">
+                                <span className="text-sm">
+                                    {selectedAnswer !== null ? "Answer selected" : "Please select an answer"}
+                                </span>
                             </div>
+                            
+                            <Button
+                                onClick={handleNext}
+                                disabled={selectedAnswer === null || loading}
+                                className="bg-primary hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed flex items-center px-6 py-3"
+                            >
+                                {loading ? (
+                                    <>
+                                        <Loader className="w-4 h-4 animate-spin mr-2" />
+                                        Submitting...
+                                    </>
+                                ) : (
+                                    <>
+                                        {currentQuestion === questions.length - 1 ? "Submit Exam" : "Next Question"}
+                                        <ChevronRight size={18} className="ml-2" />
+                                    </>
+                                )}
+                            </Button>
                         </div>
                     </div>
                 </div>
             </section>
 
+            {/* Updated Guidelines Section */}
             <section className="py-16 bg-neutral-50">
                 <div className="container mx-auto px-4">
                     <div className="max-w-4xl mx-auto text-center">
@@ -288,21 +542,21 @@ const Exam = () => {
                                 <Clock size={32} className="mx-auto mb-4 text-primary" />
                                 <h3 className="text-lg font-semibold mb-2">Time Limit</h3>
                                 <p className="text-neutral-600">
-                                    You have 30 minutes to complete all questions. The exam will auto-submit when time runs out.
+                                    You have 15 minutes to complete 5 randomly selected questions. The exam will auto-submit when time runs out.
                                 </p>
                             </div>
                             <div className="bg-white p-6 rounded-lg shadow-md">
                                 <CheckCircle size={32} className="mx-auto mb-4 text-green-500" />
-                                <h3 className="text-lg font-semibold mb-2">Single Answer</h3>
+                                <h3 className="text-lg font-semibold mb-2">Random Selection</h3>
                                 <p className="text-neutral-600">
-                                    Each question has only one correct answer. You can change your selection before moving to the next question.
+                                    Each test presents 5 randomly selected questions from our question bank, ensuring a unique experience every time.
                                 </p>
                             </div>
                             <div className="bg-white p-6 rounded-lg shadow-md">
                                 <AlertCircle size={32} className="mx-auto mb-4 text-orange-500" />
                                 <h3 className="text-lg font-semibold mb-2">No Going Back</h3>
                                 <p className="text-neutral-600">
-                                    Once you proceed to the next question, you cannot return to previous questions.
+                                    Once you proceed to the next question, you cannot return to previous questions. Choose carefully!
                                 </p>
                             </div>
                         </div>

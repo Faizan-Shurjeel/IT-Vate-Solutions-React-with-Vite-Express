@@ -115,6 +115,9 @@ const Register = () => {
 
     return (
         <main>
+            
+
+
             <section className="py-20 bg-primary text-white">
                 <div className="container mx-auto px-4 text-center">
                     <h1 className="text-4xl md:text-5xl font-bold mb-6">
@@ -128,7 +131,73 @@ const Register = () => {
                     </p>
                 </div>
             </section>
+                     <section className="py-8 bg-white border-b border-neutral-200">
+  <div className="container mx-auto px-4">
+    <div className="flex justify-center items-center space-x-8 overflow-x-auto">
+      {/* Step 1 - Active */}
+      <div className="flex flex-col items-center min-w-[140px]">
+        <div className="relative flex items-center justify-center w-12 h-12 rounded-full bg-primary text-white font-bold text-lg mb-3 shadow-lg">
+          1
+          <div className="absolute -top-8 left-1/2 transform -translate-x-1/2">
+            <span className="bg-primary text-white text-xs px-2 py-1 rounded-full whitespace-nowrap">
+              Current Step
+            </span>
+          </div>
+        </div>
+        <h3 className="text-sm font-semibold text-primary text-center">Create Account</h3>
+        <p className="text-xs text-neutral-600 text-center mt-1">Register your details</p>
+      </div>
 
+      {/* Connector Line */}
+      <div className="hidden md:block w-16 h-0.5 bg-neutral-300 -mt-8"></div>
+
+      {/* Step 2 - Pending */}
+      <div className="flex flex-col items-center min-w-[140px]">
+        <div className="flex items-center justify-center w-12 h-12 rounded-full bg-neutral-200 text-neutral-500 font-bold text-lg mb-3">
+          2
+        </div>
+        <h3 className="text-sm font-medium text-neutral-500 text-center">Training Overview</h3>
+        <p className="text-xs text-neutral-400 text-center mt-1">Course structure</p>
+      </div>
+
+      {/* Connector Line */}
+      <div className="hidden md:block w-16 h-0.5 bg-neutral-300 -mt-8"></div>
+
+      {/* Step 3 - Pending */}
+      <div className="flex flex-col items-center min-w-[140px]">
+        <div className="flex items-center justify-center w-12 h-12 rounded-full bg-neutral-200 text-neutral-500 font-bold text-lg mb-3">
+          3
+        </div>
+        <h3 className="text-sm font-medium text-neutral-500 text-center">Assessment Test</h3>
+        <p className="text-xs text-neutral-400 text-center mt-1">Skills evaluation</p>
+      </div>
+
+      {/* Connector Line */}
+      <div className="hidden md:block w-16 h-0.5 bg-neutral-300 -mt-8"></div>
+
+      {/* Step 4 - Pending */}
+      <div className="flex flex-col items-center min-w-[140px]">
+        <div className="flex items-center justify-center w-12 h-12 rounded-full bg-neutral-200 text-neutral-500 font-bold text-lg mb-3">
+          4
+        </div>
+        <h3 className="text-sm font-medium text-neutral-500 text-center">Results</h3>
+        <p className="text-xs text-neutral-400 text-center mt-1">Recommendations</p>
+      </div>
+
+      {/* Connector Line */}
+      <div className="hidden md:block w-16 h-0.5 bg-neutral-300 -mt-8"></div>
+
+      {/* Step 5 - Pending */}
+      <div className="flex flex-col items-center min-w-[140px]">
+        <div className="flex items-center justify-center w-12 h-12 rounded-full bg-neutral-200 text-neutral-500 font-bold text-lg mb-3">
+          5
+        </div>
+        <h3 className="text-sm font-medium text-neutral-500 text-center">Payment</h3>
+        <p className="text-xs text-neutral-400 text-center mt-1">Complete enrollment</p>
+      </div>
+    </div>
+  </div>
+</section>   
             <section className="py-20 bg-white">
                 <div className="container mx-auto px-4">
                     <div className="max-w-2xl mx-auto">
@@ -280,7 +349,7 @@ const Register = () => {
 <div className="bg-white p-6 rounded-lg shadow-md text-center md:col-span-2">
   <h3 className="text-xl font-semibold mb-3">Step 2: Training Overview</h3>
   <p className="text-neutral-600">
-    Review the course structure, objectives, and expectations to prepare.
+    Review the course structure, your eligiblity criteria, and expectations to prepare.
   </p>
 </div>
 
