@@ -160,27 +160,21 @@ const Services = () => {
                     <CheckCircle2 className="text-secondary mt-1 mr-2 w-5 h-5" />
                     <div>
                       <span className="font-medium">Core Concepts</span>
-                      <p className="text-sm text-neutral-600">
-                        Electronics principles, schematic capture, and PCB layout basics.
-                      </p>
+                     
                     </div>
                   </li>
                   <li className="flex items-start">
                     <CheckCircle2 className="text-secondary mt-1 mr-2 w-5 h-5" />
                     <div>
                       <span className="font-medium">Professional Practices</span>
-                      <p className="text-sm text-neutral-600">
-                        Design for manufacturing, signal integrity, and layout optimization.
-                      </p>
+                    
                     </div>
                   </li>
                   <li className="flex items-start">
                     <CheckCircle2 className="text-secondary mt-1 mr-2 w-5 h-5" />
                     <div>
                       <span className="font-medium">Advanced Techniques</span>
-                      <p className="text-sm text-neutral-600">
-                        High-speed routing, EMI/EMC strategies, and real-world project work.
-                      </p>
+                    
                     </div>
                   </li>
                 </ul>
