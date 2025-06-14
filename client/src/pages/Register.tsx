@@ -168,8 +168,8 @@ const Register = () => {
         <div className="flex items-center justify-center w-12 h-12 rounded-full bg-neutral-200 text-neutral-500 font-bold text-lg mb-3">
           3
         </div>
-        <h3 className="text-sm font-medium text-neutral-500 text-center">Assessment Test</h3>
-        <p className="text-xs text-neutral-400 text-center mt-1">Skills evaluation</p>
+        <h3 className="text-sm font-medium text-neutral-500 text-center">Select a Package</h3>
+        <p className="text-xs text-neutral-400 text-center mt-1">Choose from offered packages</p>
       </div>
 
       {/* Connector Line */}
@@ -180,8 +180,8 @@ const Register = () => {
         <div className="flex items-center justify-center w-12 h-12 rounded-full bg-neutral-200 text-neutral-500 font-bold text-lg mb-3">
           4
         </div>
-        <h3 className="text-sm font-medium text-neutral-500 text-center">Results</h3>
-        <p className="text-xs text-neutral-400 text-center mt-1">Recommendations</p>
+        <h3 className="text-sm font-medium text-neutral-500 text-center">Enroll in the Program</h3>
+        <p className="text-xs text-neutral-400 text-center mt-1">Finalize your enrollment</p>
       </div>
 
       {/* Connector Line */}
@@ -193,7 +193,7 @@ const Register = () => {
           5
         </div>
         <h3 className="text-sm font-medium text-neutral-500 text-center">Payment</h3>
-        <p className="text-xs text-neutral-400 text-center mt-1">Complete enrollment</p>
+        <p className="text-xs text-neutral-400 text-center mt-1">Make payment</p>
       </div>
     </div>
   </div>

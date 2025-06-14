@@ -23,6 +23,9 @@ import AssessmentWrapper from "./components/AssessmentWrapper";
 import Exam from "@/pages/Exam";
 import ExamResults from "@/pages/ExamResults";
 import Payment from "@/pages/Payment";
+import Packages from "@/pages/Packages";
+import EnrollmentConfirmation from "@/pages/EnrollmentConfirmation";
+import PaymentSuccess from "@/pages/PaymentSuccess";
 
 function Router() {
   return (
@@ -41,6 +44,10 @@ function Router() {
         <Route path="/exam" component={Exam} />
         <Route path="/exam-results" component={ExamResults} />
         <Route path="/payment" component={Payment} />
+        <Route path="/packages" component={Packages} />
+        <Route path="/enroll" component={EnrollmentConfirmation} />
+        <Route path="/payment-success" component={PaymentSuccess} />
+        
         <Route path="/assessment">
           <ProtectedRoute>
           <AssessmentWrapper />

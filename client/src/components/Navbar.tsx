@@ -1,15 +1,26 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { Menu, X } from "lucide-react";
-//import { Button } from "@/components/ui/button";
+import { useAuth } from "@/context/AuthContext";
+import { auth } from "@/utils/firebase";
 
 const Navbar = () => {
   const [location] = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const { user, loading } = useAuth();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+  };
+
+  const handleLogout = async () => {
+    try {
+      await auth.signOut();
+      setIsMenuOpen(false); // Close mobile menu after logout
+    } catch (error) {
+      console.error("Logout failed", error);
+    }
   };
 
   useEffect(() => {
@@ -50,9 +61,8 @@ const Navbar = () => {
       <nav className="container mx-auto px-4 flex flex-wrap items-center justify-between">
         <div className="flex items-center">
           <Link href="/" className="flex items-center">
-  <img src="/logo_h_c.png" alt="IT-vate Solutions Logo" className="h-12" />
-</Link>
-
+            <img src="/logo_h_c.png" alt="IT-vate Solutions Logo" className="h-12" />
+          </Link>
         </div>
 
         {/* Mobile menu button */}
@@ -83,15 +93,47 @@ const Navbar = () => {
                 </Link>
               </li>
             ))}
+            
+            {/* User dropdown for authenticated users */}
+            {user && !loading && (
+              <li className="relative group">
+                <button className="nav-link cursor-pointer hover:text-primary transition-colors flex items-center">
+                  {user.displayName || user.email}
+                  <svg className="ml-1 h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                  </svg>
+                </button>
+                <ul className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                  <li>
+                    <div className="px-4 py-2 text-sm text-gray-700 border-b border-gray-100">
+                      {user.email}
+                    </div>
+                  </li>
+                  <li>
+                    <button
+                      onClick={handleLogout}
+                      className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                    >
+                      Logout
+                    </button>
+                  </li>
+                </ul>
+              </li>
+            )}
+
+            {/* Login link for non-authenticated users */}
+            {!user && !loading && (
+              <li>
+                <Link
+                  href="/register"
+                  className="nav-link hover:text-primary transition-colors"
+                >
+                  Login
+                </Link>
+              </li>
+            )}
           </ul>
         </div>
-
-        {/* CTA Button
-        <Link href="/contact" className="hidden md:block">
-          <Button className="bg-accent hover:bg-accent/90 text-white font-medium px-6 py-2 rounded-md transition-colors shadow-md">
-            Get a Quote
-          </Button>
-        </Link> */}
       </nav>
     </header>
   );
