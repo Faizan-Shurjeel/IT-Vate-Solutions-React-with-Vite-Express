@@ -316,7 +316,7 @@ const Register = () => {
                                         ) : (
                                             <>
                                                 <UserPlus size={18} className="mr-2" />
-                                                {loading ? "Registering..." : "Enroll Now"}
+                                                {loading ? "Registering..." : "Sign Up"}
                                             </>
                                         )}
                                     </Button>
