@@ -1,0 +1,39 @@
+{
+  "originalName": "91910e81-2564-4b5a-a71d-545308b739b7.jpg",
+  "fileName": "payment_unknown_2025-06-27T09-56-16-052Z.jpg",
+  "size": 55840,
+  "mimetype": "image/jpeg",
+  "userId": "o1z0q3SrcCPG7kz4S0pOvzGOMk42",
+  "userEmail": "habeelali1231232@gmail.com",
+  "packageDetails": {
+    "id": "complete-bundle",
+    "name": "Complete Training Bundle",
+    "subtitle": "All 3 Levels at Once",
+    "price": "₨12,000",
+    "priceValue": 12000,
+    "originalPrice": "₨15,000",
+    "discount": "20% OFF",
+    "duration": "All Levels",
+    "description": "Get all 3 levels with maximum savings and continuous learning progression",
+    "icon": {
+      "type": {},
+      "key": null,
+      "ref": null,
+      "props": {
+        "className": "w-8 h-8"
+      },
+      "_owner": null,
+      "_store": {}
+    },
+    "features": [
+      "All 3 Levels Included",
+      "20% Discount Applied",
+      "Continuous Learning Path",
+      "Maximum Value",
+      "Single Payment",
+      "Complete Certification Track"
+    ]
+  },
+  "uploadedAt": "2025-06-27T09:56:16.057Z",
+  "filePath": "C:\\Users\\xo\\Desktop\\itvate\\IT-Vate-Solutions-React-with-Vite-Express\\payment-screenshots\\payment_unknown_2025-06-27T09-56-16-052Z.jpg"
+}

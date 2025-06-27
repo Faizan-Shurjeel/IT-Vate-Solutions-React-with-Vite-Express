@@ -88,8 +88,8 @@ By agreeing to these terms, you confirm that you understand the assessment proce
                                     </span>
                                 </div>
                             </div>
-                            <h3 className="text-sm font-semibold text-primary text-center">Training Overview</h3>
-                            <p className="text-xs text-neutral-600 text-center mt-1">Details about the program</p>
+                            <h3 className="text-sm font-semibold text-primary text-center">Choose Your Track</h3>
+                            <p className="text-xs text-neutral-600 text-center mt-1">Select a track that best suits you</p>
                         </div>
 
                         {/* Connector Line */}

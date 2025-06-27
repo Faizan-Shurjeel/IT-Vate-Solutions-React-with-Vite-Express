@@ -1,0 +1,38 @@
+{
+  "originalName": "91910e81-2564-4b5a-a71d-545308b739b7.jpg",
+  "fileName": "payment_unknown_2025-06-27T09-50-33-626Z.jpg",
+  "size": 55840,
+  "mimetype": "image/jpeg",
+  "userId": "t0RuAIktmkSOBXGru4xS93cgSn63",
+  "userEmail": "habeelali2302@gmail.com",
+  "packageDetails": {
+    "id": "direct-level-2",
+    "name": "Direct Entry - Level 2",
+    "subtitle": "Intermediate Level",
+    "price": "₨8,000",
+    "priceValue": 8000,
+    "duration": "4 Weeks",
+    "description": "Advance your skills with intermediate PCB design techniques and layout optimization.",
+    "icon": {
+      "type": {},
+      "key": null,
+      "ref": null,
+      "props": {
+        "className": "w-8 h-8"
+      },
+      "_owner": null,
+      "_store": {}
+    },
+    "features": [
+      "Advanced Layout Techniques",
+      "Signal Integrity Basics",
+      "Multi-layer PCB Design",
+      "Component Placement Optimization",
+      "Routing Strategies",
+      "Design Verification",
+      "IT-vate Certificate upon completion"
+    ]
+  },
+  "uploadedAt": "2025-06-27T09:50:33.633Z",
+  "filePath": "C:\\Users\\xo\\Desktop\\itvate\\IT-Vate-Solutions-React-with-Vite-Express\\payment-screenshots\\payment_unknown_2025-06-27T09-50-33-626Z.jpg"
+}

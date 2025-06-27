@@ -26,6 +26,17 @@ import Payment from "@/pages/Payment";
 import Packages from "@/pages/Packages";
 import EnrollmentConfirmation from "@/pages/EnrollmentConfirmation";
 import PaymentSuccess from "@/pages/PaymentSuccess";
+import Onboarding from "@/pages/Onboarding";
+import CompleteTrainingOptions from "@/pages/CompleteTrainingOptions"
+import ProgressivePathEnrollment from "@/pages/ProgressivePathEnrollment";
+import DirectEntryAssessment from "@/pages/DirectEntryAssessment";
+import DirectEntryLevelSelection from "@/pages/DirectEntryLevelSelection";
+import ProgressivePathRecommendation from "@/pages/ProgressivePathRecommendation";
+import AdminPanel from "@/pages/AdminPanel";
+
+// Add to your routes
+
+
 
 function Router() {
   return (
@@ -47,7 +58,13 @@ function Router() {
         <Route path="/packages" component={Packages} />
         <Route path="/enroll" component={EnrollmentConfirmation} />
         <Route path="/payment-success" component={PaymentSuccess} />
-        
+        <Route path="/onboarding" component={Onboarding} />
+        <Route path="/complete-training-options" component={CompleteTrainingOptions} />
+        <Route path="/progressive-path-enrollment" component={ProgressivePathEnrollment} />
+        <Route path="/direct-entry-assessment" component={DirectEntryAssessment} />
+        <Route path="/direct-entry-level-selection" component={DirectEntryLevelSelection} />
+        <Route path="/progressive-path-recommendation" component={ProgressivePathRecommendation} />
+        <Route path="/admin-panel" component={AdminPanel} />
         <Route path="/assessment">
           <ProtectedRoute>
           <AssessmentWrapper />

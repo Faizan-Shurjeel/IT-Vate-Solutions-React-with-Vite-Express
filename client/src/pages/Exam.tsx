@@ -6,6 +6,9 @@ import {
     CheckCircle,
     AlertCircle,
     Loader,
+    ArrowLeft,
+    Brain,
+    Timer
 } from "lucide-react";
 import { useLocation } from "wouter";
 import { useAuth } from "@/context/AuthContext";
@@ -20,41 +23,24 @@ import {
 } from "firebase/firestore";
 import { db } from "@/utils/firebase";
 
-// Types
-interface Question {
-    id: string;
-    questionId: number;
-    question: string;
-    options: string[];
-    correctAnswer: number;
-}
-
-interface ExamResult {
-    score: number;
-    totalQuestions: number;
-    answers: (number | null)[];
-    completedAt: Date;
-    timeTaken: number;
-}
-
 const Exam = () => {
     const { user, loading: authLoading } = useAuth();
     const [, setLocation] = useLocation();
     
     // State management
-    const [allQuestions, setAllQuestions] = useState<Question[]>([]);
-    const [questions, setQuestions] = useState<Question[]>([]);
+    const [allQuestions, setAllQuestions] = useState([]);
+    const [questions, setQuestions] = useState([]);
     const [currentQuestion, setCurrentQuestion] = useState(0);
-    const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
-    const [answers, setAnswers] = useState<(number | null)[]>([]);
-    const [timeLeft, setTimeLeft] = useState(900); // 15 minutes for 5 questions
+    const [selectedAnswer, setSelectedAnswer] = useState(null);
+    const [answers, setAnswers] = useState([]);
+    const [timeLeft, setTimeLeft] = useState(900); // 15 minutes
     const [loading, setLoading] = useState(false);
     const [questionsLoading, setQuestionsLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+    const [error, setError] = useState(null);
     const [examStartTime] = useState(Date.now());
 
-    // Function to shuffle array using Fisher-Yates algorithm
-    const shuffleArray = <T,>(array: T[]): T[] => {
+    // Utility functions for question randomization
+    const shuffleArray = (array) => {
         const shuffled = [...array];
         for (let i = shuffled.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
@@ -63,17 +49,15 @@ const Exam = () => {
         return shuffled;
     };
 
-    // Function to get random subset of questions
-    const getRandomQuestions = (allQuestions: Question[], count: number = 5): Question[] => {
+    const getRandomQuestions = (allQuestions, count = 5) => {
         if (allQuestions.length <= count) {
             return shuffleArray(allQuestions);
         }
-        
         const shuffled = shuffleArray(allQuestions);
         return shuffled.slice(0, count);
     };
 
-    // Redirect if not authenticated
+    // Authentication check
     useEffect(() => {
         if (!authLoading && !user) {
             setLocation("/register");
@@ -95,7 +79,7 @@ const Exam = () => {
                     throw new Error("No questions found in the database");
                 }
                 
-                const fetchedQuestions: Question[] = [];
+                const fetchedQuestions = [];
                 querySnapshot.forEach((doc) => {
                     const data = doc.data();
                     fetchedQuestions.push({
@@ -111,15 +95,14 @@ const Exam = () => {
                     throw new Error("No valid questions found");
                 }
                 
-                // Store all questions and select 5 random ones
                 setAllQuestions(fetchedQuestions);
                 const randomQuestions = getRandomQuestions(fetchedQuestions, 5);
                 setQuestions(randomQuestions);
-                setAnswers(new Array(5).fill(null)); // Always 5 questions
+                setAnswers(new Array(5).fill(null));
                 
             } catch (error) {
                 console.error("Error fetching questions:", error);
-                setError(error instanceof Error ? error.message : "Failed to load questions");
+                setError(error.message || "Failed to load questions");
             } finally {
                 setQuestionsLoading(false);
             }
@@ -130,7 +113,7 @@ const Exam = () => {
         }
     }, [user, authLoading]);
 
-    // Timer effect - reduced time for 5 questions
+    // Timer countdown effect
     useEffect(() => {
         if (questionsLoading || questions.length === 0) return;
 
@@ -153,13 +136,13 @@ const Exam = () => {
         setSelectedAnswer(ans !== undefined ? ans : null);
     }, [currentQuestion, answers]);
 
-    const formatTime = (seconds: number) => {
+    const formatTime = (seconds) => {
         const minutes = Math.floor(seconds / 60);
         const remainingSeconds = seconds % 60;
         return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
     };
 
-    const handleAnswerSelect = (answerIndex: number) => {
+    const handleAnswerSelect = (answerIndex) => {
         setSelectedAnswer(answerIndex);
         const newAnswers = [...answers];
         newAnswers[currentQuestion] = answerIndex;
@@ -190,7 +173,7 @@ const Exam = () => {
             const score = calculateScore();
             const timeTaken = Math.floor((Date.now() - examStartTime) / 1000);
             
-            const examResult: ExamResult = {
+            const examResult = {
                 score,
                 totalQuestions: questions.length,
                 answers,
@@ -208,7 +191,7 @@ const Exam = () => {
                     lastExamDate: new Date()
                 });
 
-                // Save detailed exam attempt with the specific questions used
+                // Save detailed exam attempt
                 const examAttemptRef = doc(db, "examAttempts", `${user.uid}_${Date.now()}`);
                 await setDoc(examAttemptRef, {
                     userId: user.uid,
@@ -225,7 +208,7 @@ const Exam = () => {
                 });
             }
             
-            // Store results in sessionStorage for results page
+            // Store results for results page
             sessionStorage.setItem('examResults', JSON.stringify({
                 score,
                 totalQuestions: questions.length,
@@ -244,14 +227,17 @@ const Exam = () => {
         }
     };
 
-    const determineLevel = (score: number, total: number): string => {
+    const determineLevel = (score, total) => {
         const percentage = (score / total) * 100;
         if (percentage >= 75) return "Level 3";
         if (percentage >= 50) return "Level 2";
-        if (percentage < 50) return "Level 1";
+        return "Level 1";
     };
 
-    // Function to restart with new random questions
+    const handleGoBack = () => {
+        setLocation("/assessment-landing");
+    };
+
     const handleNewQuestions = () => {
         if (allQuestions.length > 0) {
             const newRandomQuestions = getRandomQuestions(allQuestions, 5);
@@ -259,7 +245,7 @@ const Exam = () => {
             setAnswers(new Array(5).fill(null));
             setCurrentQuestion(0);
             setSelectedAnswer(null);
-            setTimeLeft(900); // Reset timer
+            setTimeLeft(900);
             setError(null);
         }
     };
@@ -273,7 +259,7 @@ const Exam = () => {
                 <div className="text-center">
                     <Loader className="w-12 h-12 animate-spin text-primary mx-auto mb-4" />
                     <h2 className="text-xl font-semibold text-neutral-700 mb-2">
-                        {authLoading ? "Authenticating..." : "Loading Questions..."}
+                        {authLoading ? "Authenticating..." : "Loading Assessment..."}
                     </h2>
                     <p className="text-neutral-500">Please wait while we prepare your assessment.</p>
                 </div>
@@ -302,6 +288,7 @@ const Exam = () => {
                             <Button 
                                 onClick={handleNewQuestions}
                                 variant="outline"
+                                className="border-primary text-primary hover:bg-primary/10"
                             >
                                 New Questions
                             </Button>
@@ -337,55 +324,84 @@ const Exam = () => {
 
     return (
         <main>
-            <section className="py-20 bg-primary text-white">
+            {/* Hero Section */}
+            <section className="py-16 bg-gradient-to-br from-primary to-primary/80 text-white">
                 <div className="container mx-auto px-4 text-center">
-                    <h1 className="text-4xl md:text-5xl font-bold mb-6">
-                        PCB Design Assessment
-                    </h1>
-                    <p className="text-xl max-w-3xl mx-auto">
-                        Test your knowledge with 5 randomly selected PCB design questions. This focused assessment will help us understand your current skill level.
-                    </p>
+                    <div className="max-w-4xl mx-auto">
+                        <Brain size={64} className="mx-auto mb-6 text-white/90" />
+                        <h1 className="text-4xl md:text-5xl font-bold mb-6">
+                            PCB Design Assessment
+                        </h1>
+                        <p className="text-xl md:text-2xl mb-4">
+                            Test your knowledge with 5 randomly selected questions.
+                        </p>
+                        <p className="text-lg opacity-90">
+                            This focused assessment will determine your starting level.
+                        </p>
+                    </div>
                 </div>
             </section>
 
-            {/* Step Indicator */}
+            {/* Progress Steps */}
             <section className="py-8 bg-white border-b border-neutral-200">
                 <div className="container mx-auto px-4">
                     <div className="flex justify-center items-center space-x-8 overflow-x-auto">
-                        {/* Step 1 - Completed */}
+                        {/* Step 1 - Complete */}
                         <div className="flex flex-col items-center min-w-[140px]">
                             <div className="flex items-center justify-center w-12 h-12 rounded-full bg-green-500 text-white font-bold text-lg mb-3 shadow-lg">
-                                <CheckCircle size={24} />
+                                ✓
                             </div>
                             <h3 className="text-sm font-semibold text-green-600 text-center">Create Account</h3>
-                            <p className="text-xs text-neutral-600 text-center mt-1">Register your details</p>
+                            <p className="text-xs text-neutral-600 text-center mt-1">Completed</p>
                         </div>
 
-                        <div className="hidden md:block w-16 h-0.5 bg-green-500 -mt-8"></div>
+                        <div className="hidden md:block w-16 h-0.5 bg-green-300 -mt-8"></div>
 
-                        {/* Step 2 - Completed */}
+                        {/* Step 2 - Complete */}
                         <div className="flex flex-col items-center min-w-[140px]">
                             <div className="flex items-center justify-center w-12 h-12 rounded-full bg-green-500 text-white font-bold text-lg mb-3 shadow-lg">
-                                <CheckCircle size={24} />
+                                ✓
                             </div>
                             <h3 className="text-sm font-semibold text-green-600 text-center">Training Overview</h3>
-                            <p className="text-xs text-neutral-600 text-center mt-1">Course structure</p>
+                            <p className="text-xs text-neutral-600 text-center mt-1">Completed</p>
                         </div>
 
-                        <div className="hidden md:block w-16 h-0.5 bg-green-500 -mt-8"></div>
+                        <div className="hidden md:block w-16 h-0.5 bg-green-300 -mt-8"></div>
 
-                        {/* Step 3 - Current */}
+                        {/* Step 3 - Complete */}
+                        <div className="flex flex-col items-center min-w-[140px]">
+                            <div className="flex items-center justify-center w-12 h-12 rounded-full bg-green-500 text-white font-bold text-lg mb-3 shadow-lg">
+                                ✓
+                            </div>
+                            <h3 className="text-sm font-semibold text-green-600 text-center">Choose Your Track</h3>
+                            <p className="text-xs text-neutral-600 text-center mt-1">Direct Entry Selected</p>
+                        </div>
+
+                        <div className="hidden md:block w-16 h-0.5 bg-green-300 -mt-8"></div>
+
+                        {/* Step 3C - Complete */}
+                        <div className="flex flex-col items-center min-w-[140px]">
+                            <div className="flex items-center justify-center w-12 h-12 rounded-full bg-green-500 text-white font-bold text-lg mb-3 shadow-lg">
+                                ✓
+                            </div>
+                            <h3 className="text-sm font-semibold text-green-600 text-center">Assessment Landing</h3>
+                            <p className="text-xs text-neutral-600 text-center mt-1">Completed</p>
+                        </div>
+
+                        <div className="hidden md:block w-16 h-0.5 bg-primary -mt-8"></div>
+
+                        {/* Current Step - Assessment Test */}
                         <div className="flex flex-col items-center min-w-[140px]">
                             <div className="relative flex items-center justify-center w-12 h-12 rounded-full bg-primary text-white font-bold text-lg mb-3 shadow-lg">
-                                3
+                                <Timer className="w-6 h-6" />
                                 <div className="absolute -top-8 left-1/2 transform -translate-x-1/2">
                                     <span className="bg-primary text-white text-xs px-2 py-1 rounded-full whitespace-nowrap">
                                         Current Step
                                     </span>
                                 </div>
                             </div>
-                            <h3 className="text-sm font-semibold text-primary text-center">Assessment Test</h3>
-                            <p className="text-xs text-neutral-600 text-center mt-1">Skills evaluation</p>
+                            <h3 className="text-sm font-semibold text-primary text-center">Taking Assessment</h3>
+                            <p className="text-xs text-neutral-600 text-center mt-1">In Progress</p>
                         </div>
 
                         <div className="hidden md:block w-16 h-0.5 bg-neutral-300 -mt-8"></div>
@@ -398,30 +414,34 @@ const Exam = () => {
                             <h3 className="text-sm font-medium text-neutral-500 text-center">Results</h3>
                             <p className="text-xs text-neutral-400 text-center mt-1">Recommendations</p>
                         </div>
-
-                        <div className="hidden md:block w-16 h-0.5 bg-neutral-300 -mt-8"></div>
-
-                        {/* Step 5 - Pending */}
-                        <div className="flex flex-col items-center min-w-[140px]">
-                            <div className="flex items-center justify-center w-12 h-12 rounded-full bg-neutral-200 text-neutral-500 font-bold text-lg mb-3">
-                                5
-                            </div>
-                            <h3 className="text-sm font-medium text-neutral-500 text-center">Payment</h3>
-                            <p className="text-xs text-neutral-400 text-center mt-1">Complete enrollment</p>
-                        </div>
                     </div>
                 </div>
             </section>
 
-            <section className="py-20 bg-white">
+            {/* Back Button */}
+            <section className="py-4 bg-neutral-50">
+                <div className="container mx-auto px-4">
+                    <Button
+                        onClick={handleGoBack}
+                        variant="ghost"
+                        className="text-primary hover:text-primary/80 hover:bg-primary/10"
+                    >
+                        <ArrowLeft className="w-4 h-4 mr-2" />
+                        Back to Assessment Info
+                    </Button>
+                </div>
+            </section>
+
+            {/* Assessment Content */}
+            <section className="py-16 bg-neutral-50">
                 <div className="container mx-auto px-4">
                     <div className="max-w-4xl mx-auto">
-                        {/* Timer and Progress */}
-                        <div className="bg-neutral-50 p-6 rounded-lg shadow-md mb-8">
+                        {/* Timer and Progress Header */}
+                        <div className="bg-white p-6 rounded-xl shadow-lg border border-neutral-200 mb-8">
                             <div className="flex justify-between items-center flex-wrap gap-4">
                                 <div className="flex items-center space-x-4">
                                     <div className="flex items-center text-neutral-600">
-                                        <Clock size={20} className="mr-2" />
+                                        <Clock size={20} className="mr-2 text-primary" />
                                         <span className="font-medium">Time Remaining: </span>
                                         <span className={`ml-2 font-bold text-lg ${
                                             timeLeft <= 180 ? 'text-red-500' : 'text-primary'
@@ -462,8 +482,8 @@ const Exam = () => {
                             </div>
                         </div>
 
-                        {/* Question Card - THIS WAS MISSING */}
-                        <div className="bg-white p-8 rounded-lg shadow-lg border border-neutral-200 mb-8">
+                        {/* Question Card */}
+                        <div className="bg-white p-8 rounded-xl shadow-lg border border-neutral-200 mb-8">
                             <div className="mb-6">
                                 <h2 className="text-2xl font-bold text-neutral-800 mb-4">
                                     Question {currentQuestion + 1} of 5
@@ -478,10 +498,10 @@ const Exam = () => {
                                 {questions[currentQuestion]?.options.map((option, index) => (
                                     <label
                                         key={`${currentQuestion}-${index}`}
-                                        className={`flex items-center p-4 border-2 rounded-lg cursor-pointer transition-all hover:bg-neutral-100 ${
+                                        className={`flex items-center p-4 border-2 rounded-lg cursor-pointer transition-all hover:bg-neutral-50 ${
                                             selectedAnswer === index
-                                                ? 'border-primary bg-primary/5'
-                                                : 'border-neutral-300'
+                                                ? 'border-primary bg-primary/5 ring-2 ring-primary/20'
+                                                : 'border-neutral-300 hover:border-primary/50'
                                         }`}
                                     >
                                         <input
@@ -490,7 +510,7 @@ const Exam = () => {
                                             value={index}
                                             checked={selectedAnswer === index}
                                             onChange={() => handleAnswerSelect(index)}
-                                            className="mr-4 w-4 h-4 text-primary"
+                                            className="mr-4 w-4 h-4 text-primary focus:ring-primary"
                                         />
                                         <span className="text-neutral-700 font-medium">
                                             {String.fromCharCode(65 + index)}. {option}
@@ -504,7 +524,11 @@ const Exam = () => {
                         <div className="flex justify-between items-center">
                             <div className="text-neutral-600">
                                 <span className="text-sm">
-                                    {selectedAnswer !== null ? "Answer selected" : "Please select an answer"}
+                                    {selectedAnswer !== null ? (
+                                        <span className="text-green-600 font-medium">✓ Answer selected</span>
+                                    ) : (
+                                        <span className="text-orange-600">Please select an answer</span>
+                                    )}
                                 </span>
                             </div>
                             
@@ -520,7 +544,7 @@ const Exam = () => {
                                     </>
                                 ) : (
                                     <>
-                                        {currentQuestion === questions.length - 1 ? "Submit Exam" : "Next Question"}
+                                        {currentQuestion === questions.length - 1 ? "Submit Assessment" : "Next Question"}
                                         <ChevronRight size={18} className="ml-2" />
                                     </>
                                 )}
@@ -530,33 +554,33 @@ const Exam = () => {
                 </div>
             </section>
 
-            {/* Updated Guidelines Section */}
-            <section className="py-16 bg-neutral-50">
+            {/* Assessment Guidelines */}
+            <section className="py-16 bg-white">
                 <div className="container mx-auto px-4">
                     <div className="max-w-4xl mx-auto text-center">
                         <h2 className="text-3xl font-bold text-neutral-800 mb-6">
                             Assessment Guidelines
                         </h2>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            <div className="bg-white p-6 rounded-lg shadow-md">
+                            <div className="bg-neutral-50 p-6 rounded-lg border border-neutral-200">
                                 <Clock size={32} className="mx-auto mb-4 text-primary" />
-                                <h3 className="text-lg font-semibold mb-2">Time Limit</h3>
+                                <h3 className="text-lg font-semibold mb-2">15-Minute Limit</h3>
                                 <p className="text-neutral-600">
-                                    You have 15 minutes to complete 5 randomly selected questions. The exam will auto-submit when time runs out.
+                                    Complete 5 randomly selected questions within the time limit.
                                 </p>
                             </div>
-                            <div className="bg-white p-6 rounded-lg shadow-md">
+                            <div className="bg-neutral-50 p-6 rounded-lg border border-neutral-200">
                                 <CheckCircle size={32} className="mx-auto mb-4 text-green-500" />
-                                <h3 className="text-lg font-semibold mb-2">Random Selection</h3>
+                                <h3 className="text-lg font-semibold mb-2">Random Questions</h3>
                                 <p className="text-neutral-600">
-                                    Each test presents 5 randomly selected questions from our question bank, ensuring a unique experience every time.
+                                    Each assessment presents unique questions from our question bank.
                                 </p>
                             </div>
-                            <div className="bg-white p-6 rounded-lg shadow-md">
+                            <div className="bg-neutral-50 p-6 rounded-lg border border-neutral-200">
                                 <AlertCircle size={32} className="mx-auto mb-4 text-orange-500" />
                                 <h3 className="text-lg font-semibold mb-2">No Going Back</h3>
                                 <p className="text-neutral-600">
-                                    Once you proceed to the next question, you cannot return to previous questions. Choose carefully!
+                                    Once you proceed, you cannot return to previous questions.
                                 </p>
                             </div>
                         </div>

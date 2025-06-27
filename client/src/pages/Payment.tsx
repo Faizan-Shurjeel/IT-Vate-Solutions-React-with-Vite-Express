@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,7 +20,12 @@ import {
     Crown,
     DollarSign,
     FileImage,
-    Loader2
+    Loader2,
+    ArrowLeft,
+    Brain,
+    Package,
+    GraduationCap,
+    Zap
 } from "lucide-react";
 import { useLocation } from "wouter";
 import { useAuth } from "@/context/AuthContext";
@@ -40,9 +46,9 @@ const Payment = () => {
     
     const [ocrStatus, setOcrStatus] = useState("");
     const [isProcessingOCR, setIsProcessingOCR] = useState(false);
-    const [selectedImage, setSelectedImage] = useState<File | null>(null);   // already there
-const [imagePreview, setImagePreview]   = useState<string | null>(null); // NEW
-
+    const [selectedImage, setSelectedImage] = useState(null);
+    const [imagePreview, setImagePreview] = useState(null);
+    const [uploadedFileName, setUploadedFileName] = useState("");
 
     useEffect(() => {
         if (!user) {
@@ -51,11 +57,12 @@ const [imagePreview, setImagePreview]   = useState<string | null>(null); // NEW
         }
         fetchUserDetails();
     }, [user]);
+
     useEffect(() => {
-  return () => {
-    if (imagePreview) URL.revokeObjectURL(imagePreview);
-  };
-}, [imagePreview]);
+        return () => {
+            if (imagePreview) URL.revokeObjectURL(imagePreview);
+        };
+    }, [imagePreview]);
 
     const fetchUserDetails = async () => {
         try {
@@ -64,10 +71,13 @@ const [imagePreview, setImagePreview]   = useState<string | null>(null); // NEW
                 const userData = userDoc.data();
                 setUserDetails(userData);
                 
-                // Get package details based on selected package
+                // Get package details based on selected package and level
                 const selectedPackage = userData.selectedPackage;
+                const selectedLevel = userData.selectedLevel;
+                const selectedOption = userData.selectedOption;
+                
                 if (selectedPackage) {
-                    setPackageDetails(getPackageInfo(selectedPackage));
+                    setPackageDetails(getPackageInfo(selectedPackage, selectedLevel, selectedOption));
                 }
             }
         } catch (error) {
@@ -75,52 +85,158 @@ const [imagePreview, setImagePreview]   = useState<string | null>(null); // NEW
         }
     };
 
-    const getPackageInfo = (packageId) => {
+    const getPackageInfo = (packageId, levelId, optionId) => {
         const packages = {
-            level1: {
-                id: "level1",
-                name: "Level 1 Foundation",
-                subtitle: "Start from basics",
-                price: "₨15,000",
-                priceValue: 15000,
-                duration: "6 weeks",
-                description: "Build solid fundamentals and work from there",
+            complete: {
+                bundle: {
+                    id: "complete-bundle",
+                    name: "Complete Training Bundle",
+                    subtitle: "All 3 Levels at Once",
+                    price: "₨12,000",
+                    priceValue: 12000,
+                    originalPrice: "₨15,000",
+                    discount: "20% OFF",
+                    duration: "All Levels",
+                    description: "Get all 3 levels with maximum savings and continuous learning progression",
+                    icon: <Package className="w-8 h-8" />,
+                    features: [
+                        "All 3 Levels Included",
+                        "20% Discount Applied",
+                        "Continuous Learning Path",
+                        "Maximum Value",
+                        "Single Payment",
+                        "Complete Certification Track"
+                    ]
+                },
+                "level-by-level": {
+                    id: "complete-level-by-level",
+                    name: "Complete Training - Level by Level",
+                    subtitle: "Starting with Level 1",
+                    price: "₨5,000",
+                    priceValue: 5000,
+                    duration: "Per Level (4 Weeks each)",
+                    description: "Start at Level 1, unlock the next level after each IT-vate certificate",
+                    icon: <GraduationCap className="w-8 h-8" />,
+                    features: [
+                        "Start from Level 1 (Required)",
+                        "Unlock Next Level After Certificate",
+                        "₨5,000 per level",
+                        "Step-by-Step Learning",
+                        "Flexible Payment Schedule",
+                        "Progress at Your Own Pace"
+                    ]
+                }
+            },
+            progressive: {
+                id: "progressive-level-1",
+                name: "Progressive Path - Level 1",
+                subtitle: "Foundation Level",
+                price: "₨5,000",
+                priceValue: 5000,
+                duration: "4 Weeks",
+                description: "Build your foundation in PCB design with essential concepts and basic circuit design principles.",
                 icon: <BookOpen className="w-8 h-8" />,
                 features: [
-                    "PCB Design Basics",
-                    "Schematic Design",
-                    "Component Placement",
-                    "Basic Routing",
-                    "Design Verification",
-                    "3 Practice Projects",
-                    "Certificate",
-                    "Community Access"
+                    "Introduction to PCB Design",
+                    "Basic Circuit Principles",
+                    "Component Selection",
+                    "Schematic Design Basics",
+                    "Design Rules & Guidelines",
+                    "Hands-on Project",
+                    "IT-vate Certificate upon completion"
                 ]
             },
-            complete: {
-                id: "complete",
-                name: "Complete Package",
-                subtitle: "Beginner to advanced",
-                price: "₨35,000",
-                priceValue: 35000,
-                duration: "Comprehensive",
-                description: "Complete journey with future cohort access",
-                icon: <Crown className="w-8 h-8" />,
+            direct: {
+                "level-1": {
+                    id: "direct-level-1",
+                    name: "Direct Entry - Level 1",
+                    subtitle: "Foundation Level",
+                    price: "₨8,000",
+                    priceValue: 8000,
+                    duration: "4 Weeks",
+                    description: "Build your foundation in PCB design with essential concepts and basic circuit design principles.",
+                    icon: <BookOpen className="w-8 h-8" />,
+                    features: [
+                        "Introduction to PCB Design",
+                        "Basic Circuit Principles",
+                        "Component Selection",
+                        "Schematic Design Basics",
+                        "Design Rules & Guidelines",
+                        "Hands-on Project",
+                        "IT-vate Certificate upon completion"
+                    ]
+                },
+                "level-2": {
+                    id: "direct-level-2",
+                    name: "Direct Entry - Level 2",
+                    subtitle: "Intermediate Level",
+                    price: "₨8,000",
+                    priceValue: 8000,
+                    duration: "4 Weeks",
+                    description: "Advance your skills with intermediate PCB design techniques and layout optimization.",
+                    icon: <Target className="w-8 h-8" />,
+                    features: [
+                        "Advanced Layout Techniques",
+                        "Signal Integrity Basics",
+                        "Multi-layer PCB Design",
+                        "Component Placement Optimization",
+                        "Routing Strategies",
+                        "Design Verification",
+                        "IT-vate Certificate upon completion"
+                    ]
+                },
+                "level-3": {
+                    id: "direct-level-3",
+                    name: "Direct Entry - Level 3",
+                    subtitle: "Advanced Level",
+                    price: "₨8,000",
+                    priceValue: 8000,
+                    duration: "4 Weeks",
+                    description: "Master advanced PCB design with high-speed design, EMI/EMC considerations, and professional workflows.",
+                    icon: <Award className="w-8 h-8" />,
+                    features: [
+                        "High-Speed PCB Design",
+                        "EMI/EMC Considerations",
+                        "Advanced Signal Integrity",
+                        "Professional Design Workflows",
+                        "Industry Best Practices",
+                        "Portfolio Project",
+                        "IT-vate Master Certificate"
+                    ]
+                }
+            },
+            special: {
+                id: "special-track",
+                name: "Special Track - One on One",
+                subtitle: "Personalized Training",
+                price: "Contact Us",
+                priceValue: 0,
+                duration: "Flexible",
+                description: "Personalized one-on-one training for any level",
+                icon: <User className="w-8 h-8" />,
                 features: [
-                    "Everything in Level 1",
-                    "Advanced Techniques",
-                    "Multi-layer Design",
-                    "Signal Integrity",
-                    "Industry Projects",
-                    "Mentorship Sessions",
-                    "Job Assistance",
-                    "Future Cohort Access",
-                    "Discounted Level 2 & 3",
-                    "Lifetime Updates"
+                    "One-on-One Training",
+                    "Any Level Available",
+                    "Personalized Approach",
+                    "Flexible Schedule",
+                    "Custom Curriculum",
+                    "Direct Mentor Access"
                 ]
             }
         };
-        return packages[packageId] || null;
+
+        // Handle different package structures
+        if (packageId === "complete" && optionId) {
+            return packages.complete[optionId] || packages.complete.bundle;
+        } else if (packageId === "direct" && levelId) {
+            return packages.direct[levelId] || packages.direct["level-1"];
+        } else if (packageId === "progressive") {
+            return packages.progressive;
+        } else if (packageId === "special") {
+            return packages.special;
+        }
+        
+        return packages.progressive; // Default fallback
     };
 
     const paymentMethods = [
@@ -130,12 +246,12 @@ const [imagePreview, setImagePreview]   = useState<string | null>(null); // NEW
             icon: <Smartphone size={24} className="text-green-600" />,
             details: {
                 account: "03001234567",
-                accountName: "PCB Training Institute",
+                accountName: "IT-vate Training Institute",
                 instructions: [
                     "Open your EasyPaisa app or dial *786#",
                     "Select 'Send Money' option",
                     "Enter the account number: 03001234567",
-                    `Enter amount: ${packageDetails?.price || "₨15,000"}`,
+                    `Enter amount: ${packageDetails?.price || "₨5,000"}`,
                     "Complete the transaction",
                     "Take a screenshot or copy the transaction ID"
                 ]
@@ -147,12 +263,12 @@ const [imagePreview, setImagePreview]   = useState<string | null>(null); // NEW
             icon: <Smartphone size={24} className="text-red-600" />,
             details: {
                 account: "03007654321",
-                accountName: "PCB Training Institute",
+                accountName: "IT-vate Training Institute",
                 instructions: [
                     "Open your JazzCash app or dial *786#",
                     "Select 'Send Money' option",
                     "Enter the account number: 03007654321",
-                    `Enter amount: ${packageDetails?.price || "₨15,000"}`,
+                    `Enter amount: ${packageDetails?.price || "₨5,000"}`,
                     "Complete the transaction",
                     "Take a screenshot or copy the transaction ID"
                 ]
@@ -164,13 +280,13 @@ const [imagePreview, setImagePreview]   = useState<string | null>(null); // NEW
             icon: <Building2 size={24} className="text-blue-600" />,
             details: {
                 account: "1234567890123456",
-                accountName: "PCB Training Institute",
+                accountName: "IT-vate Training Institute",
                 instructions: [
                     "Visit your bank or use online banking",
                     "Transfer to Account: 1234567890123456",
-                    "Account Title: PCB Training Institute",
+                    "Account Title: IT-vate Training Institute",
                     "Bank: Meezan Bank Limited",
-                    `Amount: ${packageDetails?.price || "₨15,000"}`,
+                    `Amount: ${packageDetails?.price || "₨5,000"}`,
                     "Take a screenshot or copy the transaction reference"
                 ]
             }
@@ -183,37 +299,142 @@ const [imagePreview, setImagePreview]   = useState<string | null>(null); // NEW
         setTimeout(() => setCopiedField(""), 2000);
     };
 
-    const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-  const file = e.target.files?.[0];
-  if (!file) return;
-
-  // store the file
-  setSelectedImage(file);
-  setOcrStatus("");
-  setError("");    
-  processImageWithOCR(file);
-
-  // create / replace preview URL               ←-------------- NEW
-  if (imagePreview) URL.revokeObjectURL(imagePreview);
-  setImagePreview(URL.createObjectURL(file));  //            NEW
-};
+    // File upload function to save to project folder
+    // Example with Firebase Storage
 
 
+    const saveFileToProject = async (file) => {
+        try {
+            const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+            const fileExtension = file.name.split('.').pop();
+            const expectedFileName = `payment_${user.uid}_${timestamp}.${fileExtension}`;
+            
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('userId', user.uid);
+            formData.append('userEmail', user.email);
+            formData.append('packageDetails', JSON.stringify(packageDetails));
+            
+            console.log('Uploading file to API server...');
+            
+            const response = await fetch('http://localhost:3001/api/upload-payment-screenshot', {
+                method: 'POST',
+                body: formData,
+            });
+            
+            const result = await response.json();
+            
+            if (!response.ok || !result.success) {
+                throw new Error(result.error || 'Failed to upload file');
+            }
+            
+            setUploadedFileName(result.fileName);
+            console.log('File uploaded successfully:', result.fileName);
+            setOcrStatus(`File uploaded successfully: ${result.fileName}`);
+            
+            return result.fileName;
+            
+        } catch (error) {
+            console.error('Error uploading to API server:', error);
+            setOcrStatus(`Upload failed: ${error.message}. Saving locally...`);
+            
+            // Fallback to localStorage
+            return new Promise((resolve, reject) => {
+                const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+                const fileExtension = file.name.split('.').pop();
+                const fallbackFileName = `payment_${user.uid}_${timestamp}.${fileExtension}`;
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const fileData = {
+                            fileName: fallbackFileName,
+                            base64: e.target.result,
+                            originalName: file.name,
+                            size: file.size,
+                            type: file.type,
+                            userId: user.uid,
+                            userEmail: user.email,
+                            packageDetails: packageDetails,
+                            uploadedAt: new Date().toISOString(),
+                            fallback: true
+                        };
+                        
+                        localStorage.setItem(`payment_screenshot_${user.uid}`, JSON.stringify(fileData));
+                        
+                        const allScreenshots = JSON.parse(localStorage.getItem('all_payment_screenshots') || '[]');
+                        allScreenshots.push(fileData);
+                        localStorage.setItem('all_payment_screenshots', JSON.stringify(allScreenshots));
+                        
+                        setUploadedFileName(fallbackFileName);
+                        setOcrStatus('File saved locally (API server failed)');
+                        resolve(fallbackFileName);
+                        
+                    } catch (error) {
+                        reject(error);
+                    }
+                };
+                
+                reader.onerror = function(error) {
+                    reject(error);
+                };
+                
+                reader.readAsDataURL(file);
+            });
+        }
+    };
+    
+
+
+    const handleImageUpload = async (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+    
+        // Validate file size (max 10MB)
+        if (file.size > 10 * 1024 * 1024) {
+            setError("File size must be less than 10MB");
+            return;
+        }
+    
+        // Validate file type
+        if (!file.type.startsWith('image/')) {
+            setError("Please upload an image file");
+            return;
+        }
+    
+        setSelectedImage(file);
+        setOcrStatus("Uploading file...");
+        setError("");
+        
+        // Save file to project folder
+        try {
+            const savedFileName = await saveFileToProject(file);
+            console.log('File processing completed:', savedFileName);
+            setOcrStatus("File uploaded successfully. Processing for transaction ID...");
+        } catch (error) {
+            console.error('Error in file upload process:', error);
+            setError("File upload failed. You can still proceed by entering transaction ID manually.");
+        }
+        
+        // Process with OCR
+        processImageWithOCR(file);
+    
+        // Create preview
+        if (imagePreview) URL.revokeObjectURL(imagePreview);
+        setImagePreview(URL.createObjectURL(file));
+    };
+    
 
     const preprocessImage = (canvas, context) => {
-        // Get image data
         const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
         const data = imageData.data;
 
-        // Convert to grayscale and apply threshold
         for (let i = 0; i < data.length; i += 4) {
             const gray = data[i] * 0.299 + data[i + 1] * 0.587 + data[i + 2] * 0.114;
-            // Apply threshold for better contrast
             const threshold = gray > 128 ? 255 : 0;
-            data[i] = threshold;     // Red
-            data[i + 1] = threshold; // Green
-            data[i + 2] = threshold; // Blue
-            // Alpha stays the same
+            data[i] = threshold;
+            data[i + 1] = threshold;
+            data[i + 2] = threshold;
         }
 
         context.putImageData(imageData, 0, 0);
@@ -225,23 +446,16 @@ const [imagePreview, setImagePreview]   = useState<string | null>(null); // NEW
         setOcrStatus("Processing image...");
 
         try {
-            // Create canvas for image preprocessing
             const canvas = document.createElement('canvas');
             const context = canvas.getContext('2d');
             const img = new Image();
 
             img.onload = async () => {
-                // Set canvas size
                 canvas.width = img.width;
                 canvas.height = img.height;
-                
-                // Draw image on canvas
                 context.drawImage(img, 0, 0);
-                
-                // Preprocess image
                 const processedCanvas = preprocessImage(canvas, context);
                 
-                // Convert canvas to blob
                 processedCanvas.toBlob(async (blob) => {
                     await performOCR(blob);
                 }, 'image/png');
@@ -250,93 +464,72 @@ const [imagePreview, setImagePreview]   = useState<string | null>(null); // NEW
             img.src = URL.createObjectURL(imageFile);
         } catch (error) {
             console.error("Image preprocessing error:", error);
-            // Fallback to original image
             await performOCR(imageFile);
         }
     };
 
-    const performOCR = async (imageBlob: Blob) => {
-  try {
-    const worker = await createWorker('eng');   // ← NEW
+    const performOCR = async (imageBlob) => {
+        try {
+            const worker = await createWorker('eng');
 
-    // (optional) fine-tune parameters – still supported
-    await worker.setParameters({
-      tessedit_char_whitelist:
-        'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789:- ',
-      tessedit_pageseg_mode: '6',               // block of text
-    });
+            await worker.setParameters({
+                tessedit_char_whitelist: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789:- ',
+                tessedit_pageseg_mode: '6',
+            });
 
-    setOcrStatus('Extracting text…');
-    const {
-      data: { text },
-    } = await worker.recognize(imageBlob);
+            setOcrStatus('Extracting text…');
+            const { data: { text } } = await worker.recognize(imageBlob);
+            await worker.terminate();
 
-    await worker.terminate();
+            const id = extractTransactionId(text);
+            if (id) {
+                setTransactionId(id);
+                setOcrStatus(`Transaction ID found: ${id}`);
+            } else {
+                setOcrStatus('Could not find transaction ID. Please enter manually.');
+                console.log('Full OCR text:', text);
+            }
+        } catch (err) {
+            console.error('OCR Error:', err);
+            setOcrStatus('OCR failed. Please enter transaction ID manually.');
+        } finally {
+            setIsProcessingOCR(false);
+        }
+    };
 
-    const id = extractTransactionId(text);
-    if (id) {
-      setTransactionId(id);
-      setOcrStatus(`Transaction ID found: ${id}`);
-    } else {
-      setOcrStatus('Could not find transaction ID. Please enter manually.');
-      console.log('Full OCR text:', text);
-    }
-  } catch (err) {
-    console.error('OCR Error:', err);
-    setOcrStatus('OCR failed. Please enter transaction ID manually.');
-  } finally {
-    setIsProcessingOCR(false);
-  }
-};
+    const extractTransactionId = (text) => {
+        const clean = text
+            .replace(/[\n\r]/g, " ")
+            .replace(/[|]+/g, " ")
+            .replace(/\s+/g, " ")
+            .trim();
 
+        const tagged = [
+            /(?:transaction|txn|trans)\s*id\s*[:\-]?\s*([A-Z0-9\-]{6,25})/i,
+            /(?:reference|ref)\s*(?:no|number)?\s*[:\-]?\s*([A-Z0-9\-]{6,25})/i,
+            /\bTID[:\-]?\s*([A-Z0-9\-]{6,25})\b/i,
+            /\b(?:payment|order)\s*id\s*[:\-]?\s*([A-Z0-9\-]{6,25})\b/i
+        ];
 
-    /**
- * Try to pull a transaction / reference number from raw OCR text.
- * Covers EasyPaisa, JazzCash, SadaPay, NayaPay, generic bank/UPI,
- * PayPal-style 17-char IDs, pure numerics, hyphenated refs, etc.
- */
-const extractTransactionId = (text: string): string | null => {
-  // normalise white-space & punctuation
-  const clean = text
-    .replace(/[\n\r]/g, " ")            // new-lines → space
-    .replace(/[|]+/g, " ")              // table borders
-    .replace(/\s+/g, " ")               // collapse runs
-    .trim();
+        for (const rx of tagged) {
+            const m = clean.match(rx);
+            if (m) return m[1].toUpperCase();
+        }
 
-  // --- provider-specific & common tags --------------------------
-  const tagged = [
-    // EasyPaisa / JazzCash apps usually print “Transaction ID : XXXXXX”
-    /(?:transaction|txn|trans)\s*id\s*[:\-]?\s*([A-Z0-9\-]{6,25})/i,
-    /(?:reference|ref)\s*(?:no|number)?\s*[:\-]?\s*([A-Z0-9\-]{6,25})/i,
-    // NayaPay / SadaPay screens often label “TID”
-    /\bTID[:\-]?\s*([A-Z0-9\-]{6,25})\b/i,
-    // “Payment ID”, “Order ID” variations
-    /\b(?:payment|order)\s*id\s*[:\-]?\s*([A-Z0-9\-]{6,25})\b/i
-  ];
-  for (const rx of tagged) {
-    const m = clean.match(rx);
-    if (m) return m[1].toUpperCase();
-  }
+        const paypalLike = /\b[A-Z0-9]{17}\b/i;
+        const paypalHit = clean.match(paypalLike);
+        if (paypalHit) return paypalHit[0].toUpperCase();
 
-  // --- generic fall-backs --------------------------------------
-  // PayPal-style exactly 17-char IDs (letters+digits)
-  const paypalLike = /\b[A-Z0-9]{17}\b/i;
-  const paypalHit = clean.match(paypalLike);
-  if (paypalHit) return paypalHit[0].toUpperCase();
+        const longDigits = /\b\d{10,20}\b/;
+        const digitHit = clean.match(longDigits);
+        if (digitHit) return digitHit[0];
 
-  // long pure numerics (bank references, IBFT slips) 10-20 digits
-  const longDigits = /\b\d{10,20}\b/;
-  const digitHit = clean.match(longDigits);
-  if (digitHit) return digitHit[0];
+        const mixed = /\b[A-Z0-9]{8,25}\b/i;
+        const mixedHit = clean.match(mixed);
+        if (mixedHit) return mixedHit[0].toUpperCase();
 
-  // mixed alpha-numeric 8-25 chars (last resort)
-  const mixed = /\b[A-Z0-9]{8,25}\b/i;
-  const mixedHit = clean.match(mixed);
-  if (mixedHit) return mixedHit[0].toUpperCase();
-
-  return null; // nothing usable
-};
-
+        return null;
+    };
 
     const handleSubmit = async (e) => {
         if (e) e.preventDefault();
@@ -346,10 +539,11 @@ const extractTransactionId = (text: string): string | null => {
             setError("Please select a payment method");
             return;
         }
+
         if (!selectedImage) {
-  setError("Please upload a payment screenshot.");
-  return;
-}
+            setError("Please upload a payment screenshot.");
+            return;
+        }
 
         if (!transactionId.trim()) {
             setError("Please enter your transaction ID or upload payment screenshot");
@@ -364,17 +558,16 @@ const extractTransactionId = (text: string): string | null => {
         setIsSubmitting(true);
 
         try {
-            // Update user document with payment information
             await updateDoc(doc(db, "users", user.uid), {
                 paymentMethod: selectedMethod,
                 transactionId: transactionId.trim(),
-                paymentAmount: packageDetails?.priceValue || 15000,
+                paymentAmount: packageDetails?.priceValue || 5000,
                 paymentStatus: 'pending_verification',
                 paymentSubmittedAt: serverTimestamp(),
+                paymentScreenshot: uploadedFileName,
                 status: "payment_submitted"
             });
 
-            // Navigate to success page
             setLocation("/payment-success");
         } catch (error) {
             console.error("Error submitting payment:", error);
@@ -384,12 +577,28 @@ const extractTransactionId = (text: string): string | null => {
         }
     };
 
+    const handleGoBack = () => {
+        // Navigate back based on package type
+        if (userDetails?.selectedPackage === "complete") {
+            setLocation("/complete-training-options");
+        } else if (userDetails?.selectedPackage === "progressive") {
+            setLocation("/progressive-path-enrollment");
+        } else if (userDetails?.selectedPackage === "direct") {
+            setLocation("/direct-entry-level-selection");
+        } else {
+            setLocation("/packages");
+        }
+    };
+
     const selectedPaymentMethod = paymentMethods.find(method => method.id === selectedMethod);
 
     if (!userDetails || !packageDetails) {
         return (
-            <div className="min-h-screen flex items-center justify-center">
-                <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
+            <div className="min-h-screen flex items-center justify-center bg-neutral-50">
+                <div className="text-center">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+                    <p className="text-neutral-600">Loading payment details...</p>
+                </div>
             </div>
         );
     }
@@ -400,7 +609,7 @@ const extractTransactionId = (text: string): string | null => {
             <section className="py-16 bg-gradient-to-br from-primary to-primary/80 text-white">
                 <div className="container mx-auto px-4 text-center">
                     <div className="max-w-4xl mx-auto">
-                        <CreditCard size={64} className="mx-auto mb-6 text-green-300" />
+                        <CreditCard size={64} className="mx-auto mb-6 text-white/90" />
                         <h1 className="text-4xl md:text-5xl font-bold mb-6">
                             Complete Your Payment
                         </h1>
@@ -427,7 +636,6 @@ const extractTransactionId = (text: string): string | null => {
                             <p className="text-xs text-neutral-600 text-center mt-1">Completed</p>
                         </div>
 
-                        {/* Connector Line */}
                         <div className="hidden md:block w-16 h-0.5 bg-green-300 -mt-8"></div>
 
                         {/* Step 2 - Complete */}
@@ -439,7 +647,6 @@ const extractTransactionId = (text: string): string | null => {
                             <p className="text-xs text-neutral-600 text-center mt-1">Completed</p>
                         </div>
 
-                        {/* Connector Line */}
                         <div className="hidden md:block w-16 h-0.5 bg-green-300 -mt-8"></div>
 
                         {/* Step 3 - Complete */}
@@ -447,11 +654,10 @@ const extractTransactionId = (text: string): string | null => {
                             <div className="flex items-center justify-center w-12 h-12 rounded-full bg-green-500 text-white font-bold text-lg mb-3 shadow-lg">
                                 ✓
                             </div>
-                            <h3 className="text-sm font-semibold text-green-600 text-center">Select a Package</h3>
+                            <h3 className="text-sm font-semibold text-green-600 text-center">Track Selection</h3>
                             <p className="text-xs text-neutral-600 text-center mt-1">Completed</p>
                         </div>
 
-                        {/* Connector Line */}
                         <div className="hidden md:block w-16 h-0.5 bg-green-300 -mt-8"></div>
 
                         {/* Step 4 - Complete */}
@@ -459,11 +665,10 @@ const extractTransactionId = (text: string): string | null => {
                             <div className="flex items-center justify-center w-12 h-12 rounded-full bg-green-500 text-white font-bold text-lg mb-3 shadow-lg">
                                 ✓
                             </div>
-                            <h3 className="text-sm font-semibold text-green-600 text-center">Enroll in the Program</h3>
+                            <h3 className="text-sm font-semibold text-green-600 text-center">Level Selection</h3>
                             <p className="text-xs text-neutral-600 text-center mt-1">Completed</p>
                         </div>
 
-                        {/* Connector Line */}
                         <div className="hidden md:block w-16 h-0.5 bg-primary -mt-8"></div>
 
                         {/* Step 5 - Active */}
@@ -480,6 +685,20 @@ const extractTransactionId = (text: string): string | null => {
                             <p className="text-xs text-neutral-600 text-center mt-1">Complete enrollment</p>
                         </div>
                     </div>
+                </div>
+            </section>
+
+            {/* Back Button */}
+            <section className="py-4 bg-neutral-50">
+                <div className="container mx-auto px-4">
+                    <Button
+                        onClick={handleGoBack}
+                        variant="ghost"
+                        className="text-primary hover:text-primary/80 hover:bg-primary/10"
+                    >
+                        <ArrowLeft className="w-4 h-4 mr-2" />
+                        Back to Previous Step
+                    </Button>
                 </div>
             </section>
 
@@ -509,7 +728,14 @@ const extractTransactionId = (text: string): string | null => {
                                 <div className="bg-neutral-50 p-6 rounded-lg">
                                     <div className="flex items-center justify-between mb-4">
                                         <span className="font-medium text-neutral-700">Package Price:</span>
-                                        <span className="text-2xl font-bold text-primary">{packageDetails.price}</span>
+                                        <div className="text-right">
+                                            <span className="text-2xl font-bold text-primary">{packageDetails.price}</span>
+                                            {packageDetails.originalPrice && (
+                                                <div className="text-sm text-neutral-500 line-through">
+                                                    {packageDetails.originalPrice}
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
                                     <div className="flex items-center justify-between">
                                         <span className="font-medium text-neutral-700">Student:</span>
@@ -609,28 +835,32 @@ const extractTransactionId = (text: string): string | null => {
                                             id="screenshot-upload"
                                         />
                                         <label htmlFor="screenshot-upload" className="cursor-pointer">
-  <div className="flex flex-col items-center">
-    {imagePreview ? (
-      <>
-        <img
-          src={imagePreview}
-          alt="Screenshot preview"
-          className="h-40 w-auto object-contain rounded-lg shadow"
-        />
-        <span className="text-sm text-neutral-500 mt-2">
-          Click to choose a different file
-        </span>
-      </>
-    ) : (
-      <>
-        <Upload size={48} className="text-neutral-400 mb-2" />
-        <span className="text-neutral-600">Click to upload payment screenshot</span>
-        <span className="text-sm text-neutral-500 mt-1">PNG / JPG up&nbsp;to&nbsp;10 MB</span>
-      </>
-    )}
-  </div>
-</label>
-
+                                            <div className="flex flex-col items-center">
+                                                {imagePreview ? (
+                                                    <>
+                                                        <img
+                                                            src={imagePreview}
+                                                            alt="Screenshot preview"
+                                                            className="h-40 w-auto object-contain rounded-lg shadow"
+                                                        />
+                                                        <span className="text-sm text-neutral-500 mt-2">
+                                                            Click to choose a different file
+                                                        </span>
+                                                        {uploadedFileName && (
+                                                            <span className="text-xs text-green-600 mt-1">
+                                                                ✓ Saved as: {uploadedFileName}
+                                                            </span>
+                                                        )}
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <Upload size={48} className="text-neutral-400 mb-2" />
+                                                        <span className="text-neutral-600">Click to upload payment screenshot</span>
+                                                        <span className="text-sm text-neutral-500 mt-1">PNG / JPG up to 10 MB</span>
+                                                    </>
+                                                )}
+                                            </div>
+                                        </label>
                                     </div>
                                     
                                     {/* OCR Status */}
@@ -701,6 +931,7 @@ const extractTransactionId = (text: string): string | null => {
                                     <ul className="text-blue-700 space-y-1 text-sm">
                                         <li>• Your enrollment will be activated within 24 hours of payment verification</li>
                                         <li>• Upload clear payment screenshots for faster verification and automatic transaction ID detection</li>
+                                        <li>• Screenshots are securely stored in our payment verification system</li>
                                         <li>• Keep your transaction receipt for future reference</li>
                                         <li>• Contact support if you face any issues with payment</li>
                                         <li>• All payments are secure and your data is protected</li>

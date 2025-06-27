@@ -10,10 +10,14 @@ import {
     BookOpen,
     Home,
     MessageSquare,
-    Download,
     Calendar,
     Shield,
-    ArrowRight
+    ArrowRight,
+    Package,
+    GraduationCap,
+    Target,
+    Award,
+    Zap
 } from "lucide-react";
 import { useLocation } from "wouter";
 import { useAuth } from "@/context/AuthContext";
@@ -41,10 +45,13 @@ const PaymentSuccess = () => {
                 const userData = userDoc.data();
                 setUserDetails(userData);
                 
-                // Get package details based on selected package
+                // Get package details based on selected package and level
                 const selectedPackage = userData.selectedPackage;
+                const selectedLevel = userData.selectedLevel;
+                const selectedOption = userData.selectedOption;
+                
                 if (selectedPackage) {
-                    setPackageDetails(getPackageInfo(selectedPackage));
+                    setPackageDetails(getPackageInfo(selectedPackage, selectedLevel, selectedOption));
                 }
             }
         } catch (error) {
@@ -52,34 +59,160 @@ const PaymentSuccess = () => {
         }
     };
 
-    const getPackageInfo = (packageId) => {
+    const getPackageInfo = (packageId, levelId, optionId) => {
         const packages = {
-            level1: {
-                id: "level1",
-                name: "Level 1 Foundation",
-                subtitle: "Start from basics",
-                price: "₨15,000",
-                duration: "6 weeks",
-                description: "Build solid fundamentals and work from there",
-                icon: <BookOpen className="w-8 h-8" />
-            },
             complete: {
-                id: "complete",
-                name: "Complete Package",
-                subtitle: "Beginner to advanced",
-                price: "₨35,000",
-                duration: "Comprehensive",
-                description: "Complete journey with future cohort access",
-                icon: <Crown className="w-8 h-8" />
+                bundle: {
+                    id: "complete-bundle",
+                    name: "Complete Training Bundle",
+                    subtitle: "All 3 Levels at Once",
+                    price: "₨12,000",
+                    originalPrice: "₨15,000",
+                    discount: "20% OFF",
+                    duration: "All Levels",
+                    description: "Get all 3 levels with maximum savings and continuous learning progression",
+                    icon: <Package className="w-8 h-8" />,
+                    features: [
+                        "All 3 Levels Included",
+                        "20% Discount Applied",
+                        "Continuous Learning Path",
+                        "Maximum Value",
+                        "Single Payment",
+                        "Complete Certification Track"
+                    ]
+                },
+                "level-by-level": {
+                    id: "complete-level-by-level",
+                    name: "Complete Training - Level by Level",
+                    subtitle: "Starting with Level 1",
+                    price: "₨5,000",
+                    duration: "Per Level (4 Weeks each)",
+                    description: "Start at Level 1, unlock the next level after each IT-vate certificate",
+                    icon: <GraduationCap className="w-8 h-8" />,
+                    features: [
+                        "Start from Level 1 (Required)",
+                        "Unlock Next Level After Certificate",
+                        "₨5,000 per level",
+                        "Step-by-Step Learning",
+                        "Flexible Payment Schedule",
+                        "Progress at Your Own Pace"
+                    ]
+                }
+            },
+            progressive: {
+                id: "progressive-level-1",
+                name: "Progressive Path - Level 1",
+                subtitle: "Foundation Level",
+                price: "₨5,000",
+                duration: "4 Weeks",
+                description: "Build your foundation in PCB design with essential concepts and basic circuit design principles.",
+                icon: <BookOpen className="w-8 h-8" />,
+                features: [
+                    "Introduction to PCB Design",
+                    "Basic Circuit Principles",
+                    "Component Selection",
+                    "Schematic Design Basics",
+                    "Design Rules & Guidelines",
+                    "Hands-on Project",
+                    "IT-vate Certificate upon completion"
+                ]
+            },
+            direct: {
+                "level-1": {
+                    id: "direct-level-1",
+                    name: "Direct Entry - Level 1",
+                    subtitle: "Foundation Level",
+                    price: "₨8,000",
+                    duration: "4 Weeks",
+                    description: "Build your foundation in PCB design with essential concepts and basic circuit design principles.",
+                    icon: <BookOpen className="w-8 h-8" />,
+                    features: [
+                        "Introduction to PCB Design",
+                        "Basic Circuit Principles",
+                        "Component Selection",
+                        "Schematic Design Basics",
+                        "Design Rules & Guidelines",
+                        "Hands-on Project",
+                        "IT-vate Certificate upon completion"
+                    ]
+                },
+                "level-2": {
+                    id: "direct-level-2",
+                    name: "Direct Entry - Level 2",
+                    subtitle: "Intermediate Level",
+                    price: "₨8,000",
+                    duration: "4 Weeks",
+                    description: "Advance your skills with intermediate PCB design techniques and layout optimization.",
+                    icon: <Target className="w-8 h-8" />,
+                    features: [
+                        "Advanced Layout Techniques",
+                        "Signal Integrity Basics",
+                        "Multi-layer PCB Design",
+                        "Component Placement Optimization",
+                        "Routing Strategies",
+                        "Design Verification",
+                        "IT-vate Certificate upon completion"
+                    ]
+                },
+                "level-3": {
+                    id: "direct-level-3",
+                    name: "Direct Entry - Level 3",
+                    subtitle: "Advanced Level",
+                    price: "₨8,000",
+                    duration: "4 Weeks",
+                    description: "Master advanced PCB design with high-speed design, EMI/EMC considerations, and professional workflows.",
+                    icon: <Award className="w-8 h-8" />,
+                    features: [
+                        "High-Speed PCB Design",
+                        "EMI/EMC Considerations",
+                        "Advanced Signal Integrity",
+                        "Professional Design Workflows",
+                        "Industry Best Practices",
+                        "Portfolio Project",
+                        "IT-vate Master Certificate"
+                    ]
+                }
+            },
+            special: {
+                id: "special-track",
+                name: "Special Track - One on One",
+                subtitle: "Personalized Training",
+                price: "Contact Us",
+                duration: "Flexible",
+                description: "Personalized one-on-one training for any level",
+                icon: <User className="w-8 h-8" />,
+                features: [
+                    "One-on-One Training",
+                    "Any Level Available",
+                    "Personalized Approach",
+                    "Flexible Schedule",
+                    "Custom Curriculum",
+                    "Direct Mentor Access"
+                ]
             }
         };
-        return packages[packageId] || null;
+
+        // Handle different package structures
+        if (packageId === "complete" && optionId) {
+            return packages.complete[optionId] || packages.complete.bundle;
+        } else if (packageId === "direct" && levelId) {
+            return packages.direct[levelId] || packages.direct["level-1"];
+        } else if (packageId === "progressive") {
+            return packages.progressive;
+        } else if (packageId === "special") {
+            return packages.special;
+        }
+        
+        return packages.progressive; // Default fallback
     };
 
     if (!userDetails || !packageDetails) {
         return (
-            <div className="min-h-screen flex items-center justify-center">
-                <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
+            <div className="min-h-screen flex items-center justify-center bg-neutral-50">
+                <div className="text-center">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+                    <p className="text-neutral-600">Loading confirmation details...</p>
+                </div>
             </div>
         );
     }
@@ -117,7 +250,6 @@ const PaymentSuccess = () => {
                             <p className="text-xs text-neutral-600 text-center mt-1">Completed</p>
                         </div>
 
-                        {/* Connector Line */}
                         <div className="hidden md:block w-16 h-0.5 bg-green-300 -mt-8"></div>
 
                         {/* Step 2 - Complete */}
@@ -129,7 +261,6 @@ const PaymentSuccess = () => {
                             <p className="text-xs text-neutral-600 text-center mt-1">Completed</p>
                         </div>
 
-                        {/* Connector Line */}
                         <div className="hidden md:block w-16 h-0.5 bg-green-300 -mt-8"></div>
 
                         {/* Step 3 - Complete */}
@@ -137,11 +268,10 @@ const PaymentSuccess = () => {
                             <div className="flex items-center justify-center w-12 h-12 rounded-full bg-green-500 text-white font-bold text-lg mb-3 shadow-lg">
                                 ✓
                             </div>
-                            <h3 className="text-sm font-semibold text-green-600 text-center">Select a Package</h3>
+                            <h3 className="text-sm font-semibold text-green-600 text-center">Track Selection</h3>
                             <p className="text-xs text-neutral-600 text-center mt-1">Completed</p>
                         </div>
 
-                        {/* Connector Line */}
                         <div className="hidden md:block w-16 h-0.5 bg-green-300 -mt-8"></div>
 
                         {/* Step 4 - Complete */}
@@ -149,11 +279,10 @@ const PaymentSuccess = () => {
                             <div className="flex items-center justify-center w-12 h-12 rounded-full bg-green-500 text-white font-bold text-lg mb-3 shadow-lg">
                                 ✓
                             </div>
-                            <h3 className="text-sm font-semibold text-green-600 text-center">Enroll in the Program</h3>
+                            <h3 className="text-sm font-semibold text-green-600 text-center">Level Selection</h3>
                             <p className="text-xs text-neutral-600 text-center mt-1">Completed</p>
                         </div>
 
-                        {/* Connector Line */}
                         <div className="hidden md:block w-16 h-0.5 bg-green-300 -mt-8"></div>
 
                         {/* Step 5 - Complete */}
@@ -215,11 +344,22 @@ const PaymentSuccess = () => {
                                             <p className="text-neutral-600">{packageDetails.subtitle}</p>
                                         </div>
                                     </div>
-                                    <div className="flex items-center justify-between">
+                                    <div className="flex items-center justify-between mb-2">
                                         <span className="font-medium text-neutral-700">Amount Paid:</span>
-                                        <span className="text-2xl font-bold text-green-600">
-                                            {packageDetails.price}
-                                        </span>
+                                        <div className="text-right">
+                                            <span className="text-2xl font-bold text-green-600">
+                                                {packageDetails.price}
+                                            </span>
+                                            {packageDetails.originalPrice && (
+                                                <div className="text-sm text-neutral-500 line-through">
+                                                    {packageDetails.originalPrice}
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                    <div className="flex items-center justify-between">
+                                        <span className="font-medium text-neutral-700">Duration:</span>
+                                        <span className="text-neutral-600">{packageDetails.duration}</span>
                                     </div>
                                     {userDetails.transactionId && (
                                         <div className="mt-3 pt-3 border-t border-green-200">
@@ -232,6 +372,23 @@ const PaymentSuccess = () => {
                                         </div>
                                     )}
                                 </div>
+                            </div>
+                        </div>
+
+                        {/* Package Features */}
+                        <div className="bg-white rounded-xl shadow-lg p-8 mb-8">
+                            <h2 className="text-2xl font-bold text-neutral-800 mb-6 flex items-center">
+                                {packageDetails.icon}
+                                <span className="ml-3">What You'll Get</span>
+                            </h2>
+                            
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                {packageDetails.features.map((feature, index) => (
+                                    <div key={index} className="flex items-center p-3 bg-neutral-50 rounded-lg">
+                                        <CheckCircle className="w-5 h-5 mr-3 text-green-500 flex-shrink-0" />
+                                        <span className="text-neutral-700">{feature}</span>
+                                    </div>
+                                ))}
                             </div>
                         </div>
 
@@ -255,11 +412,21 @@ const PaymentSuccess = () => {
                                     </div>
                                 </div>
                                 
-                           
-                                
                                 <div className="flex items-start">
                                     <div className="bg-blue-100 text-blue-600 rounded-full w-8 h-8 flex items-center justify-center font-bold text-sm mr-4 mt-1 flex-shrink-0">
                                         2
+                                    </div>
+                                    <div>
+                                        <h3 className="font-semibold text-neutral-800 mb-2">Account Activation</h3>
+                                        <p className="text-neutral-600">
+                                            Your training account will be activated and you'll receive access credentials via email.
+                                        </p>
+                                    </div>
+                                </div>
+                                
+                                <div className="flex items-start">
+                                    <div className="bg-blue-100 text-blue-600 rounded-full w-8 h-8 flex items-center justify-center font-bold text-sm mr-4 mt-1 flex-shrink-0">
+                                        3
                                     </div>
                                     <div>
                                         <h3 className="font-semibold text-neutral-800 mb-2">Training Schedule</h3>
@@ -271,12 +438,12 @@ const PaymentSuccess = () => {
                                 
                                 <div className="flex items-start">
                                     <div className="bg-blue-100 text-blue-600 rounded-full w-8 h-8 flex items-center justify-center font-bold text-sm mr-4 mt-1 flex-shrink-0">
-                                        3
+                                        4
                                     </div>
                                     <div>
-                                        <h3 className="font-semibold text-neutral-800 mb-2">Process Complete!</h3>
+                                        <h3 className="font-semibold text-neutral-800 mb-2">Begin Your Journey!</h3>
                                         <p className="text-neutral-600">
-                                            You can begin your training as soon as the program commences.
+                                            Start your PCB design training and work towards your IT-vate certification.
                                         </p>
                                     </div>
                                 </div>
@@ -292,12 +459,18 @@ const PaymentSuccess = () => {
                                         Important Information
                                     </h3>
                                     <ul className="text-blue-700 space-y-2">
-                        
                                         <li>• Keep your transaction ID for future reference: <strong>{userDetails.transactionId}</strong></li>
                                         <li>• Check your spam folder if you don't receive our emails</li>
                                         <li>• Contact support if you have any questions or concerns</li>
-                                        {packageDetails.id === 'complete' && (
-                                            <li>• Your future cohort access benefits will be activated automatically</li>
+                                        <li>• Your enrollment is confirmed once payment is verified</li>
+                                        {packageDetails.id === 'complete-bundle' && (
+                                            <li>• You have access to all 3 levels with this package</li>
+                                        )}
+                                        {packageDetails.id === 'complete-level-by-level' && (
+                                            <li>• Complete Level 1 to unlock Level 2</li>
+                                        )}
+                                        {packageDetails.id === 'progressive-level-1' && (
+                                            <li>• Earn your certificate to unlock Level 2</li>
                                         )}
                                     </ul>
                                 </div>
@@ -333,7 +506,7 @@ const PaymentSuccess = () => {
                                 <div className="flex flex-col md:flex-row justify-center items-center space-y-2 md:space-y-0 md:space-x-8">
                                     <div className="flex items-center">
                                         <Mail className="w-4 h-4 mr-2 text-neutral-400" />
-                                        <span className="text-neutral-600">support@pcbtraining.com</span>
+                                        <span className="text-neutral-600">support@itvate.com</span>
                                     </div>
                                     <div className="flex items-center">
                                         <Phone className="w-4 h-4 mr-2 text-neutral-400" />

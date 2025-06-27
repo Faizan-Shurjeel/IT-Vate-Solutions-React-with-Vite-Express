@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { CheckCircle, BookOpen, Target, Clock, Award, FileText, ChevronRight, Lock, Info, Check, Crown, Users } from "lucide-react";
+import { CheckCircle, BookOpen, Target, Clock, Award, FileText, ChevronRight, Lock, Info, Check, Crown, Users, Zap, Star, User } from "lucide-react";
 import { useLocation } from "wouter";
 import { useAuth } from "@/context/AuthContext";
 import { doc, updateDoc } from "firebase/firestore";
@@ -18,10 +18,10 @@ const Packages = () => {
             setLocation("/register");
             return;
         }
-
+    
         setLoading(true);
         setSelectedPackage(packageType);
-
+    
         try {
             // Update user document with selected package
             const userDocRef = doc(db, "users", user.uid);
@@ -29,9 +29,18 @@ const Packages = () => {
                 selectedPackage: packageType,
                 packageSelectedAt: new Date(),
             });
-
-            // Navigate to enrollment page
-            setLocation("/enroll");
+    
+            // Navigate based on package type
+            if (packageType === "complete") {
+                // For Complete Training, go to Step 3A (options selection)
+                setLocation("/complete-training-options");
+            } else if( packageType === "progressive") {
+                // For Progressive Path, go to Step 3B (enrollment)
+                setLocation("/progressive-path-enrollment");
+            } else if (packageType === "direct") { 
+                // For Direct Entry, go to Step 3C (enrollment)
+                setLocation("/direct-entry-assessment");
+            }
         } catch (error) {
             console.error("Error updating package selection:", error);
             alert("Failed to select package. Please try again.");
@@ -40,42 +49,87 @@ const Packages = () => {
             setSelectedPackage(null);
         }
     };
+    
 
     const packages = [
         {
-            id: "level1",
-            name: "Level 1 Foundation",
-            subtitle: "Start from basics",
-            price: "₨15,000",
-            duration: "6 weeks",
-            description: "Build solid fundamentals and work from there",
+            id: "complete",
+            name: "Complete Training",
+            subtitle: "Levels 1-3, 20% off",
+            price: "₨12,000",
+            duration: "All Levels",
+            description: "Register once, attend all 3 levels with 20% discount",
             features: [
-                "PCB Design Basics",
-                "Schematic Design",
-                "Basic Routing",
-                "Certificate",
+                "All 3 Levels Included",
+                "20% Discount Applied",
+                "Complete Journey",
+                "Maximum Savings"
             ],
-            cta: "Select Level 1",
-            popular: false,
-            icon: <BookOpen className="w-8 h-8" />,
-            color: "border-blue-200 hover:border-blue-300"
+            cta: "Select Complete Training",
+            popular: true,
+            badge: "Students & Early-Career Pros",
+            icon: <Crown className="w-8 h-8" />,
+            color: "border-primary hover:border-primary/80 ring-2 ring-primary/20"
         },
         {
-            id: "complete",
-            name: "Complete Package",
-            subtitle: "Beginner to advanced",
-            price: "₨35,000",
-            duration: "Comprehensive",
-            description: "Complete journey with future cohort access",
+            id: "progressive",
+            name: "Progressive Path",
+            subtitle: "Start at Level 1",
+            price: "₨5,000",
+            duration: "Per Level",
+            description: "Start at Level 1, unlock the next level after each IT-vate certificate",
             features: [
-                "Everything in Level 1",
-                "Advanced Techniques",
-                "Future Cohort Access",
-                "Discounted Level 2 & 3"
+                "Start from Level 1",
+                "Unlock Next Level After Certificate",
+                "₨5,000 per level",
+                "Step-by-Step Learning"
             ],
-            cta: "Select Complete",
-            popular: true,
-            icon: <Crown className="w-8 h-8" />,
+            cta: "Select Progressive Path",
+            popular: false,
+            badge: "Anyone Starting New",
+            icon: <BookOpen className="w-8 h-8" />,
+            color: "border-primary hover:border-primary/80 ring-2 ring-primary/20"
+        },
+        {
+            id: "direct",
+            name: "Direct Entry/Fast Track",
+            subtitle: "Jump to Level 2/Level 3 via test",
+            price: "₨8,000",
+            duration: "Per Level",
+            description: "Take a 15-minute assessment test to determine your starting level",
+            testDetails: [
+                { score: "≥50%", access: "Level 2 Access" },
+                { score: "≥75%", access: "Level 3 Access" }
+            ],
+            features: [
+                "15-minute Assessment Test",
+                "Score ≥50% → Level 2 Access",
+                "Score ≥75% → Level 3 Access",
+                "₨8,000 per level"
+            ],
+            cta: "Select Direct Entry",
+            popular: false,
+            badge: "Fast-Track for Pros",
+            icon: <Zap className="w-8 h-8" />,
+            color: "border-primary hover:border-primary/80 ring-2 ring-primary/20"
+        },
+        {
+            id: "special",
+            name: "Special Track",
+            subtitle: "Any level - One on One Training",
+            price: "Contact Us",
+            duration: "Flexible",
+            description: "Personalized one-on-one training for any level",
+            features: [
+                "One-on-One Training",
+                "Any Level Available",
+                "Personalized Approach",
+                "Flexible Schedule"
+            ],
+            cta: "Select Special Track",
+            popular: false,
+            badge: "Personalized Training",
+            icon: <User className="w-8 h-8" />,
             color: "border-primary hover:border-primary/80 ring-2 ring-primary/20"
         }
     ];
@@ -88,13 +142,13 @@ const Packages = () => {
                     <div className="max-w-4xl mx-auto">
                         <Target size={64} className="mx-auto mb-6 text-green-300" />
                         <h1 className="text-4xl md:text-5xl font-bold mb-6">
-                            Choose Your Training Package
+                            Choose Your Track
                         </h1>
                         <p className="text-xl md:text-2xl mb-4">
-                            Select the package that matches your learning goals.
+                            Four ways to enroll, one goal: professional excellence.
                         </p>
                         <p className="text-lg opacity-90">
-                            Both options include hands-on projects and industry-recognized certification.
+                            Select the track that matches your learning goals and experience level.
                         </p>
                     </div>
                 </div>
@@ -138,8 +192,8 @@ const Packages = () => {
                                     </span>
                                 </div>
                             </div>
-                            <h3 className="text-sm font-semibold text-primary text-center">Select a Package</h3>
-                            <p className="text-xs text-neutral-600 text-center mt-1">Choose from offered packages</p>
+                            <h3 className="text-sm font-semibold text-primary text-center">Choose Your Track</h3>
+                            <p className="text-xs text-neutral-600 text-center mt-1">Select from available tracks</p>
                         </div>
 
                         {/* Connector Line */}
@@ -150,8 +204,8 @@ const Packages = () => {
                             <div className="flex items-center justify-center w-12 h-12 rounded-full bg-neutral-200 text-neutral-500 font-bold text-lg mb-3">
                                 4
                             </div>
-                            <h3 className="text-sm font-medium text-neutral-500 text-center">Enroll in the Program</h3>
-                            <p className="text-xs text-neutral-400 text-center mt-1">Finalize your enrollment</p>
+                            <h3 className="text-sm font-medium text-neutral-500 text-center">Select Your Option</h3>
+                            <p className="text-xs text-neutral-400 text-center mt-1">Choose level or bundle</p>
                         </div>
 
                         {/* Connector Line */}
@@ -172,21 +226,21 @@ const Packages = () => {
             {/* Package Selection */}
             <section className="py-16 bg-neutral-50">
                 <div className="container mx-auto px-4">
-                    <div className="max-w-5xl mx-auto">
+                    <div className="max-w-7xl mx-auto">
                         <div className="text-center mb-12">
                             <h2 className="text-3xl md:text-4xl font-bold text-neutral-800 mb-4">
-                                Training Packages
+                                Training Tracks
                             </h2>
                             <p className="text-lg text-neutral-600">
-                                Choose the package that best fits your learning objectives.
+                                Choose the track that best fits your experience level and learning objectives.
                             </p>
                         </div>
 
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                             {packages.map((pkg) => (
                                 <div
                                     key={pkg.id}
-                                    className={`relative bg-white rounded-xl shadow-lg border-2 ${pkg.color} transition-all duration-300 hover:shadow-xl group`}
+                                    className={`relative bg-white rounded-xl shadow-lg border-2 ${pkg.color} transition-all duration-300 hover:shadow-xl group flex flex-col h-full`}
                                 >
                                     {pkg.popular && (
                                         <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
@@ -196,67 +250,90 @@ const Packages = () => {
                                         </div>
                                     )}
 
-                                    <div className="p-8">
+                                    {!pkg.popular && (
+                                        <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
+                                            <div className="px-3 py-1 rounded-full text-xs font-semibold shadow-lg bg-primary text-white">
+                                                {pkg.badge}
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    <div className="p-6 flex flex-col h-full">
                                         {/* Header */}
-                                        <div className="text-center mb-8">
-                                            <div className={`inline-flex items-center justify-center w-16 h-16 rounded-full mb-4 ${
-                                                pkg.popular ? 'bg-primary text-white' : 'bg-blue-100 text-blue-600'
+                                        <div className="text-center mb-6">
+                                            <div className={`inline-flex items-center justify-center w-14 h-14 rounded-full mb-4 ${
+                                                pkg.popular ? 'bg-primary text-white' : 'bg-primary/10 text-primary'
                                             }`}>
                                                 {pkg.icon}
                                             </div>
-                                            <h3 className="text-2xl font-bold text-neutral-800 mb-2">
+                                            <h3 className="text-lg font-bold text-neutral-800 mb-2">
                                                 {pkg.name}
                                             </h3>
-                                            <p className="text-neutral-600 mb-4">{pkg.subtitle}</p>
-                                            <p className="text-neutral-700">{pkg.description}</p>
+                                            <p className="text-neutral-600 mb-3 text-sm">{pkg.subtitle}</p>
+                                            <p className="text-neutral-700 text-sm">{pkg.description}</p>
                                         </div>
 
                                         {/* Pricing */}
-                                        <div className="text-center mb-8 p-6 bg-neutral-50 rounded-lg">
-                                            <div className="text-4xl font-bold text-neutral-800 mb-2">
+                                        <div className="text-center mb-6 p-4 bg-neutral-50 rounded-lg">
+                                            <div className="text-2xl font-bold text-neutral-800 mb-1">
                                                 {pkg.price}
                                             </div>
-                                            <div className="flex items-center justify-center text-neutral-600">
-                                                <Clock className="w-4 h-4 mr-2" />
-                                                <span>{pkg.duration}</span>
+                                            <div className="flex items-center justify-center text-neutral-600 text-sm">
+                                                <Clock className="w-3 h-3 mr-1" />
+                                                <span className="text-xs">{pkg.duration}</span>
                                             </div>
                                         </div>
 
+                                        {/* Test Details for Direct Entry */}
+                                        {pkg.id === 'direct' && pkg.testDetails && (
+                                            <div className="mb-4 p-3 bg-primary/5 rounded-lg border border-primary/20">
+                                                <h4 className="text-xs font-semibold text-primary mb-2">Assessment Results:</h4>
+                                                <div className="space-y-1">
+                                                    {pkg.testDetails.map((detail, index) => (
+                                                        <div key={index} className="flex items-center justify-between text-xs">
+                                                            <span className="font-medium text-primary">{detail.score}</span>
+                                                            <span className="text-neutral-600">→ {detail.access}</span>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        )}
+
                                         {/* Features */}
-                                        <div className="mb-8">
-                                            <h4 className="font-semibold text-neutral-800 mb-4">What's Included:</h4>
-                                            <div className="space-y-3">
+                                        <div className="mb-6 flex-grow">
+                                            <h4 className="font-semibold text-neutral-800 mb-3 text-sm">What's Included:</h4>
+                                            <div className="space-y-2">
                                                 {pkg.features.map((feature, index) => (
                                                     <div key={index} className="flex items-start">
-                                                        <Check className={`w-5 h-5 mr-3 mt-0.5 flex-shrink-0 ${
-                                                            pkg.popular ? 'text-primary' : 'text-green-500'
+                                                        <Check className={`w-4 h-4 mr-2 mt-0.5 flex-shrink-0 ${
+                                                            pkg.popular ? 'text-primary' : 'text-primary'
                                                         }`} />
-                                                        <span className="text-neutral-700">{feature}</span>
+                                                        <span className="text-neutral-700 text-xs">{feature}</span>
                                                     </div>
                                                 ))}
                                             </div>
                                         </div>
 
-                                        {/* CTA */}
-                                        <div className="text-center">
+                                        {/* CTA - This will be pushed to bottom */}
+                                        <div className="text-center mt-auto">
                                             <Button
                                                 onClick={() => handleSelectPackage(pkg.id)}
                                                 disabled={loading}
-                                                className={`w-full py-3 text-lg font-semibold rounded-lg transition-all duration-300 ${
+                                                className={`w-full py-2 text-sm font-semibold rounded-lg transition-all duration-300 ${
                                                     pkg.popular 
                                                         ? 'bg-primary hover:bg-primary/90 text-white shadow-lg' 
-                                                        : 'bg-blue-600 hover:bg-blue-700 text-white'
+                                                        : 'bg-primary hover:bg-primary/90 text-white'
                                                 } ${loading && selectedPackage === pkg.id ? 'opacity-50 cursor-not-allowed' : ''}`}
                                             >
                                                 {loading && selectedPackage === pkg.id ? (
                                                     <>
-                                                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                                                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
                                                         Processing...
                                                     </>
                                                 ) : (
                                                     <>
                                                         {pkg.cta}
-                                                        <ChevronRight className="w-5 h-5 ml-2" />
+                                                        <ChevronRight className="w-4 h-4 ml-2" />
                                                     </>
                                                 )}
                                             </Button>
@@ -271,16 +348,16 @@ const Packages = () => {
                             <div className="bg-white p-6 rounded-xl shadow-sm border border-neutral-200">
                                 <div className="flex items-start space-x-4">
                                     <div className="flex-shrink-0">
-                                        <Info size={24} className="text-blue-600 mt-1" />
+                                        <Info size={24} className="text-primary mt-1" />
                                     </div>
                                     <div className="flex-1 text-left">
                                         <h3 className="text-lg font-semibold text-neutral-800 mb-2">
-                                            Complete Package Benefits
+                                            Complete Training Benefits
                                         </h3>
                                         <p className="text-neutral-600">
-                                            The Complete Package reserves your spot in future Level 2 and Level 3 cohorts 
-                                            at discounted rates when they become available. This ensures continuous learning 
-                                            progression at significant savings.
+                                            The Complete Training package provides all 3 levels with a 20% discount and ensures 
+                                            continuous learning progression at significant savings. Perfect for students and 
+                                            early-career professionals committed to mastering PCB design.
                                         </p>
                                     </div>
                                 </div>
