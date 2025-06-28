@@ -51,14 +51,15 @@ const Onboarding = () => {
                     </div>
                 </div>
             </section>
-{/* Progress Steps */}
-<section className="py-8 bg-white border-b border-neutral-200">
+            {/* Progress Steps */}
+            <section className="py-8 bg-white border-b border-neutral-200">
                 <div className="container mx-auto px-4">
                     <div className="flex justify-center items-center space-x-8 overflow-x-auto">
-                        {/* Step 3 - Active */}
+
+                        {/* Step 0 - Active */}
                         <div className="flex flex-col items-center min-w-[140px]">
                             <div className="relative flex items-center justify-center w-12 h-12 rounded-full bg-primary text-white font-bold text-lg mb-3 shadow-lg">
-                                3
+                                0
                                 <div className="absolute -top-8 left-1/2 transform -translate-x-1/2">
                                     <span className="bg-primary text-white text-xs px-2 py-1 rounded-full whitespace-nowrap">
                                         Current Step
@@ -71,42 +72,38 @@ const Onboarding = () => {
 
                         {/* Connector Line */}
                         <div className="hidden md:block w-16 h-0.5 bg-neutral-300 -mt-8"></div>
-                        {/* Step 1 - Complete */}
+
+                        {/* Step 1 - Pending */}
                         <div className="flex flex-col items-center min-w-[140px]">
-                            <div className="flex items-center justify-center w-12 h-12 rounded-full bg-green-500 text-white font-bold text-lg mb-3 shadow-lg">
-                                ✓
+                            <div className="flex items-center justify-center w-12 h-12 rounded-full bg-neutral-200 text-neutral-500 font-bold text-lg mb-3">
+                                1
                             </div>
-                            <h3 className="text-sm font-semibold text-green-600 text-center">Create Account</h3>
-                            <p className="text-xs text-neutral-600 text-center mt-1">Completed</p>
+                            <h3 className="text-sm font-medium text-neutral-500 text-center">Create Your Profile</h3>
+                            <p className="text-xs text-neutral-400 text-center mt-1">Register with us</p>
                         </div>
 
                         {/* Connector Line */}
-                        <div className="hidden md:block w-16 h-0.5 bg-green-300 -mt-8"></div>
+                        <div className="hidden md:block w-16 h-0.5 bg-neutral-300 -mt-8"></div>
 
-                        {/* Step 2 - Complete */}
+                        {/* Step 2 - Pending */}
                         <div className="flex flex-col items-center min-w-[140px]">
-                            <div className="flex items-center justify-center w-12 h-12 rounded-full bg-green-500 text-white font-bold text-lg mb-3 shadow-lg">
-                                ✓
+                            <div className="flex items-center justify-center w-12 h-12 rounded-full bg-neutral-200 text-neutral-500 font-bold text-lg mb-3">
+                                2
                             </div>
-                            <h3 className="text-sm font-semibold text-green-600 text-center">Training Overview</h3>
-                            <p className="text-xs text-neutral-600 text-center mt-1">Completed</p>
+                            <h3 className="text-sm font-medium text-neutral-500 text-center">Choose Your Track</h3>
+                            <p className="text-xs text-neutral-400 text-center mt-1">Select level or bundle</p>
                         </div>
 
                         {/* Connector Line */}
-                        <div className="hidden md:block w-16 h-0.5 bg-primary -mt-8"></div>
+                        <div className="hidden md:block w-16 h-0.5 bg-neutral-300 -mt-8"></div>
 
-                        {/* Step 3 - Active */}
+                        {/* Step 3 - Pending */}
                         <div className="flex flex-col items-center min-w-[140px]">
-                            <div className="relative flex items-center justify-center w-12 h-12 rounded-full bg-primary text-white font-bold text-lg mb-3 shadow-lg">
+                            <div className="flex items-center justify-center w-12 h-12 rounded-full bg-neutral-200 text-neutral-500 font-bold text-lg mb-3">
                                 3
-                                <div className="absolute -top-8 left-1/2 transform -translate-x-1/2">
-                                    <span className="bg-primary text-white text-xs px-2 py-1 rounded-full whitespace-nowrap">
-                                        Current Step
-                                    </span>
-                                </div>
                             </div>
-                            <h3 className="text-sm font-semibold text-primary text-center">Choose Your Track</h3>
-                            <p className="text-xs text-neutral-600 text-center mt-1">Select from available tracks</p>
+                            <h3 className="text-sm font-medium text-neutral-500 text-center">Finalize</h3>
+                            <p className="text-xs text-neutral-400 text-center mt-1">Complete any intermediary steps</p>
                         </div>
 
                         {/* Connector Line */}
@@ -117,8 +114,8 @@ const Onboarding = () => {
                             <div className="flex items-center justify-center w-12 h-12 rounded-full bg-neutral-200 text-neutral-500 font-bold text-lg mb-3">
                                 4
                             </div>
-                            <h3 className="text-sm font-medium text-neutral-500 text-center">Select Your Option</h3>
-                            <p className="text-xs text-neutral-400 text-center mt-1">Choose level or bundle</p>
+                            <h3 className="text-sm font-medium text-neutral-500 text-center">Payment</h3>
+                            <p className="text-xs text-neutral-400 text-center mt-1">Make payment</p>
                         </div>
 
                         {/* Connector Line */}
@@ -129,12 +126,13 @@ const Onboarding = () => {
                             <div className="flex items-center justify-center w-12 h-12 rounded-full bg-neutral-200 text-neutral-500 font-bold text-lg mb-3">
                                 5
                             </div>
-                            <h3 className="text-sm font-medium text-neutral-500 text-center">Payment</h3>
-                            <p className="text-xs text-neutral-400 text-center mt-1">Make payment</p>
+                            <h3 className="text-sm font-medium text-neutral-500 text-center">Confirmation</h3>
+                            <p className="text-xs text-neutral-400 text-center mt-1">Download your enrollment slip</p>
                         </div>
                     </div>
                 </div>
             </section>
+
             {/* Main Content */}
             <section className="py-16 bg-neutral-50">
                 <div className="container mx-auto px-4">
@@ -205,77 +203,7 @@ const Onboarding = () => {
                             </div>
                         </div>
 
-                        {/* Create Profile / Log In Section */}
-                        <div className="bg-white rounded-xl shadow-lg border border-neutral-200 p-8">
-                            <div className="text-center">
-                                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-6 bg-gradient-to-br from-orange-400 to-red-400 text-white">
-                                    <Users className="w-8 h-8" />
-                                </div>
-                                <h3 className="text-2xl font-bold text-neutral-800 mb-4">
-                                    Get Started Today
-                                </h3>
-                                <p className="text-neutral-600 mb-8 max-w-2xl mx-auto">
-                                    Join thousands of students and professionals who have transformed their careers through our comprehensive PCB design training programs.
-                                </p>
 
-                                <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                                    <Button
-                                        onClick={handleCreateProfile}
-                                        className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white px-8 py-3 text-lg font-semibold rounded-lg transition-all duration-300 shadow-lg"
-                                    >
-                                        Create Profile
-                                        <ArrowRight className="w-5 h-5 ml-2" />
-                                    </Button>
-                                    
-                                    <div className="text-neutral-400 font-medium">or</div>
-                                    
-                                    <Button
-                                        onClick={handleLogin}
-                                        variant="outline"
-                                        className="border-2 border-orange-300 text-orange-600 hover:bg-orange-50 px-8 py-3 text-lg font-semibold rounded-lg transition-all duration-300"
-                                    >
-                                        Log In
-                                    </Button>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Additional Info */}
-                        <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div className="bg-white p-6 rounded-xl shadow-sm border border-neutral-200">
-                                <div className="flex items-start space-x-4">
-                                    <div className="flex-shrink-0">
-                                        <BookOpen size={24} className="text-blue-600 mt-1" />
-                                    </div>
-                                    <div className="flex-1">
-                                        <h4 className="text-lg font-semibold text-neutral-800 mb-2">
-                                            Structured Learning Path
-                                        </h4>
-                                        <p className="text-neutral-600 text-sm">
-                                            Our curriculum is designed to take you from beginner to professional, 
-                                            with hands-on projects and real-world applications at every step.
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="bg-white p-6 rounded-xl shadow-sm border border-neutral-200">
-                                <div className="flex items-start space-x-4">
-                                    <div className="flex-shrink-0">
-                                        <Award size={24} className="text-orange-600 mt-1" />
-                                    </div>
-                                    <div className="flex-1">
-                                        <h4 className="text-lg font-semibold text-neutral-800 mb-2">
-                                            Industry Recognition
-                                        </h4>
-                                        <p className="text-neutral-600 text-sm">
-                                            Earn certificates that are recognized by leading companies in the 
-                                            electronics and PCB design industry.
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </section>

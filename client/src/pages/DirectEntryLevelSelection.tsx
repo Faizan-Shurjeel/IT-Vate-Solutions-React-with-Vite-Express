@@ -6,83 +6,70 @@ import { useAuth } from "@/context/AuthContext";
 import { doc, updateDoc, getDoc } from "firebase/firestore";
 import { db } from "@/utils/firebase";
 
-// Level Selection Pane Component
-const LevelSelectionPane = ({ selectedLevel, levels, onContinue, loading, userResults }) => {
-    const getSelectedLevelData = () => {
-        if (!selectedLevel) {
-            return {
-                title: "Select a Level",
-                price: "-",
-                duration: "Choose your level",
-                description: "Please select a level to see details.",
-                features: ["Select a level to view details"],
-                requirements: []
-            };
-        }
-
-        const level = levels.find(lvl => lvl.id === selectedLevel);
-        return {
-            title: level?.name || "Select a Level",
-            price: level?.price || "-",
-            duration: level?.duration || "",
-            description: level?.description || "",
-            features: level?.features || [],
-            requirements: level?.requirements || []
-        };
-    };
-
-    const current = getSelectedLevelData();
-
+// Bundle Selection Pane Component
+const BundleSelectionPane = ({ onContinue, loading, userResults }) => {
     return (
         <div className="sticky top-20">
             <div className="bg-white rounded-xl shadow-lg border-2 border-primary/20 overflow-hidden">
                 {/* Header */}
                 <div className="bg-gradient-to-r from-primary to-primary/80 text-white p-6">
                     <div className="flex items-center mb-2">
-                        <Calculator className="w-6 h-6 mr-2" />
-                        <h3 className="text-lg font-bold">Level Details</h3>
+                        <Package className="w-6 h-6 mr-2" />
+                        <h3 className="text-lg font-bold">Bundle Details</h3>
                     </div>
-                    <p className="text-primary-100 text-sm">Based on your {userResults?.percentage}% score</p>
+                    <p className="text-primary-100 text-sm">Based on your {userResults?.percentage || 0}% score</p>
                 </div>
 
                 {/* Content */}
                 <div className="p-6">
-                    <h4 className="text-xl font-bold text-neutral-800 mb-2">{current.title}</h4>
+                    <h4 className="text-xl font-bold text-neutral-800 mb-2">Direct Entry Bundle</h4>
                     
                     {/* Pricing */}
                     <div className="mb-6 p-4 bg-neutral-50 rounded-lg border border-neutral-200">
-                        <div className="text-3xl font-bold text-neutral-800 mb-2">
-                            {current.price}
+                        <div className="flex items-center justify-between mb-2">
+                            <div className="text-3xl font-bold text-neutral-800">
+                                ₨20,000
+                            </div>
+                            <div className="text-right">
+                                <div className="text-lg text-neutral-500 line-through">
+                                    ₨24,000
+                                </div>
+                                <div className="text-sm font-semibold text-green-600">
+                                    Save ₨4,000
+                                </div>
+                            </div>
                         </div>
                         <div className="flex items-center text-neutral-600">
                             <Clock className="w-4 h-4 mr-1" />
-                            <span className="text-sm">{current.duration}</span>
+                            <span className="text-sm">All 3 Levels (12 Weeks Total)</span>
+                        </div>
+                        <div className="mt-3 p-2 bg-green-50 rounded border border-green-200">
+                            <div className="flex items-center text-green-700">
+                                <Star className="w-4 h-4 mr-1" />
+                                <span className="text-xs font-semibold">Complete PCB Design Mastery</span>
+                            </div>
                         </div>
                     </div>
 
                     {/* Description */}
-                    <p className="text-neutral-600 text-sm mb-4">{current.description}</p>
+                    <p className="text-neutral-600 text-sm mb-4">
+                        Get complete access to all 3 levels of PCB design training. Perfect for professionals who want comprehensive knowledge.
+                    </p>
 
-                    {/* Requirements */}
-                    {current.requirements.length > 0 && (
-                        <div className="mb-4 p-3 bg-green-50 rounded-lg border border-green-200">
-                            <h5 className="font-semibold text-green-800 mb-2 text-sm">Prerequisites Met:</h5>
-                            <div className="space-y-1">
-                                {current.requirements.map((req, index) => (
-                                    <div key={index} className="flex items-center text-green-700">
-                                        <Check className="w-3 h-3 mr-2" />
-                                        <span className="text-xs">{req}</span>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    )}
-
-                    {/* Features */}
+                    {/* Bundle Features */}
                     <div className="mb-6">
-                        <h5 className="font-semibold text-neutral-800 mb-3 text-sm">What You'll Learn:</h5>
+                        <h5 className="font-semibold text-neutral-800 mb-3 text-sm">Complete Bundle Includes:</h5>
                         <div className="space-y-2">
-                            {current.features.map((feature, index) => (
+                            {[
+                                "Level 1: Foundation (4 Weeks)",
+                                "Level 2: Intermediate (4 Weeks)", 
+                                "Level 3: Advanced (4 Weeks)",
+                                "All Course Materials",
+                                "3 IT-vate Certificates",
+                                "Portfolio Projects",
+                                "Industry Best Practices",
+                                "Lifetime Access"
+                            ].map((feature, index) => (
                                 <div key={index} className="flex items-start">
                                     <Check className="w-4 h-4 mr-2 mt-0.5 flex-shrink-0 text-primary" />
                                     <span className="text-neutral-700 text-xs">{feature}</span>
@@ -91,28 +78,43 @@ const LevelSelectionPane = ({ selectedLevel, levels, onContinue, loading, userRe
                         </div>
                     </div>
 
-                    {/* Continue Button */}
-                    {selectedLevel && (
-                        <div className="pt-4 border-t border-neutral-200">
-                            <Button
-                                onClick={() => onContinue(selectedLevel)}
-                                disabled={loading}
-                                className="w-full bg-primary hover:bg-primary/90 text-white py-3 font-semibold rounded-lg"
-                            >
-                                {loading ? (
-                                    <>
-                                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                                        Processing...
-                                    </>
-                                ) : (
-                                    <>
-                                        Enroll in This Level
-                                        <ChevronRight className="w-4 h-4 ml-2" />
-                                    </>
-                                )}
-                            </Button>
+                    {/* Benefits */}
+                    <div className="mb-6 p-3 bg-blue-50 rounded-lg border border-blue-200">
+                        <h5 className="font-semibold text-blue-800 mb-2 text-sm">Bundle Benefits:</h5>
+                        <div className="space-y-1">
+                            {[
+                                "Save ₨4,000 compared to individual levels",
+                                "Continuous learning progression",
+                                "Complete skill development path"
+                            ].map((benefit, index) => (
+                                <div key={index} className="flex items-center text-blue-700">
+                                    <Trophy className="w-3 h-3 mr-2" />
+                                    <span className="text-xs">{benefit}</span>
+                                </div>
+                            ))}
                         </div>
-                    )}
+                    </div>
+
+                    {/* Continue Button */}
+                    <div className="pt-4 border-t border-neutral-200">
+                        <Button
+                            onClick={onContinue}
+                            disabled={loading}
+                            className="w-full bg-primary hover:bg-primary/90 text-white py-3 font-semibold rounded-lg"
+                        >
+                            {loading ? (
+                                <>
+                                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                                    Processing...
+                                </>
+                            ) : (
+                                <>
+                                    Enroll in Complete Bundle
+                                    <ChevronRight className="w-4 h-4 ml-2" />
+                                </>
+                            )}
+                        </Button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -123,7 +125,6 @@ const DirectEntryLevelSelection = () => {
     const [, setLocation] = useLocation();
     const { user } = useAuth();
     const [loading, setLoading] = useState(false);
-    const [selectedLevel, setSelectedLevel] = useState(null);
     const [availableLevels, setAvailableLevels] = useState([]);
     const [userResults, setUserResults] = useState(null);
     const [dataLoading, setDataLoading] = useState(true);
@@ -154,7 +155,7 @@ const DirectEntryLevelSelection = () => {
         fetchUserData();
     }, [user, setLocation]);
 
-    const handleSelectLevel = async (levelId) => {
+    const handleSelectBundle = async () => {
         if (!user) {
             alert("Please log in to continue");
             setLocation("/register");
@@ -167,15 +168,16 @@ const DirectEntryLevelSelection = () => {
             const userDocRef = doc(db, "users", user.uid);
             await updateDoc(userDocRef, {
                 selectedPackage: "direct",
-                selectedLevel: levelId,
+                selectedLevel: "bundle", // All levels
+                selectedOption: "bundle",
                 levelSelectedAt: new Date(),
             });
 
             // Navigate to payment
             setLocation("/payment");
         } catch (error) {
-            console.error("Error selecting level:", error);
-            alert("Failed to select level. Please try again.");
+            console.error("Error selecting bundle:", error);
+            alert("Failed to select bundle. Please try again.");
         } finally {
             setLoading(false);
         }
@@ -185,92 +187,51 @@ const DirectEntryLevelSelection = () => {
         setLocation("/exam-results");
     };
 
-    const allLevels = [
+    const bundleFeatures = [
         {
-            id: "level-1",
-            name: "Level 1 - Foundation",
-            price: "₨8,000",
+            level: "Level 1 - Foundation",
             duration: "4 Weeks",
-            description: "Build your foundation in PCB design with essential concepts and basic circuit design principles.",
             features: [
                 "Introduction to PCB Design",
-                "Basic Circuit Principles",
+                "Basic Circuit Principles", 
                 "Component Selection",
-                "Schematic Design Basics",
-                "Design Rules & Guidelines",
-                "Hands-on Project",
-                "IT-vate Certificate upon completion"
+                "Schematic Design Basics"
             ],
-            requirements: [
-                "Basic electronics knowledge",
-                "Computer literacy"
-            ],
-            levelNumber: 1,
-            difficulty: "Beginner"
+            icon: <BookOpen className="w-6 h-6" />,
+            color: "text-blue-600"
         },
         {
-            id: "level-2",
-            name: "Level 2 - Intermediate",
-            price: "₨8,000",
+            level: "Level 2 - Intermediate", 
             duration: "4 Weeks",
-            description: "Advance your skills with intermediate PCB design techniques and layout optimization.",
             features: [
                 "Advanced Layout Techniques",
                 "Signal Integrity Basics",
                 "Multi-layer PCB Design",
-                "Component Placement Optimization",
-                "Routing Strategies",
-                "Design Verification",
-                "IT-vate Certificate upon completion"
+                "Component Placement Optimization"
             ],
-            requirements: [
-                "Assessment score ≥50%",
-                "Understanding of basic PCB concepts"
-            ],
-            levelNumber: 2,
-            difficulty: "Intermediate"
+            icon: <Target className="w-6 h-6" />,
+            color: "text-orange-600"
         },
         {
-            id: "level-3",
-            name: "Level 3 - Advanced",
-            price: "₨8,000",
-            duration: "4 Weeks",
-            description: "Master advanced PCB design with high-speed design, EMI/EMC considerations, and professional workflows.",
+            level: "Level 3 - Advanced",
+            duration: "4 Weeks", 
             features: [
                 "High-Speed PCB Design",
                 "EMI/EMC Considerations",
                 "Advanced Signal Integrity",
-                "Professional Design Workflows",
-                "Industry Best Practices",
-                "Portfolio Project",
-                "IT-vate Master Certificate"
+                "Professional Design Workflows"
             ],
-            requirements: [
-                "Assessment score ≥75%",
-                "Strong PCB design foundation"
-            ],
-            levelNumber: 3,
-            difficulty: "Advanced"
+            icon: <Award className="w-6 h-6" />,
+            color: "text-purple-600"
         }
     ];
-
-    // Filter levels based on user's available levels
-    const getUserLevels = () => {
-        return allLevels.map(level => ({
-            ...level,
-            available: availableLevels.includes(`Level ${level.levelNumber}`),
-            recommended: level.levelNumber === Math.max(...availableLevels.map(l => parseInt(l.split(' ')[1])))
-        }));
-    };
-
-    const levels = getUserLevels();
 
     if (dataLoading) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-neutral-50">
                 <div className="text-center">
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-                    <p className="text-neutral-600">Loading available levels...</p>
+                    <p className="text-neutral-600">Loading bundle details...</p>
                 </div>
             </div>
         );
@@ -282,15 +243,15 @@ const DirectEntryLevelSelection = () => {
             <section className="py-16 bg-gradient-to-br from-primary to-primary/80 text-white">
                 <div className="container mx-auto px-4 text-center">
                     <div className="max-w-4xl mx-auto">
-                        <Target size={64} className="mx-auto mb-6 text-white/90" />
+                        <Package size={64} className="mx-auto mb-6 text-white/90" />
                         <h1 className="text-4xl md:text-5xl font-bold mb-6">
-                            Select Your Level
+                            Direct Entry Complete Bundle
                         </h1>
                         <p className="text-xl md:text-2xl mb-4">
-                            Based on your assessment score of {userResults?.percentage || 0}%, you can access these levels.
+                            Based on your assessment score of {userResults?.percentage || 0}%, get complete access to all levels.
                         </p>
                         <p className="text-lg opacity-90">
-                            Choose the level that matches your learning goals and start your journey.
+                            Master PCB design from foundation to advanced with our comprehensive bundle.
                         </p>
                     </div>
                 </div>
@@ -354,8 +315,8 @@ const DirectEntryLevelSelection = () => {
                                     </span>
                                 </div>
                             </div>
-                            <h3 className="text-sm font-semibold text-primary text-center">Select Level</h3>
-                            <p className="text-xs text-neutral-600 text-center mt-1">Choose your starting point</p>
+                            <h3 className="text-sm font-semibold text-primary text-center">Select Bundle</h3>
+                            <p className="text-xs text-neutral-600 text-center mt-1">Complete package</p>
                         </div>
 
                         <div className="hidden md:block w-16 h-0.5 bg-neutral-300 -mt-8"></div>
@@ -386,162 +347,104 @@ const DirectEntryLevelSelection = () => {
                 </div>
             </section>
 
-            {/* Level Selection with Details Pane */}
+            {/* Bundle Selection with Details Pane */}
             <section className="py-16 bg-neutral-50">
                 <div className="container mx-auto px-4">
                     <div className="max-w-7xl mx-auto">
                         <div className="text-center mb-12">
                             <h2 className="text-3xl md:text-4xl font-bold text-neutral-800 mb-4">
-                                Available Levels
+                                Complete PCB Design Bundle
                             </h2>
                             <p className="text-lg text-neutral-600">
-                                Based on your assessment performance, you have access to the following levels.
+                                Get comprehensive training across all 3 levels with significant savings.
                             </p>
                         </div>
 
                         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                            {/* Level Cards */}
+                            {/* Bundle Overview */}
                             <div className="lg:col-span-2 space-y-6">
-                                {levels.map((level) => (
-                                    <div
-                                        key={level.id}
-                                        className={`relative bg-white rounded-xl shadow-lg border-2 transition-all duration-300 cursor-pointer ${
-                                            !level.available
-                                                ? 'border-neutral-200 opacity-60 cursor-not-allowed'
-                                                : selectedLevel === level.id
-                                                    ? 'border-primary ring-2 ring-primary/20 hover:shadow-xl'
-                                                    : 'border-primary/30 hover:border-primary/60 hover:shadow-xl'
-                                        }`}
-                                        onClick={() => level.available && setSelectedLevel(level.id)}
-                                    >
-                                        {/* Level Badge */}
-                                        <div className="absolute -top-3 left-6">
-                                            <div className={`px-3 py-1 rounded-full text-xs font-semibold shadow-lg ${
-                                                level.available 
-                                                    ? (level.recommended ? 'bg-green-500 text-white' : 'bg-primary text-white')
-                                                    : 'bg-neutral-400 text-white'
-                                            }`}>
-                                                Level {level.levelNumber} - {level.difficulty}
+                                {/* Main Bundle Card */}
+                                <div className="bg-white rounded-xl shadow-lg border-2 border-primary ring-2 ring-primary/20 p-8">
+                                    <div className="text-center mb-6">
+                                        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary text-white mb-4">
+                                            <Package className="w-8 h-8" />
+                                        </div>
+                                        <h3 className="text-2xl font-bold text-neutral-800 mb-2">
+                                            Direct Entry Complete Bundle
+                                        </h3>
+                                        <p className="text-neutral-600">All 3 levels included with maximum value</p>
+                                    </div>
+
+                                    <div className="text-center mb-6 p-6 bg-neutral-50 rounded-lg">
+                                        <div className="flex items-center justify-center mb-4">
+                                            <div className="text-4xl font-bold text-primary">₨20,000</div>
+                                            <div className="ml-4">
+                                                <div className="text-xl text-neutral-500 line-through">₨24,000</div>
+                                                <div className="text-sm font-semibold text-green-600">Save ₨4,000</div>
                                             </div>
                                         </div>
+                                        <div className="flex items-center justify-center text-neutral-600">
+                                            <Clock className="w-4 h-4 mr-2" />
+                                            <span>12 Weeks Total Duration</span>
+                                        </div>
+                                    </div>
 
-                                        {/* Recommended Badge */}
-                                        {level.recommended && level.available && (
-                                            <div className="absolute -top-4 right-6">
-                                                <div className="bg-gradient-to-r from-green-500 to-green-600 text-white px-3 py-1 rounded-full text-xs font-semibold shadow-lg">
-                                                    Recommended
-                                                </div>
-                                            </div>
-                                        )}
+                                    <div className="text-center">
+                                        <div className="text-primary font-semibold text-lg mb-2">
+                                            ✓ Perfect for your {userResults?.percentage || 0}% assessment score
+                                        </div>
+                                        <p className="text-neutral-600 text-sm">
+                                            Complete your PCB design journey from foundation to mastery
+                                        </p>
+                                    </div>
+                                </div>
 
-                                        {/* Lock Icon for Unavailable Levels */}
-                                        {!level.available && (
-                                            <div className="absolute top-6 right-6">
-                                                <Lock className="w-6 h-6 text-neutral-400" />
-                                            </div>
-                                        )}
-
-                                        {/* Selection Indicator */}
-                                        {selectedLevel === level.id && level.available && (
-                                            <div className="absolute top-6 right-6">
-                                                <div className="w-6 h-6 bg-primary rounded-full flex items-center justify-center">
-                                                    <Check className="w-4 h-4 text-white" />
-                                                </div>
-                                            </div>
-                                        )}
-
-                                        <div className="p-6 pt-8">
+                                {/* Level Breakdown */}
+                                <div className="space-y-4">
+                                    <h3 className="text-xl font-bold text-neutral-800">What's Included in Your Bundle:</h3>
+                                    {bundleFeatures.map((level, index) => (
+                                        <div key={index} className="bg-white rounded-lg shadow border border-neutral-200 p-6">
                                             <div className="flex items-start space-x-4">
-                                                {/* Icon */}
-                                                <div className={`flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center ${
-                                                    level.available
-                                                        ? (selectedLevel === level.id ? 'bg-primary text-white' : 'bg-primary/10 text-primary')
-                                                        : 'bg-neutral-200 text-neutral-400'
-                                                }`}>
-                                                    {level.available ? (
-                                                        level.levelNumber === 1 ? <BookOpen className="w-6 h-6" /> :
-                                                        level.levelNumber === 2 ? <Target className="w-6 h-6" /> :
-                                                        <Trophy className="w-6 h-6" />
-                                                    ) : (
-                                                        <Lock className="w-6 h-6" />
-                                                    )}
+                                                <div className={`flex-shrink-0 w-12 h-12 rounded-full bg-neutral-100 flex items-center justify-center ${level.color}`}>
+                                                    {level.icon}
                                                 </div>
-
-                                                {/* Content */}
                                                 <div className="flex-1">
-                                                    <h3 className="text-lg font-bold text-neutral-800 mb-1">
-                                                        {level.name}
-                                                    </h3>
-                                                    <p className="text-neutral-600 text-sm mb-2">
-                                                        {level.available ? `${level.price} • ${level.duration}` : "Not Available"}
-                                                    </p>
-                                                    <p className="text-neutral-700 text-sm mb-4">{level.description}</p>
-
-                                                    {/* Quick Features */}
-                                                    <div className="grid grid-cols-1 gap-2 mb-4">
-                                                        {level.features.slice(0, 3).map((feature, index) => (
-                                                            <div key={index} className="flex items-center">
-                                                                <Check className={`w-3 h-3 mr-2 flex-shrink-0 ${
-                                                                    level.available ? 'text-primary' : 'text-neutral-400'
-                                                                }`} />
+                                                    <div className="flex items-center justify-between mb-2">
+                                                        <h4 className="text-lg font-semibold text-neutral-800">{level.level}</h4>
+                                                        <span className="text-sm text-neutral-500">{level.duration}</span>
+                                                    </div>
+                                                    <div className="grid grid-cols-2 gap-2">
+                                                        {level.features.map((feature, idx) => (
+                                                            <div key={idx} className="flex items-center">
+                                                                <Check className="w-3 h-3 mr-2 text-primary flex-shrink-0" />
                                                                 <span className="text-xs text-neutral-600">{feature}</span>
                                                             </div>
                                                         ))}
-                                                        {level.features.length > 3 && (
-                                                            <div className="text-xs text-neutral-500 ml-5">
-                                                                +{level.features.length - 3} more features
-                                                            </div>
-                                                        )}
-                                                    </div>
-
-                                                    {/* Status */}
-                                                    <div className="text-center">
-                                                        {level.available ? (
-                                                            selectedLevel === level.id ? (
-                                                                <div className="text-primary font-semibold text-sm">
-                                                                    ✓ Selected - Use continue button to proceed
-                                                                </div>
-                                                            ) : (
-                                                                <div className="text-neutral-500 text-sm">
-                                                                    Click to select this level
-                                                                </div>
-                                                            )
-                                                        ) : (
-                                                            <div className="text-neutral-500 text-sm">
-                                                                🔒 Requires higher assessment score
-                                                            </div>
-                                                        )}
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                ))}
+                                    ))}
+                                </div>
                             </div>
 
-                            {/* Level Details Pane */}
+                            {/* Bundle Selection Pane */}
                             <div className="hidden lg:block">
-                                <LevelSelectionPane 
-                                    selectedLevel={selectedLevel}
-                                    levels={levels}
-                                    onContinue={handleSelectLevel}
+                                <BundleSelectionPane 
+                                    onContinue={handleSelectBundle}
                                     loading={loading}
                                     userResults={userResults}
                                 />
                             </div>
                         </div>
 
-                        {/* Mobile Level Details */}
+                        {/* Mobile Bundle Selection */}
                         <div className="lg:hidden mt-8">
-                            {selectedLevel && (
-                                <LevelSelectionPane 
-                                    selectedLevel={selectedLevel}
-                                    levels={levels}
-                                    onContinue={handleSelectLevel}
-                                    loading={loading}
-                                    userResults={userResults}
-                                />
-                            )}
+                            <BundleSelectionPane 
+                                onContinue={handleSelectBundle}
+                                loading={loading}
+                                userResults={userResults}
+                            />
                         </div>
 
                         {/* Assessment Summary */}
@@ -563,9 +466,39 @@ const DirectEntryLevelSelection = () => {
                                                 <strong>Available Levels:</strong> {availableLevels.join(", ")}
                                             </p>
                                             <p>
-                                                <strong>Recommendation:</strong> Start with Level {Math.max(...availableLevels.map(l => parseInt(l.split(' ')[1])))} for optimal learning progression.
+                                                <strong>Recommendation:</strong> Complete Bundle gives you access to all levels with significant savings and continuous learning progression.
                                             </p>
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Why Choose Bundle */}
+                        <div className="mt-8">
+                            <div className="bg-gradient-to-r from-primary/10 to-accent/10 p-8 rounded-xl border border-primary/20">
+                                <h3 className="text-2xl font-bold text-neutral-800 mb-6 text-center">Why Choose the Complete Bundle?</h3>
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                    <div className="text-center">
+                                        <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center mx-auto mb-3">
+                                            <Star className="w-6 h-6 text-white" />
+                                        </div>
+                                        <h4 className="font-semibold text-neutral-800 mb-2">Maximum Savings</h4>
+                                        <p className="text-sm text-neutral-600">Save ₨4,000 compared to individual level purchases</p>
+                                    </div>
+                                    <div className="text-center">
+                                        <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center mx-auto mb-3">
+                                            <Trophy className="w-6 h-6 text-white" />
+                                        </div>
+                                        <h4 className="font-semibold text-neutral-800 mb-2">Complete Mastery</h4>
+                                        <p className="text-sm text-neutral-600">From beginner to expert in one comprehensive journey</p>
+                                    </div>
+                                    <div className="text-center">
+                                        <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center mx-auto mb-3">
+                                            <Target className="w-6 h-6 text-white" />
+                                        </div>
+                                        <h4 className="font-semibold text-neutral-800 mb-2">Continuous Progress</h4>
+                                        <p className="text-sm text-neutral-600">Seamless progression through all skill levels</p>
                                     </div>
                                 </div>
                             </div>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
@@ -6,6 +6,8 @@ import {
 import { doc, setDoc } from "firebase/firestore";
 import { auth, db } from "@/utils/firebase";
 import { Button } from "@/components/ui/button";
+import { Check } from "lucide-react";
+
 import {
     UserPlus,
     Mail,
@@ -13,34 +15,37 @@ import {
     User,
     Lock,
     LogIn,
+    CreditCard,
+    Eye,
+    EyeOff,
 } from "lucide-react";
 import { useLocation } from "wouter";
-import { useEffect } from "react";
-import { useAuth } from "@/context/AuthContext"; // adjust if needed
+import { useAuth } from "@/context/AuthContext";
 
 const Register = () => {
     const { user, loading: authLoading } = useAuth();
     const [, setLocation] = useLocation();
     const [isLogin, setIsLogin] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
 
     useEffect(() => {
         if (!authLoading && user) {
-            setLocation("/assessment");
+            setLocation("/training-overview");
         }
     }, [authLoading, user, setLocation]);
 
     const [form, setForm] = useState({
-        firstName: "",
-        lastName: "",
+        fullName: "",
+        cnic: "",
+        mobile: "",
         email: "",
         password: "",
-        phone: "",
     });
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
 
@@ -48,15 +53,15 @@ const Register = () => {
         setIsLogin(!isLogin);
         setError("");
         setForm({
-            firstName: "",
-            lastName: "",
+            fullName: "",
+            cnic: "",
+            mobile: "",
             email: "",
             password: "",
-            phone: "",
         });
     };
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setError("");
         setLoading(true);
@@ -70,16 +75,15 @@ const Register = () => {
 
             try {
                 await signInWithEmailAndPassword(auth, form.email, form.password);
-                alert("Login successful!");
-                setForm({ firstName: "", lastName: "", email: "", password: "", phone: "" });
-                setLocation("/assessment");
-            } catch (error: any) {
+                setForm({ fullName: "", cnic: "", mobile: "", email: "", password: "" });
+                setLocation("/training-overview");
+            } catch (error) {
                 setError(error.message);
             } finally {
                 setLoading(false);
             }
         } else {
-            if (!form.firstName || !form.lastName || !form.email || !form.password) {
+            if (!form.fullName || !form.cnic || !form.mobile || !form.email || !form.password) {
                 setError("Please fill in all required fields.");
                 setLoading(false);
                 return;
@@ -92,20 +96,27 @@ const Register = () => {
 
             try {
                 const { user } = await createUserWithEmailAndPassword(auth, form.email, form.password);
+
+                // Split full name into first and last name
+                const nameParts = form.fullName.trim().split(' ');
+                const firstName = nameParts[0] || '';
+                const lastName = nameParts.slice(1).join(' ') || '';
+
                 await setDoc(doc(db, "users", user.uid), {
-                    firstName: form.firstName,
-                    lastName: form.lastName,
+                    firstName: firstName,
+                    lastName: lastName,
+                    fullName: form.fullName,
+                    cnic: form.cnic,
+                    mobile: form.mobile,
                     email: form.email,
-                    phone: form.phone || null,
                     createdAt: new Date(),
                     testCompleted: false,
                     level: "undetermined",
                 });
 
-                alert("Registration successful!");
-                setForm({ firstName: "", lastName: "", email: "", password: "", phone: "" });
-                setLocation("/assessment");
-            } catch (error: any) {
+                setForm({ fullName: "", cnic: "", mobile: "", email: "", password: "" });
+                setLocation("/training-overview");
+            } catch (error) {
                 setError(error.message);
             } finally {
                 setLoading(false);
@@ -114,38 +125,52 @@ const Register = () => {
     };
 
     return (
-        <main>
-            
-
-
-            <section className="py-20 bg-primary text-white">
+        <main className="min-h-screen bg-neutral-50">
+            {/* Hero Section */}
+            <section className="py-16 bg-primary text-white">
                 <div className="container mx-auto px-4 text-center">
-                    <h1 className="text-4xl md:text-5xl font-bold mb-6">
-                        {isLogin ? "Welcome Back" : "Training Registration"}
-                    </h1>
-                    <p className="text-xl max-w-3xl mx-auto">
-                        {isLogin
-                            ? "Sign in to continue your PCB design journey and access your training materials."
-                            : "Gain real-world skills with our immersive, industry-focused programs—designed for students and professionals ready to lead."
-                        }
-                    </p>
+                    <div className="max-w-3xl mx-auto">
+                        <h1 className="text-4xl md:text-5xl font-bold mb-4">
+                            {isLogin ? "Welcome Back" : "Join IT-vate Training"}
+                        </h1>
+                        <p className="text-lg md:text-xl opacity-90">
+                            {isLogin
+                                ? "Sign in to continue your PCB design journey"
+                                : "Start your professional PCB design training today"
+                            }
+                        </p>
+                    </div>
                 </div>
             </section>
-                     <section className="py-8 bg-white border-b border-neutral-200">
+
+         
+          
+
+{/* Progress Steps */}
+<section className="py-8 bg-white border-b border-neutral-200">
   <div className="container mx-auto px-4">
     <div className="flex justify-center items-center space-x-8 overflow-x-auto">
+
+      {/* Step 0 - Completed */}
+      <div className="flex flex-col items-center min-w-[140px]">
+        <div className="flex items-center justify-center w-12 h-12 rounded-full bg-green-500 text-white mb-3 shadow-lg">
+          <Check className="w-6 h-6" />
+        </div>
+        <h3 className="text-sm font-semibold text-green-600 text-center">Start Your Journey</h3>
+        <p className="text-xs text-neutral-600 text-center mt-1">Get an overview of the programme</p>
+      </div>
+
+      {/* Connector Line */}
+      <div className="hidden md:block w-16 h-0.5 bg-neutral-300 -mt-8"></div>
+
       {/* Step 1 - Active */}
       <div className="flex flex-col items-center min-w-[140px]">
         <div className="relative flex items-center justify-center w-12 h-12 rounded-full bg-primary text-white font-bold text-lg mb-3 shadow-lg">
           1
-          <div className="absolute -top-8 left-1/2 transform -translate-x-1/2">
-            <span className="bg-primary text-white text-xs px-2 py-1 rounded-full whitespace-nowrap">
-              Current Step
-            </span>
-          </div>
+
         </div>
-        <h3 className="text-sm font-semibold text-primary text-center">Create Account</h3>
-        <p className="text-xs text-neutral-600 text-center mt-1">Register your details</p>
+        <h3 className="text-sm font-semibold text-primary text-center">Create Your Profile</h3>
+        <p className="text-xs text-neutral-600 text-center mt-1">Register with us</p>
       </div>
 
       {/* Connector Line */}
@@ -156,8 +181,8 @@ const Register = () => {
         <div className="flex items-center justify-center w-12 h-12 rounded-full bg-neutral-200 text-neutral-500 font-bold text-lg mb-3">
           2
         </div>
-        <h3 className="text-sm font-medium text-neutral-500 text-center">Training Overview</h3>
-        <p className="text-xs text-neutral-400 text-center mt-1">Course structure</p>
+        <h3 className="text-sm font-medium text-neutral-500 text-center">Choose Your Track</h3>
+        <p className="text-xs text-neutral-400 text-center mt-1">Select level or bundle</p>
       </div>
 
       {/* Connector Line */}
@@ -168,8 +193,8 @@ const Register = () => {
         <div className="flex items-center justify-center w-12 h-12 rounded-full bg-neutral-200 text-neutral-500 font-bold text-lg mb-3">
           3
         </div>
-        <h3 className="text-sm font-medium text-neutral-500 text-center">Select a Package</h3>
-        <p className="text-xs text-neutral-400 text-center mt-1">Choose from offered packages</p>
+        <h3 className="text-sm font-medium text-neutral-500 text-center">Finalize</h3>
+        <p className="text-xs text-neutral-400 text-center mt-1">Complete any intermediary steps</p>
       </div>
 
       {/* Connector Line */}
@@ -180,8 +205,8 @@ const Register = () => {
         <div className="flex items-center justify-center w-12 h-12 rounded-full bg-neutral-200 text-neutral-500 font-bold text-lg mb-3">
           4
         </div>
-        <h3 className="text-sm font-medium text-neutral-500 text-center">Enroll in the Program</h3>
-        <p className="text-xs text-neutral-400 text-center mt-1">Finalize your enrollment</p>
+        <h3 className="text-sm font-medium text-neutral-500 text-center">Payment</h3>
+        <p className="text-xs text-neutral-400 text-center mt-1">Make payment</p>
       </div>
 
       {/* Connector Line */}
@@ -192,134 +217,157 @@ const Register = () => {
         <div className="flex items-center justify-center w-12 h-12 rounded-full bg-neutral-200 text-neutral-500 font-bold text-lg mb-3">
           5
         </div>
-        <h3 className="text-sm font-medium text-neutral-500 text-center">Payment</h3>
-        <p className="text-xs text-neutral-400 text-center mt-1">Make payment</p>
+        <h3 className="text-sm font-medium text-neutral-500 text-center">Confirmation</h3>
+        <p className="text-xs text-neutral-400 text-center mt-1">Download your enrollment slip</p>
       </div>
+
     </div>
   </div>
-</section>   
-            <section className="py-20 bg-white">
+</section>
+
+
+            {/* Registration Form */}
+            <section className="py-16">
                 <div className="container mx-auto px-4">
-                    <div className="max-w-2xl mx-auto">
-                        <div className="bg-neutral-50 p-8 rounded-lg shadow-md">
-                            <div className="text-center mb-8">
-                                <h2 className="text-3xl font-bold text-neutral-800 mb-4">
-                                    {isLogin ? "Sign In" : "Register for the Program"}
+                    <div className="max-w-md mx-auto">
+                        <div className="bg-white rounded-2xl shadow-xl border border-neutral-200 overflow-hidden">
+                            {/* Form Header */}
+                            <div className="px-8 pt-8 pb-6 text-center">
+                                <h2 className="text-2xl font-bold text-neutral-800 mb-2">
+                                    {isLogin ? "Sign In" : "Create Account"}
                                 </h2>
-                                <p className="text-neutral-600">
+                                <p className="text-neutral-600 text-sm">
                                     {isLogin
-                                        ? "Enter your credentials to access your account"
-                                        : "Fill in your details to enroll in our PCB Designer Programme"
+                                        ? "Enter your credentials to continue"
+                                        : "Fill in your details to get started"
                                     }
                                 </p>
                             </div>
 
-                            {/* Toggle Button */}
-                            <div className="text-center mb-6">
-                                <p className="text-neutral-600 mb-3">
-                                    {isLogin ? "Don't have an account?" : "Already have an account?"}
-                                </p>
-                                <button
-                                    type="button"
-                                    onClick={handleToggle}
-                                    className="text-primary hover:text-primary/80 font-medium underline transition-colors"
-                                >
-                                    {isLogin ? "Create Account" : "Sign In"}
-                                </button>
-                            </div>
+                            {/* Form Content */}
+                            <div className="px-8 pb-8">
+                                <form onSubmit={handleSubmit} className="space-y-4">
+                                    {/* Registration Fields */}
+                                    {!isLogin && (
+                                        <>
+                                            {/* Full Name */}
+                                            <div className="relative">
+                                                <User size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-primary" />
+                                                <input
+                                                    name="fullName"
+                                                    placeholder="Full Name"
+                                                    onChange={handleChange}
+                                                    value={form.fullName}
+                                                    required
+                                                    className="w-full pl-10 pr-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-sm"
+                                                />
+                                            </div>
 
-                            <div className="space-y-6">
-                                <div
-                                    className={`transition-all duration-300 ease-in-out ${isLogin ? 'opacity-0 max-h-0 overflow-hidden' : 'opacity-100 max-h-96'
-                                        }`}
-                                >
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                                        <div className="relative">
-                                            <User size={18} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400" />
-                                            <input
-                                                name="firstName"
-                                                placeholder="First Name"
-                                                onChange={handleChange}
-                                                value={form.firstName}
-                                                required={!isLogin}
-                                                className="w-full pl-10 pr-4 py-3 border border-neutral-300 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
-                                            />
-                                        </div>
+                                            {/* CNIC */}
+                                            <div className="relative">
+                                                <CreditCard size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-primary" />
+                                                <input
+                                                    name="cnic"
+                                                    placeholder="CNIC (12345-1234567-1)"
+                                                    onChange={handleChange}
+                                                    value={form.cnic}
+                                                    required
+                                                    pattern="\d{5}-\d{7}-\d"
+                                                    title="CNIC format: 12345-1234567-1"
+                                                    className="w-full pl-10 pr-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-sm"
+                                                />
+                                            </div>
 
-                                        <div className="relative">
-                                            <User size={18} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400" />
-                                            <input
-                                                name="lastName"
-                                                placeholder="Last Name"
-                                                onChange={handleChange}
-                                                value={form.lastName}
-                                                required={!isLogin}
-                                                className="w-full pl-10 pr-4 py-3 border border-neutral-300 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
-                                            />
-                                        </div>
-                                    </div>
+                                            {/* Mobile */}
+                                            <div className="relative">
+                                                <Phone size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-primary" />
+                                                <input
+                                                    name="mobile"
+                                                    placeholder="Mobile (0300-1234567)"
+                                                    onChange={handleChange}
+                                                    value={form.mobile}
+                                                    required
+                                                    pattern="03\d{2}-\d{7}"
+                                                    title="Mobile format: 0300-1234567"
+                                                    className="w-full pl-10 pr-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-sm"
+                                                />
+                                            </div>
+                                        </>
+                                    )}
 
-                                    <div className="relative mb-6">
-                                        <Phone size={18} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400" />
+                                    {/* Email */}
+                                    <div className="relative">
+                                        <Mail size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-primary" />
                                         <input
-                                            name="phone"
-                                            placeholder="Phone Number (Optional)"
+                                            type="email"
+                                            name="email"
+                                            placeholder="Email Address"
                                             onChange={handleChange}
-                                            value={form.phone}
-                                            className="w-full pl-10 pr-4 py-3 border border-neutral-300 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
+                                            value={form.email}
+                                            required
+                                            className="w-full pl-10 pr-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-sm"
                                         />
                                     </div>
-                                </div>
 
-                                <div className="relative">
-                                    <Mail size={18} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400" />
-                                    <input
-                                        type="email"
-                                        name="email"
-                                        placeholder="Email Address"
-                                        onChange={handleChange}
-                                        value={form.email}
-                                        required
-                                        className="w-full pl-10 pr-4 py-3 border border-neutral-300 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
-                                    />
-                                </div>
+                                    {/* Password */}
+                                    <div className="relative">
+                                        <Lock size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-primary" />
+                                        <input
+                                            type={showPassword ? "text" : "password"}
+                                            name="password"
+                                            placeholder="Password"
+                                            onChange={handleChange}
+                                            value={form.password}
+                                            required
+                                            minLength={6}
+                                            className="w-full pl-10 pr-12 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-sm"
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowPassword(!showPassword)}
+                                            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-neutral-400 hover:text-neutral-600"
+                                        >
+                                            {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                                        </button>
+                                    </div>
 
-                                <div className="relative">
-                                    <Lock size={18} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400" />
-                                    <input
-                                        type="password"
-                                        name="password"
-                                        placeholder="Password"
-                                        onChange={handleChange}
-                                        value={form.password}
-                                        required
-                                        className="w-full pl-10 pr-4 py-3 border border-neutral-300 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
-                                    />
-                                </div>
+                                    {error && (
+                                        <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
+                                            <p className="text-red-600 text-center text-sm">{error}</p>
+                                        </div>
+                                    )}
 
-                                {error && <p className="text-red-600 text-center">{error}</p>}
-
-                                <div className="flex justify-center pt-4">
                                     <Button
-                                        onClick={(e) => {
-                                            e.preventDefault();
-                                            handleSubmit(e);
-                                        }}
+                                        type="submit"
                                         disabled={loading}
-                                        className="bg-primary hover:bg-primary/90 text-white font-medium px-8 py-3 rounded-md transition-colors shadow-md"
+                                        className="w-full bg-primary hover:bg-primary/90 text-white font-medium py-3 rounded-lg transition-colors shadow-md mt-6"
                                     >
                                         {isLogin ? (
                                             <>
-                                                <LogIn size={18} className="mr-2" />
+                                                <LogIn size={16} className="mr-2" />
                                                 {loading ? "Signing In..." : "Sign In"}
                                             </>
                                         ) : (
                                             <>
-                                                <UserPlus size={18} className="mr-2" />
-                                                {loading ? "Registering..." : "Sign Up"}
+                                                <UserPlus size={16} className="mr-2" />
+                                                {loading ? "Creating Account..." : "Create Account"}
                                             </>
                                         )}
                                     </Button>
+                                </form>
+
+                                {/* Toggle */}
+                                <div className="text-center mt-6 pt-6 border-t border-neutral-200">
+                                    <p className="text-neutral-600 text-sm mb-2">
+                                        {isLogin ? "Don't have an account?" : "Already have an account?"}
+                                    </p>
+                                    <button
+                                        type="button"
+                                        onClick={handleToggle}
+                                        className="text-primary hover:text-primary/80 font-medium text-sm transition-colors"
+                                    >
+                                        {isLogin ? "Create Account" : "Sign In"}
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -327,68 +375,7 @@ const Register = () => {
                 </div>
             </section>
 
-            <section className="py-16 bg-neutral-50">
-                <div className="container mx-auto px-4">
-                    <h2 className="text-3xl font-bold text-center text-neutral-800 mb-12">
-                        PCB Designer Programme
-                    </h2>
-                    <p className="text-center max-w-2xl mx-auto mb-12 text-neutral-600">
-                        Kickstart your journey into PCB design with a structured and practical training program.
-                    </p>
-
-                    <div className="grid grid-cols-1 md:grid-cols-6 gap-8 max-w-5xl mx-auto">
-  {/* Step 1 */}
-<div className="bg-white p-6 rounded-lg shadow-md text-center md:col-span-2">
-  <h3 className="text-xl font-semibold mb-3">Step 1: Create Your Account</h3>
-  <p className="text-neutral-600">
-    Register by providing your basic details to get started.
-  </p>
-</div>
-
-{/* Step 2 */}
-<div className="bg-white p-6 rounded-lg shadow-md text-center md:col-span-2">
-  <h3 className="text-xl font-semibold mb-3">Step 2: Training Overview</h3>
-  <p className="text-neutral-600">
-    Review the course structure, your eligiblity criteria, and expectations to prepare.
-  </p>
-</div>
-
-{/* Step 3 */}
-<div className="bg-white p-6 rounded-lg shadow-md text-center md:col-span-2">
-  <h3 className="text-xl font-semibold mb-3">Step 3: Self-Assessment Test</h3>
-  <p className="text-neutral-600">
-    Complete a skills evaluation to help us understand your current proficiency.
-  </p>
-</div>
-
-{/* Step 4 */}
-<div className="bg-white p-6 rounded-lg shadow-md text-center md:col-start-2 md:col-span-2">
-  <h3 className="text-xl font-semibold mb-3">Step 4: Results & Recommendation</h3>
-  <p className="text-neutral-600">
-    Receive your test results, recommended training level, and fee details.
-  </p>
-</div>
-
-{/* Step 5 */}
-<div className="bg-white p-6 rounded-lg shadow-md text-center md:col-start-4 md:col-span-2">
-  <h3 className="text-xl font-semibold mb-3">Step 5: Payment & Receipt Upload</h3>
-  <p className="text-neutral-600">
-    Pay the program fee and upload your payment receipt to confirm enrollment.
-  </p>
-</div>
-
-{/* Step 6 */}
-{/* <div className="bg-white p-6 rounded-lg shadow-md text-center md:col-start-3 md:col-span-2">
-  <h3 className="text-xl font-semibold mb-3">Step 6: Final Submission</h3>
-  <p className="text-neutral-600">
-    Submit all required information to complete your registration process.
-  </p>
-</div> */}
-
-</div>
-
-                </div>
-            </section>
+            
         </main>
     );
 };
