@@ -30,7 +30,7 @@ const Register = () => {
 
     useEffect(() => {
         if (!authLoading && user) {
-            setLocation("/training-overview");
+            setLocation("/packages");
         }
     }, [authLoading, user, setLocation]);
 
@@ -76,7 +76,7 @@ const Register = () => {
             try {
                 await signInWithEmailAndPassword(auth, form.email, form.password);
                 setForm({ fullName: "", cnic: "", mobile: "", email: "", password: "" });
-                setLocation("/training-overview");
+                setLocation("/packages");
             } catch (error) {
                 setError(error.message);
             } finally {
@@ -115,7 +115,7 @@ const Register = () => {
                 });
 
                 setForm({ fullName: "", cnic: "", mobile: "", email: "", password: "" });
-                setLocation("/training-overview");
+                setLocation("/packages");
             } catch (error) {
                 setError(error.message);
             } finally {
