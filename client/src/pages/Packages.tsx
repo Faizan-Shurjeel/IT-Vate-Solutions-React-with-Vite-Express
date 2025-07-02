@@ -6,11 +6,13 @@ import { useAuth } from "@/context/AuthContext";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "@/utils/firebase";
 
+
 const Packages = () => {
     const [, setLocation] = useLocation();
     const { user } = useAuth();
     const [loading, setLoading] = useState(false);
     const [selectedPackage, setSelectedPackage] = useState(null);
+
 
     const handleSelectPackage = async (packageType) => {
         if (!user) {
@@ -51,10 +53,11 @@ const Packages = () => {
     };
     
 
+
     const packages = [
         {
             id: "complete",
-            name: "Complete Training",
+            name: "Expert Track",
             subtitle: "Levels 1-3, 20% off",
             price: "₨12,000",
             duration: "All Levels",
@@ -65,15 +68,18 @@ const Packages = () => {
                 "Complete Journey",
                 "Maximum Savings"
             ],
-            cta: "Select Complete Training",
+            cta: "Select Expert Track",
             popular: true,
             badge: "Students & Early-Career Pros",
             icon: <Crown className="w-8 h-8" />,
-            color: "border-primary hover:border-primary/80 ring-2 ring-primary/20"
+            color: "border-primary hover:border-primary/80 ring-2 ring-primary/20",
+            hasDiscount: true,
+            discountText: "You save ₨3,000",
+            discountSubtext: "Best Value Package!"
         },
         {
             id: "progressive",
-            name: "Progressive Path",
+            name: "Progressive Track",
             subtitle: "Start at Level 1",
             price: "₨5,000",
             duration: "Per Level",
@@ -84,11 +90,14 @@ const Packages = () => {
                 "₨5,000 per level",
                 "Step-by-Step Learning"
             ],
-            cta: "Select Progressive Path",
+            cta: "Select Progressive Track",
             popular: false,
             badge: "Anyone Starting New",
             icon: <BookOpen className="w-8 h-8" />,
-            color: "border-primary hover:border-primary/80 ring-2 ring-primary/20"
+            color: "border-primary hover:border-primary/80 ring-2 ring-primary/20",
+            hasDiscount: true,
+            discountText: "Early Bird 40% OFF",
+            discountSubtext: "Limited Time Offer!"
         },
         {
             id: "direct",
@@ -134,6 +143,7 @@ const Packages = () => {
         }
     ];
 
+
     return (
         <main>
             {/* Hero Section */}
@@ -154,74 +164,88 @@ const Packages = () => {
                 </div>
             </section>
 
-            {/* Progress Steps */}
-            <section className="py-8 bg-white border-b border-neutral-200">
-                <div className="container mx-auto px-4">
-                    <div className="flex justify-center items-center space-x-8 overflow-x-auto">
-                        {/* Step 1 - Complete */}
-                        <div className="flex flex-col items-center min-w-[140px]">
-                            <div className="flex items-center justify-center w-12 h-12 rounded-full bg-green-500 text-white font-bold text-lg mb-3 shadow-lg">
-                                ✓
-                            </div>
-                            <h3 className="text-sm font-semibold text-green-600 text-center">Create Account</h3>
-                            <p className="text-xs text-neutral-600 text-center mt-1">Completed</p>
-                        </div>
+{/* Progress Steps */}
+<section className="py-8 bg-white border-b border-neutral-200">
+    <div className="container mx-auto px-4">
+        <div className="flex justify-center items-center space-x-8 overflow-x-auto">
+            {/* Step 0 - Complete */}
+            <div className="flex flex-col items-center min-w-[140px]">
+                <div className="flex items-center justify-center w-12 h-12 rounded-full bg-green-500 text-white font-bold text-lg mb-3 shadow-lg">
+                    ✓
+                </div>
+                <h3 className="text-sm font-semibold text-green-600 text-center">Start Your Journey</h3>
+                <p className="text-xs text-neutral-600 text-center mt-1">Completed</p>
+            </div>
 
-                        {/* Connector Line */}
-                        <div className="hidden md:block w-16 h-0.5 bg-green-300 -mt-8"></div>
+            {/* Connector Line */}
+            <div className="hidden md:block w-16 h-0.5 bg-green-300 -mt-8"></div>
 
-                        {/* Step 2 - Complete */}
-                        <div className="flex flex-col items-center min-w-[140px]">
-                            <div className="flex items-center justify-center w-12 h-12 rounded-full bg-green-500 text-white font-bold text-lg mb-3 shadow-lg">
-                                ✓
-                            </div>
-                            <h3 className="text-sm font-semibold text-green-600 text-center">Training Overview</h3>
-                            <p className="text-xs text-neutral-600 text-center mt-1">Completed</p>
-                        </div>
+            {/* Step 1 - Complete */}
+            <div className="flex flex-col items-center min-w-[140px]">
+                <div className="flex items-center justify-center w-12 h-12 rounded-full bg-green-500 text-white font-bold text-lg mb-3 shadow-lg">
+                    ✓
+                </div>
+                <h3 className="text-sm font-semibold text-green-600 text-center">Create Your Profile</h3>
+                <p className="text-xs text-neutral-600 text-center mt-1">Completed</p>
+            </div>
 
-                        {/* Connector Line */}
-                        <div className="hidden md:block w-16 h-0.5 bg-primary -mt-8"></div>
+            {/* Connector Line */}
+            <div className="hidden md:block w-16 h-0.5 bg-green-300 -mt-8"></div>
 
-                        {/* Step 3 - Active */}
-                        <div className="flex flex-col items-center min-w-[140px]">
-                            <div className="relative flex items-center justify-center w-12 h-12 rounded-full bg-primary text-white font-bold text-lg mb-3 shadow-lg">
-                                3
-                                <div className="absolute -top-8 left-1/2 transform -translate-x-1/2">
-                                    <span className="bg-primary text-white text-xs px-2 py-1 rounded-full whitespace-nowrap">
-                                        Current Step
-                                    </span>
-                                </div>
-                            </div>
-                            <h3 className="text-sm font-semibold text-primary text-center">Choose Your Track</h3>
-                            <p className="text-xs text-neutral-600 text-center mt-1">Select from available tracks</p>
-                        </div>
-
-                        {/* Connector Line */}
-                        <div className="hidden md:block w-16 h-0.5 bg-neutral-300 -mt-8"></div>
-
-                        {/* Step 4 - Pending */}
-                        <div className="flex flex-col items-center min-w-[140px]">
-                            <div className="flex items-center justify-center w-12 h-12 rounded-full bg-neutral-200 text-neutral-500 font-bold text-lg mb-3">
-                                4
-                            </div>
-                            <h3 className="text-sm font-medium text-neutral-500 text-center">Select Your Option</h3>
-                            <p className="text-xs text-neutral-400 text-center mt-1">Choose level or bundle</p>
-                        </div>
-
-                        {/* Connector Line */}
-                        <div className="hidden md:block w-16 h-0.5 bg-neutral-300 -mt-8"></div>
-
-                        {/* Step 5 - Pending */}
-                        <div className="flex flex-col items-center min-w-[140px]">
-                            <div className="flex items-center justify-center w-12 h-12 rounded-full bg-neutral-200 text-neutral-500 font-bold text-lg mb-3">
-                                5
-                            </div>
-                            <h3 className="text-sm font-medium text-neutral-500 text-center">Payment</h3>
-                            <p className="text-xs text-neutral-400 text-center mt-1">Make payment</p>
-                        </div>
+            {/* Step 2 - Active */}
+            <div className="flex flex-col items-center min-w-[140px]">
+                <div className="relative flex items-center justify-center w-12 h-12 rounded-full bg-primary text-white font-bold text-lg mb-3 shadow-lg">
+                    2
+                    <div className="absolute -top-8 left-1/2 transform -translate-x-1/2">
+                        <span className="bg-primary text-white text-xs px-2 py-1 rounded-full whitespace-nowrap">
+                            Current Step
+                        </span>
                     </div>
                 </div>
-            </section>
+                <h3 className="text-sm font-semibold text-primary text-center">Choose Your Track</h3>
+                <p className="text-xs text-neutral-600 text-center mt-1">Bundle or progressive</p>
+            </div>
+
+            {/* Connector Line */}
+            <div className="hidden md:block w-16 h-0.5 bg-neutral-300 -mt-8"></div>
+
+            {/* Step 3 - Locked */}
+            <div className="flex flex-col items-center min-w-[140px] opacity-50">
+                <div className="flex items-center justify-center w-12 h-12 rounded-full bg-neutral-200 text-neutral-500 font-bold text-lg mb-3">
+                    3
+                </div>
+                <h3 className="text-sm font-medium text-neutral-500 text-center">Confirm Your Track</h3>
+                <p className="text-xs text-neutral-400 text-center mt-1">Review your choice</p>
+            </div>
+
+            {/* Connector Line */}
+            <div className="hidden md:block w-16 h-0.5 bg-neutral-300 -mt-8"></div>
+
+            {/* Step 4 - Locked */}
+            <div className="flex flex-col items-center min-w-[140px] opacity-50">
+                <div className="flex items-center justify-center w-12 h-12 rounded-full bg-neutral-200 text-neutral-500 font-bold text-lg mb-3">
+                    4
+                </div>
+                <h3 className="text-sm font-medium text-neutral-500 text-center">Payment</h3>
+                <p className="text-xs text-neutral-400 text-center mt-1">Make payment</p>
+            </div>
+
+            {/* Connector Line */}
+            <div className="hidden md:block w-16 h-0.5 bg-neutral-300 -mt-8"></div>
+
+            {/* Step 5 - Locked */}
+            <div className="flex flex-col items-center min-w-[140px] opacity-50">
+                <div className="flex items-center justify-center w-12 h-12 rounded-full bg-neutral-200 text-neutral-500 font-bold text-lg mb-3">
+                    5
+                </div>
+                <h3 className="text-sm font-medium text-neutral-500 text-center">Confirmation</h3>
+                <p className="text-xs text-neutral-400 text-center mt-1">Download slip</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+
 
             {/* Package Selection */}
             <section className="py-16 bg-neutral-50">
@@ -236,112 +260,165 @@ const Packages = () => {
                             </p>
                         </div>
 
+
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                             {packages.map((pkg) => (
                                 <div
                                     key={pkg.id}
-                                    className={`relative bg-white rounded-xl shadow-lg border-2 ${pkg.color} transition-all duration-300 hover:shadow-xl group flex flex-col h-full`}
+                                    className="relative"
                                 >
-                                    {pkg.popular && (
-                                        <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                                            <div className="bg-gradient-to-r from-primary to-accent text-white px-4 py-1 rounded-full text-sm font-semibold shadow-lg">
-                                                Most Popular
-                                            </div>
-                                        </div>
-                                    )}
-
-                                    {!pkg.popular && (
-                                        <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
-                                            <div className="px-3 py-1 rounded-full text-xs font-semibold shadow-lg bg-primary text-white">
-                                                {pkg.badge}
-                                            </div>
-                                        </div>
-                                    )}
-
-                                    <div className="p-6 flex flex-col h-full">
-                                        {/* Header */}
-                                        <div className="text-center mb-6">
-                                            <div className={`inline-flex items-center justify-center w-14 h-14 rounded-full mb-4 ${
-                                                pkg.popular ? 'bg-primary text-white' : 'bg-primary/10 text-primary'
-                                            }`}>
-                                                {pkg.icon}
-                                            </div>
-                                            <h3 className="text-lg font-bold text-neutral-800 mb-2">
-                                                {pkg.name}
-                                            </h3>
-                                            <p className="text-neutral-600 mb-3 text-sm">{pkg.subtitle}</p>
-                                            <p className="text-neutral-700 text-sm">{pkg.description}</p>
-                                        </div>
-
-                                        {/* Pricing */}
-                                        <div className="text-center mb-6 p-4 bg-neutral-50 rounded-lg">
-                                            <div className="text-2xl font-bold text-neutral-800 mb-1">
-                                                {pkg.price}
-                                            </div>
-                                            <div className="flex items-center justify-center text-neutral-600 text-sm">
-                                                <Clock className="w-3 h-3 mr-1" />
-                                                <span className="text-xs">{pkg.duration}</span>
-                                            </div>
-                                        </div>
-
-                                        {/* Test Details for Direct Entry */}
-                                        {pkg.id === 'direct' && pkg.testDetails && (
-                                            <div className="mb-4 p-3 bg-primary/5 rounded-lg border border-primary/20">
-                                                <h4 className="text-xs font-semibold text-primary mb-2">Assessment Results:</h4>
-                                                <div className="space-y-1">
-                                                    {pkg.testDetails.map((detail, index) => (
-                                                        <div key={index} className="flex items-center justify-between text-xs">
-                                                            <span className="font-medium text-primary">{detail.score}</span>
-                                                            <span className="text-neutral-600">→ {detail.access}</span>
-                                                        </div>
-                                                    ))}
+                                    {/* Main card with conditional blur */}
+                                    <div
+                                        className={`relative bg-white rounded-xl shadow-lg border-2 ${pkg.color} transition-all duration-300 hover:shadow-xl group flex flex-col h-full ${
+                                            (pkg.id === 'direct' || pkg.id === 'special') ? 'blur-sm pointer-events-none' : ''
+                                        }`}
+                                    >
+                                        {/* Top badges - Recommended and Best for Students */}
+                                        {pkg.popular && (
+                                            <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-20">
+                                                <div className="bg-gradient-to-r from-primary to-accent text-white px-4 py-1 rounded-full text-sm font-semibold shadow-lg">
+                                                    Recommended
                                                 </div>
                                             </div>
                                         )}
 
-                                        {/* Features */}
-                                        <div className="mb-6 flex-grow">
-                                            <h4 className="font-semibold text-neutral-800 mb-3 text-sm">What's Included:</h4>
-                                            <div className="space-y-2">
-                                                {pkg.features.map((feature, index) => (
-                                                    <div key={index} className="flex items-start">
-                                                        <Check className={`w-4 h-4 mr-2 mt-0.5 flex-shrink-0 ${
-                                                            pkg.popular ? 'text-primary' : 'text-primary'
-                                                        }`} />
-                                                        <span className="text-neutral-700 text-xs">{feature}</span>
+                                        {!pkg.popular && pkg.hasDiscount && (
+                                            <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-20">
+                                                <div className="bg-gradient-to-r from-primary to-accent text-white px-4 py-1 rounded-full text-sm font-semibold shadow-lg">
+                                                    Best for Students
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {!pkg.popular && !pkg.hasDiscount && (
+                                            <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-20">
+                                                <div className="px-3 py-1 rounded-full text-xs font-semibold shadow-lg bg-primary text-white">
+                                                    {pkg.badge}
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {/* Discount Banner for cards 1 and 2 - Positioned to not overlap */}
+                                        {pkg.hasDiscount && (
+                                            <div className="absolute -top-2 -right-3 z-10">
+                                                <div className="relative">
+                                                    <div className={`${
+                                                        pkg.id === 'complete' 
+                                                            ? 'bg-gradient-to-r from-green-500 to-green-600' 
+                                                            : 'bg-gradient-to-r from-orange-500 to-red-500'
+                                                    } text-white px-3 py-1.5 rounded-lg shadow-lg transform rotate-12 hover:rotate-6 transition-transform duration-300`}>
+                                                        <div className="text-center">
+                                                            <div className="text-xs font-bold leading-tight">
+                                                                {pkg.discountText}
+                                                            </div>
+                                                            <div className="text-[10px] opacity-90">
+                                                                {pkg.discountSubtext}
+                                                            </div>
+                                                        </div>
+                                                        {/* Banner tail */}
+                                                        <div className={`absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-3 border-r-3 border-t-3 border-transparent ${
+                                                            pkg.id === 'complete' 
+                                                                ? 'border-t-green-600' 
+                                                                : 'border-t-red-500'
+                                                        }`}></div>
                                                     </div>
-                                                ))}
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        <div className="p-6 flex flex-col h-full">
+                                            {/* Header */}
+                                            <div className="text-center mb-6">
+                                                <div className={`inline-flex items-center justify-center w-14 h-14 rounded-full mb-4 ${
+                                                    pkg.popular ? 'bg-primary text-white' : 'bg-primary/10 text-primary'
+                                                }`}>
+                                                    {pkg.icon}
+                                                </div>
+                                                <h3 className="text-lg font-bold text-neutral-800 mb-2">
+                                                    {pkg.name}
+                                                </h3>
+                                                <p className="text-neutral-600 mb-3 text-sm">{pkg.subtitle}</p>
+                                                <p className="text-neutral-700 text-sm">{pkg.description}</p>
+                                            </div>
+
+                                            {/* Pricing */}
+                                            <div className="text-center mb-6 p-4 bg-neutral-50 rounded-lg">
+                                                <div className="text-2xl font-bold text-neutral-800 mb-1">
+                                                    {pkg.price}
+                                                </div>
+                                                <div className="flex items-center justify-center text-neutral-600 text-sm">
+                                                    <Clock className="w-3 h-3 mr-1" />
+                                                    <span className="text-xs">{pkg.duration}</span>
+                                                </div>
+                                            </div>
+
+                                            {/* Test Details for Direct Entry */}
+                                            {pkg.id === 'direct' && pkg.testDetails && (
+                                                <div className="mb-4 p-3 bg-primary/5 rounded-lg border border-primary/20">
+                                                    <h4 className="text-xs font-semibold text-primary mb-2">Assessment Results:</h4>
+                                                    <div className="space-y-1">
+                                                        {pkg.testDetails.map((detail, index) => (
+                                                            <div key={index} className="flex items-center justify-between text-xs">
+                                                                <span className="font-medium text-primary">{detail.score}</span>
+                                                                <span className="text-neutral-600">→ {detail.access}</span>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            )}
+
+                                            {/* Features */}
+                                            <div className="mb-6 flex-grow">
+                                                <h4 className="font-semibold text-neutral-800 mb-3 text-sm">What's Included:</h4>
+                                                <div className="space-y-2">
+                                                    {pkg.features.map((feature, index) => (
+                                                        <div key={index} className="flex items-start">
+                                                            <Check className={`w-4 h-4 mr-2 mt-0.5 flex-shrink-0 ${
+                                                                pkg.popular ? 'text-primary' : 'text-primary'
+                                                            }`} />
+                                                            <span className="text-neutral-700 text-xs">{feature}</span>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+
+                                            {/* CTA - This will be pushed to bottom */}
+                                            <div className="text-center mt-auto">
+                                                <Button
+                                                    onClick={() => handleSelectPackage(pkg.id)}
+                                                    disabled={loading || (pkg.id === 'direct' || pkg.id === 'special')}
+                                                    className={`w-full py-2 text-sm font-semibold rounded-lg transition-all duration-300 ${
+                                                        pkg.popular 
+                                                            ? 'bg-primary hover:bg-primary/90 text-white shadow-lg' 
+                                                            : 'bg-primary hover:bg-primary/90 text-white'
+                                                    } ${loading && selectedPackage === pkg.id ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                                >
+                                                    {loading && selectedPackage === pkg.id ? (
+                                                        <>
+                                                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                                                            Processing...
+                                                        </>
+                                                    ) : (
+                                                        <>
+                                                            {pkg.cta}
+                                                            <ChevronRight className="w-4 h-4 ml-2" />
+                                                        </>
+                                                    )}
+                                                </Button>
                                             </div>
                                         </div>
-
-                                        {/* CTA - This will be pushed to bottom */}
-                                        <div className="text-center mt-auto">
-                                            <Button
-                                                onClick={() => handleSelectPackage(pkg.id)}
-                                                disabled={loading}
-                                                className={`w-full py-2 text-sm font-semibold rounded-lg transition-all duration-300 ${
-                                                    pkg.popular 
-                                                        ? 'bg-primary hover:bg-primary/90 text-white shadow-lg' 
-                                                        : 'bg-primary hover:bg-primary/90 text-white'
-                                                } ${loading && selectedPackage === pkg.id ? 'opacity-50 cursor-not-allowed' : ''}`}
-                                            >
-                                                {loading && selectedPackage === pkg.id ? (
-                                                    <>
-                                                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                                                        Processing...
-                                                    </>
-                                                ) : (
-                                                    <>
-                                                        {pkg.cta}
-                                                        <ChevronRight className="w-4 h-4 ml-2" />
-                                                    </>
-                                                )}
-                                            </Button>
-                                        </div>
                                     </div>
+
+                                    {/* Lock overlay for cards 3 and 4 - OUTSIDE the blurred div */}
+                                    {(pkg.id === 'direct' || pkg.id === 'special') && (
+                                        <div className="absolute inset-0 bg-white bg-opacity-70 flex items-center justify-center rounded-xl z-30 pointer-events-none">
+                                            <Lock className="w-12 h-12 text-gray-400" />
+                                        </div>
+                                    )}
                                 </div>
                             ))}
                         </div>
+
 
                         {/* Additional Info */}
                         <div className="mt-12 text-center">
@@ -352,10 +429,10 @@ const Packages = () => {
                                     </div>
                                     <div className="flex-1 text-left">
                                         <h3 className="text-lg font-semibold text-neutral-800 mb-2">
-                                            Complete Training Benefits
+                                            Expert Track Benefits
                                         </h3>
                                         <p className="text-neutral-600">
-                                            The Complete Training package provides all 3 levels with a 20% discount and ensures 
+                                            The Expert Track package provides all 3 levels with a 20% discount and ensures 
                                             continuous learning progression at significant savings. Perfect for students and 
                                             early-career professionals committed to mastering PCB design.
                                         </p>
@@ -369,5 +446,6 @@ const Packages = () => {
         </main>
     );
 };
+
 
 export default Packages;

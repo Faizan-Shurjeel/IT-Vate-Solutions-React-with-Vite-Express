@@ -236,66 +236,87 @@ const PaymentSuccess = () => {
                     </div>
                 </div>
             </section>
+{/* Progress Steps */}
+<section className="py-8 bg-white border-b border-neutral-200">
+    <div className="container mx-auto px-4">
+        <div className="flex justify-center items-center space-x-8 overflow-x-auto">
+            {/* Step 0 - Complete */}
+            <div className="flex flex-col items-center min-w-[140px]">
+                <div className="flex items-center justify-center w-12 h-12 rounded-full bg-green-500 text-white font-bold text-lg mb-3 shadow-lg">
+                    ✓
+                </div>
+                <h3 className="text-sm font-semibold text-green-600 text-center">Start Your Journey</h3>
+                <p className="text-xs text-neutral-600 text-center mt-1">Completed</p>
+            </div>
 
-            {/* Progress Steps - All Complete */}
-            <section className="py-8 bg-white border-b border-neutral-200">
-                <div className="container mx-auto px-4">
-                    <div className="flex justify-center items-center space-x-8 overflow-x-auto">
-                        {/* Step 1 - Complete */}
-                        <div className="flex flex-col items-center min-w-[140px]">
-                            <div className="flex items-center justify-center w-12 h-12 rounded-full bg-green-500 text-white font-bold text-lg mb-3 shadow-lg">
-                                ✓
-                            </div>
-                            <h3 className="text-sm font-semibold text-green-600 text-center">Create Account</h3>
-                            <p className="text-xs text-neutral-600 text-center mt-1">Completed</p>
-                        </div>
+            {/* Connector Line */}
+            <div className="hidden md:block w-16 h-0.5 bg-green-300 -mt-8"></div>
 
-                        <div className="hidden md:block w-16 h-0.5 bg-green-300 -mt-8"></div>
+            {/* Step 1 - Complete */}
+            <div className="flex flex-col items-center min-w-[140px]">
+                <div className="flex items-center justify-center w-12 h-12 rounded-full bg-green-500 text-white font-bold text-lg mb-3 shadow-lg">
+                    ✓
+                </div>
+                <h3 className="text-sm font-semibold text-green-600 text-center">Create Your Profile</h3>
+                <p className="text-xs text-neutral-600 text-center mt-1">Completed</p>
+            </div>
 
-                        {/* Step 2 - Complete */}
-                        <div className="flex flex-col items-center min-w-[140px]">
-                            <div className="flex items-center justify-center w-12 h-12 rounded-full bg-green-500 text-white font-bold text-lg mb-3 shadow-lg">
-                                ✓
-                            </div>
-                            <h3 className="text-sm font-semibold text-green-600 text-center">Training Overview</h3>
-                            <p className="text-xs text-neutral-600 text-center mt-1">Completed</p>
-                        </div>
+            {/* Connector Line */}
+            <div className="hidden md:block w-16 h-0.5 bg-green-300 -mt-8"></div>
 
-                        <div className="hidden md:block w-16 h-0.5 bg-green-300 -mt-8"></div>
+            {/* Step 2 - Complete */}
+            <div className="flex flex-col items-center min-w-[140px]">
+                <div className="flex items-center justify-center w-12 h-12 rounded-full bg-green-500 text-white font-bold text-lg mb-3 shadow-lg">
+                    ✓
+                </div>
+                <h3 className="text-sm font-semibold text-green-600 text-center">Choose Your Track</h3>
+                <p className="text-xs text-neutral-600 text-center mt-1">Completed</p>
+            </div>
 
-                        {/* Step 3 - Complete */}
-                        <div className="flex flex-col items-center min-w-[140px]">
-                            <div className="flex items-center justify-center w-12 h-12 rounded-full bg-green-500 text-white font-bold text-lg mb-3 shadow-lg">
-                                ✓
-                            </div>
-                            <h3 className="text-sm font-semibold text-green-600 text-center">Track Selection</h3>
-                            <p className="text-xs text-neutral-600 text-center mt-1">Completed</p>
-                        </div>
+            {/* Connector Line */}
+            <div className="hidden md:block w-16 h-0.5 bg-green-300 -mt-8"></div>
 
-                        <div className="hidden md:block w-16 h-0.5 bg-green-300 -mt-8"></div>
+            {/* Step 3 - Complete */}
+            <div className="flex flex-col items-center min-w-[140px]">
+                <div className="flex items-center justify-center w-12 h-12 rounded-full bg-green-500 text-white font-bold text-lg mb-3 shadow-lg">
+                    ✓
+                </div>
+                <h3 className="text-sm font-semibold text-green-600 text-center">Confirm Your Track</h3>
+                <p className="text-xs text-neutral-600 text-center mt-1">Completed</p>
+            </div>
 
-                        {/* Step 4 - Complete */}
-                        <div className="flex flex-col items-center min-w-[140px]">
-                            <div className="flex items-center justify-center w-12 h-12 rounded-full bg-green-500 text-white font-bold text-lg mb-3 shadow-lg">
-                                ✓
-                            </div>
-                            <h3 className="text-sm font-semibold text-green-600 text-center">Level Selection</h3>
-                            <p className="text-xs text-neutral-600 text-center mt-1">Completed</p>
-                        </div>
+            {/* Connector Line */}
+            <div className="hidden md:block w-16 h-0.5 bg-green-300 -mt-8"></div>
 
-                        <div className="hidden md:block w-16 h-0.5 bg-green-300 -mt-8"></div>
+            {/* Step 4 - Complete */}
+            <div className="flex flex-col items-center min-w-[140px]">
+                <div className="flex items-center justify-center w-12 h-12 rounded-full bg-green-500 text-white font-bold text-lg mb-3 shadow-lg">
+                    ✓
+                </div>
+                <h3 className="text-sm font-semibold text-green-600 text-center">Payment</h3>
+                <p className="text-xs text-neutral-600 text-center mt-1">Completed</p>
+            </div>
 
-                        {/* Step 5 - Complete */}
-                        <div className="flex flex-col items-center min-w-[140px]">
-                            <div className="flex items-center justify-center w-12 h-12 rounded-full bg-green-500 text-white font-bold text-lg mb-3 shadow-lg">
-                                ✓
-                            </div>
-                            <h3 className="text-sm font-semibold text-green-600 text-center">Payment</h3>
-                            <p className="text-xs text-neutral-600 text-center mt-1">Completed</p>
-                        </div>
+            {/* Connector Line */}
+            <div className="hidden md:block w-16 h-0.5 bg-green-300 -mt-8"></div>
+
+            {/* Step 5 - Active */}
+            <div className="flex flex-col items-center min-w-[140px]">
+                <div className="relative flex items-center justify-center w-12 h-12 rounded-full bg-primary text-white font-bold text-lg mb-3 shadow-lg">
+                    5
+                    <div className="absolute -top-8 left-1/2 transform -translate-x-1/2">
+                        <span className="bg-primary text-white text-xs px-2 py-1 rounded-full whitespace-nowrap">
+                            Current Step
+                        </span>
                     </div>
                 </div>
-            </section>
+                <h3 className="text-sm font-semibold text-primary text-center">Confirmation</h3>
+                <p className="text-xs text-neutral-600 text-center mt-1">Download slip</p>
+            </div>
+        </div>
+    </div>
+</section>
+
 
             {/* Success Details */}
             <section className="py-16 bg-neutral-50">
@@ -375,22 +396,6 @@ const PaymentSuccess = () => {
                             </div>
                         </div>
 
-                        {/* Package Features */}
-                        <div className="bg-white rounded-xl shadow-lg p-8 mb-8">
-                            <h2 className="text-2xl font-bold text-neutral-800 mb-6 flex items-center">
-                                {packageDetails.icon}
-                                <span className="ml-3">What You'll Get</span>
-                            </h2>
-                            
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                {packageDetails.features.map((feature, index) => (
-                                    <div key={index} className="flex items-center p-3 bg-neutral-50 rounded-lg">
-                                        <CheckCircle className="w-5 h-5 mr-3 text-green-500 flex-shrink-0" />
-                                        <span className="text-neutral-700">{feature}</span>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
 
                         {/* What Happens Next */}
                         <div className="bg-white rounded-xl shadow-lg p-8 mb-8">
@@ -417,9 +422,9 @@ const PaymentSuccess = () => {
                                         2
                                     </div>
                                     <div>
-                                        <h3 className="font-semibold text-neutral-800 mb-2">Account Activation</h3>
+                                        <h3 className="font-semibold text-neutral-800 mb-2">Enrollment Activation</h3>
                                         <p className="text-neutral-600">
-                                            Your training account will be activated and you'll receive access credentials via email.
+                                            Your enrollment will be confirmed.
                                         </p>
                                     </div>
                                 </div>

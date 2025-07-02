@@ -178,7 +178,7 @@ const Services = () => {
                     </div>
                   </li>
                 </ul>
-                <Link href="/onboarding">
+                <Link href="/training">
                   <Button className="bg-primary hover:bg-primary/90 text-white font-medium px-6 py-2 rounded-md transition-colors shadow-md">
                     Enroll Now
                   </Button>

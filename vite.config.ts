@@ -3,6 +3,8 @@ import react from "@vitejs/plugin-react";
 import path from "path";
 
 export default defineConfig({
+  base: "./", // ✅ enables relative asset paths for static deployment
+
   plugins: [react()],
   resolve: {
     alias: {
@@ -21,12 +23,10 @@ export default defineConfig({
       },
     },
   },
-
-  // 🔽 ADD THIS SECTION
   server: {
     allowedHosts: [
-      "2abf-160-250-51-17.ngrok-free.app", // your tunnel host
-      "it-vate.microcloud.tech"
+      "2abf-160-250-51-17.ngrok-free.app",
+      "it-vate.microcloud.tech",
     ],
   },
 });

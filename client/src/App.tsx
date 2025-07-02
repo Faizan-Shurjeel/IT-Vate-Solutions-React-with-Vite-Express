@@ -58,7 +58,7 @@ function Router() {
         <Route path="/packages" component={Packages} />
         <Route path="/enroll" component={EnrollmentConfirmation} />
         <Route path="/payment-success" component={PaymentSuccess} />
-        <Route path="/onboarding" component={Onboarding} />
+        <Route path="/training" component={Onboarding} />
         <Route path="/complete-training-options" component={CompleteTrainingOptions} />
         <Route path="/progressive-path-enrollment" component={ProgressivePathEnrollment} />
         <Route path="/direct-entry-assessment" component={DirectEntryAssessment} />

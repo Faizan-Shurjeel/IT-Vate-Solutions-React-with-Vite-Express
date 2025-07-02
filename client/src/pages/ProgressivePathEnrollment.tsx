@@ -31,7 +31,7 @@ const PricePane = ({ selectedLevel, levels, onContinue, loading }) => {
                         <Calculator className="w-6 h-6 mr-2" />
                         <h3 className="text-lg font-bold">Enrollment Summary</h3>
                     </div>
-                    <p className="text-primary-100 text-sm">Progressive Path - Level 1</p>
+                    <p className="text-primary-100 text-sm">Progressive Track - Level 1</p>
                 </div>
 
                 {/* Content */}
@@ -114,7 +114,7 @@ const ProgressivePathEnrollment = () => {
     const [, setLocation] = useLocation();
     const { user } = useAuth();
     const [loading, setLoading] = useState(false);
-    const [selectedLevel] = useState("level-1"); // Always Level 1 for progressive path
+    const [selectedLevel] = useState("level-1"); // Always Level 1 for Progressive Track
 
     const handleEnroll = async (levelId) => {
         if (!user) {
@@ -217,7 +217,7 @@ const ProgressivePathEnrollment = () => {
                     <div className="max-w-4xl mx-auto">
                         <BookOpen size={64} className="mx-auto mb-6 text-white/90" />
                         <h1 className="text-4xl md:text-5xl font-bold mb-6">
-                            Progressive Path Enrollment
+                            Progressive Track Enrollment
                         </h1>
                         <p className="text-xl md:text-2xl mb-4">
                             Start your journey with Level 1 and unlock each level as you progress.
@@ -229,74 +229,87 @@ const ProgressivePathEnrollment = () => {
                 </div>
             </section>
 
-            {/* Progress Steps */}
-            <section className="py-8 bg-white border-b border-neutral-200">
-                <div className="container mx-auto px-4">
-                    <div className="flex justify-center items-center space-x-8 overflow-x-auto">
-                        {/* Step 1 - Complete */}
-                        <div className="flex flex-col items-center min-w-[140px]">
-                            <div className="flex items-center justify-center w-12 h-12 rounded-full bg-green-500 text-white font-bold text-lg mb-3 shadow-lg">
-                                ✓
-                            </div>
-                            <h3 className="text-sm font-semibold text-green-600 text-center">Create Account</h3>
-                            <p className="text-xs text-neutral-600 text-center mt-1">Completed</p>
-                        </div>
+      {/* Progress Steps */}
+<section className="py-8 bg-white border-b border-neutral-200">
+    <div className="container mx-auto px-4">
+        <div className="flex justify-center items-center space-x-8 overflow-x-auto">
+            {/* Step 0 - Complete */}
+            <div className="flex flex-col items-center min-w-[140px]">
+                <div className="flex items-center justify-center w-12 h-12 rounded-full bg-green-500 text-white font-bold text-lg mb-3 shadow-lg">
+                    ✓
+                </div>
+                <h3 className="text-sm font-semibold text-green-600 text-center">Start Your Journey</h3>
+                <p className="text-xs text-neutral-600 text-center mt-1">Completed</p>
+            </div>
 
-                        {/* Connector Line */}
-                        <div className="hidden md:block w-16 h-0.5 bg-green-300 -mt-8"></div>
+            {/* Connector Line */}
+            <div className="hidden md:block w-16 h-0.5 bg-green-300 -mt-8"></div>
 
-                        {/* Step 2 - Complete */}
-                        <div className="flex flex-col items-center min-w-[140px]">
-                            <div className="flex items-center justify-center w-12 h-12 rounded-full bg-green-500 text-white font-bold text-lg mb-3 shadow-lg">
-                                ✓
-                            </div>
-                            <h3 className="text-sm font-semibold text-green-600 text-center">Training Overview</h3>
-                            <p className="text-xs text-neutral-600 text-center mt-1">Completed</p>
-                        </div>
+            {/* Step 1 - Complete */}
+            <div className="flex flex-col items-center min-w-[140px]">
+                <div className="flex items-center justify-center w-12 h-12 rounded-full bg-green-500 text-white font-bold text-lg mb-3 shadow-lg">
+                    ✓
+                </div>
+                <h3 className="text-sm font-semibold text-green-600 text-center">Create Your Profile</h3>
+                <p className="text-xs text-neutral-600 text-center mt-1">Completed</p>
+            </div>
 
-                        {/* Connector Line */}
-                        <div className="hidden md:block w-16 h-0.5 bg-green-300 -mt-8"></div>
+            {/* Connector Line */}
+            <div className="hidden md:block w-16 h-0.5 bg-green-300 -mt-8"></div>
 
-                        {/* Step 3 - Complete */}
-                        <div className="flex flex-col items-center min-w-[140px]">
-                            <div className="flex items-center justify-center w-12 h-12 rounded-full bg-green-500 text-white font-bold text-lg mb-3 shadow-lg">
-                                ✓
-                            </div>
-                            <h3 className="text-sm font-semibold text-green-600 text-center">Choose Your Track</h3>
-                            <p className="text-xs text-neutral-600 text-center mt-1">Progressive Path Selected</p>
-                        </div>
+            {/* Step 2 - Complete */}
+            <div className="flex flex-col items-center min-w-[140px]">
+                <div className="flex items-center justify-center w-12 h-12 rounded-full bg-green-500 text-white font-bold text-lg mb-3 shadow-lg">
+                    ✓
+                </div>
+                <h3 className="text-sm font-semibold text-green-600 text-center">Choose Your Track</h3>
+                <p className="text-xs text-neutral-600 text-center mt-1">Completed</p>
+            </div>
 
-                        {/* Connector Line */}
-                        <div className="hidden md:block w-16 h-0.5 bg-primary -mt-8"></div>
+            {/* Connector Line */}
+            <div className="hidden md:block w-16 h-0.5 bg-green-300 -mt-8"></div>
 
-                        {/* Step 3B - Active */}
-                        <div className="flex flex-col items-center min-w-[140px]">
-                            <div className="relative flex items-center justify-center w-12 h-12 rounded-full bg-primary text-white font-bold text-lg mb-3 shadow-lg">
-                                3B
-                                <div className="absolute -top-8 left-1/2 transform -translate-x-1/2">
-                                    <span className="bg-primary text-white text-xs px-2 py-1 rounded-full whitespace-nowrap">
-                                        Current Step
-                                    </span>
-                                </div>
-                            </div>
-                            <h3 className="text-sm font-semibold text-primary text-center">Enroll in Level 1</h3>
-                            <p className="text-xs text-neutral-600 text-center mt-1">Start your journey</p>
-                        </div>
-
-                        {/* Connector Line */}
-                        <div className="hidden md:block w-16 h-0.5 bg-neutral-300 -mt-8"></div>
-
-                        {/* Step 4 - Pending */}
-                        <div className="flex flex-col items-center min-w-[140px]">
-                            <div className="flex items-center justify-center w-12 h-12 rounded-full bg-neutral-200 text-neutral-500 font-bold text-lg mb-3">
-                                4
-                            </div>
-                            <h3 className="text-sm font-medium text-neutral-500 text-center">Payment</h3>
-                            <p className="text-xs text-neutral-400 text-center mt-1">Pay for Level 1</p>
-                        </div>
+            {/* Step 3 - Active */}
+            <div className="flex flex-col items-center min-w-[140px]">
+                <div className="relative flex items-center justify-center w-12 h-12 rounded-full bg-primary text-white font-bold text-lg mb-3 shadow-lg">
+                    3
+                    <div className="absolute -top-8 left-1/2 transform -translate-x-1/2">
+                        <span className="bg-primary text-white text-xs px-2 py-1 rounded-full whitespace-nowrap">
+                            Current Step
+                        </span>
                     </div>
                 </div>
-            </section>
+                <h3 className="text-sm font-semibold text-primary text-center">Confirm Your Track</h3>
+                <p className="text-xs text-neutral-600 text-center mt-1">Review your choice</p>
+            </div>
+
+            {/* Connector Line */}
+            <div className="hidden md:block w-16 h-0.5 bg-neutral-300 -mt-8"></div>
+
+            {/* Step 4 - Locked */}
+            <div className="flex flex-col items-center min-w-[140px] opacity-50">
+                <div className="flex items-center justify-center w-12 h-12 rounded-full bg-neutral-200 text-neutral-500 font-bold text-lg mb-3">
+                    4
+                </div>
+                <h3 className="text-sm font-medium text-neutral-500 text-center">Payment</h3>
+                <p className="text-xs text-neutral-400 text-center mt-1">Make payment</p>
+            </div>
+
+            {/* Connector Line */}
+            <div className="hidden md:block w-16 h-0.5 bg-neutral-300 -mt-8"></div>
+
+            {/* Step 5 - Locked */}
+            <div className="flex flex-col items-center min-w-[140px] opacity-50">
+                <div className="flex items-center justify-center w-12 h-12 rounded-full bg-neutral-200 text-neutral-500 font-bold text-lg mb-3">
+                    5
+                </div>
+                <h3 className="text-sm font-medium text-neutral-500 text-center">Confirmation</h3>
+                <p className="text-xs text-neutral-400 text-center mt-1">Download slip</p>
+            </div>
+        </div>
+    </div>
+</section>
+
 
             {/* Back Button */}
             <section className="py-4 bg-neutral-50">
@@ -318,7 +331,7 @@ const ProgressivePathEnrollment = () => {
                     <div className="max-w-7xl mx-auto">
                         <div className="text-center mb-12">
                             <h2 className="text-3xl md:text-4xl font-bold text-neutral-800 mb-4">
-                                Progressive Path - Level 1 Enrollment
+                                Progressive Track - Level 1 Enrollment
                             </h2>
                             <p className="text-lg text-neutral-600">
                                 Start with Level 1 to build your foundation. Additional levels unlock after completing each certificate.
@@ -451,7 +464,7 @@ const ProgressivePathEnrollment = () => {
                                     </div>
                                     <div className="flex-1">
                                         <h3 className="text-lg font-semibold text-blue-800 mb-2">
-                                            How Progressive Path Works
+                                            How Progressive Track Works
                                         </h3>
                                         <div className="space-y-2 text-blue-700">
                                             <p>

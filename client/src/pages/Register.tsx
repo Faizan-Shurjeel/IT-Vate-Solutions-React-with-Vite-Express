@@ -46,8 +46,16 @@ const Register = () => {
     const [error, setError] = useState("");
 
     const handleChange = (e) => {
-        setForm({ ...form, [e.target.name]: e.target.value });
-    };
+  const { name, value } = e.target;
+  if (name === "cnic" || name === "mobile") {
+    // Remove all non-digit characters
+    const digitsOnly = value.replace(/\D/g, "");
+    setForm({ ...form, [name]: digitsOnly });
+  } else {
+    setForm({ ...form, [name]: value });
+  }
+};
+
 
     const handleToggle = () => {
         setIsLogin(!isLogin);
@@ -145,84 +153,85 @@ const Register = () => {
 
          
           
-
 {/* Progress Steps */}
 <section className="py-8 bg-white border-b border-neutral-200">
-  <div className="container mx-auto px-4">
-    <div className="flex justify-center items-center space-x-8 overflow-x-auto">
+    <div className="container mx-auto px-4">
+        <div className="flex justify-center items-center space-x-8 overflow-x-auto">
+            {/* Step 0 - Complete */}
+            <div className="flex flex-col items-center min-w-[140px]">
+                <div className="flex items-center justify-center w-12 h-12 rounded-full bg-green-500 text-white font-bold text-lg mb-3 shadow-lg">
+                    ✓
+                </div>
+                <h3 className="text-sm font-semibold text-green-600 text-center">Start Your Journey</h3>
+                <p className="text-xs text-neutral-600 text-center mt-1">Completed</p>
+            </div>
 
-      {/* Step 0 - Completed */}
-      <div className="flex flex-col items-center min-w-[140px]">
-        <div className="flex items-center justify-center w-12 h-12 rounded-full bg-green-500 text-white mb-3 shadow-lg">
-          <Check className="w-6 h-6" />
+            {/* Connector Line */}
+            <div className="hidden md:block w-16 h-0.5 bg-green-300 -mt-8"></div>
+
+            {/* Step 1 - Active */}
+            <div className="flex flex-col items-center min-w-[140px]">
+                <div className="relative flex items-center justify-center w-12 h-12 rounded-full bg-primary text-white font-bold text-lg mb-3 shadow-lg">
+                    1
+                    <div className="absolute -top-8 left-1/2 transform -translate-x-1/2">
+                        <span className="bg-primary text-white text-xs px-2 py-1 rounded-full whitespace-nowrap">
+                            Current Step
+                        </span>
+                    </div>
+                </div>
+                <h3 className="text-sm font-semibold text-primary text-center">Create Your Profile</h3>
+                <p className="text-xs text-neutral-600 text-center mt-1">Register with us</p>
+            </div>
+
+            {/* Connector Line */}
+            <div className="hidden md:block w-16 h-0.5 bg-neutral-300 -mt-8"></div>
+
+            {/* Step 2 - Locked */}
+            <div className="flex flex-col items-center min-w-[140px] opacity-50">
+                <div className="flex items-center justify-center w-12 h-12 rounded-full bg-neutral-200 text-neutral-500 font-bold text-lg mb-3">
+                    2
+                </div>
+                <h3 className="text-sm font-medium text-neutral-500 text-center">Choose Your Track</h3>
+                <p className="text-xs text-neutral-400 text-center mt-1">Bundle or progressive</p>
+            </div>
+
+            {/* Connector Line */}
+            <div className="hidden md:block w-16 h-0.5 bg-neutral-300 -mt-8"></div>
+
+            {/* Step 3 - Locked */}
+            <div className="flex flex-col items-center min-w-[140px] opacity-50">
+                <div className="flex items-center justify-center w-12 h-12 rounded-full bg-neutral-200 text-neutral-500 font-bold text-lg mb-3">
+                    3
+                </div>
+                <h3 className="text-sm font-medium text-neutral-500 text-center">Confirm Your Track</h3>
+                <p className="text-xs text-neutral-400 text-center mt-1">Review your choice</p>
+            </div>
+
+            {/* Connector Line */}
+            <div className="hidden md:block w-16 h-0.5 bg-neutral-300 -mt-8"></div>
+
+            {/* Step 4 - Locked */}
+            <div className="flex flex-col items-center min-w-[140px] opacity-50">
+                <div className="flex items-center justify-center w-12 h-12 rounded-full bg-neutral-200 text-neutral-500 font-bold text-lg mb-3">
+                    4
+                </div>
+                <h3 className="text-sm font-medium text-neutral-500 text-center">Payment</h3>
+                <p className="text-xs text-neutral-400 text-center mt-1">Make payment</p>
+            </div>
+
+            {/* Connector Line */}
+            <div className="hidden md:block w-16 h-0.5 bg-neutral-300 -mt-8"></div>
+
+            {/* Step 5 - Locked */}
+            <div className="flex flex-col items-center min-w-[140px] opacity-50">
+                <div className="flex items-center justify-center w-12 h-12 rounded-full bg-neutral-200 text-neutral-500 font-bold text-lg mb-3">
+                    5
+                </div>
+                <h3 className="text-sm font-medium text-neutral-500 text-center">Confirmation</h3>
+                <p className="text-xs text-neutral-400 text-center mt-1">Download slip</p>
+            </div>
         </div>
-        <h3 className="text-sm font-semibold text-green-600 text-center">Start Your Journey</h3>
-        <p className="text-xs text-neutral-600 text-center mt-1">Get an overview of the programme</p>
-      </div>
-
-      {/* Connector Line */}
-      <div className="hidden md:block w-16 h-0.5 bg-neutral-300 -mt-8"></div>
-
-      {/* Step 1 - Active */}
-      <div className="flex flex-col items-center min-w-[140px]">
-        <div className="relative flex items-center justify-center w-12 h-12 rounded-full bg-primary text-white font-bold text-lg mb-3 shadow-lg">
-          1
-
-        </div>
-        <h3 className="text-sm font-semibold text-primary text-center">Create Your Profile</h3>
-        <p className="text-xs text-neutral-600 text-center mt-1">Register with us</p>
-      </div>
-
-      {/* Connector Line */}
-      <div className="hidden md:block w-16 h-0.5 bg-neutral-300 -mt-8"></div>
-
-      {/* Step 2 - Pending */}
-      <div className="flex flex-col items-center min-w-[140px]">
-        <div className="flex items-center justify-center w-12 h-12 rounded-full bg-neutral-200 text-neutral-500 font-bold text-lg mb-3">
-          2
-        </div>
-        <h3 className="text-sm font-medium text-neutral-500 text-center">Choose Your Track</h3>
-        <p className="text-xs text-neutral-400 text-center mt-1">Select level or bundle</p>
-      </div>
-
-      {/* Connector Line */}
-      <div className="hidden md:block w-16 h-0.5 bg-neutral-300 -mt-8"></div>
-
-      {/* Step 3 - Pending */}
-      <div className="flex flex-col items-center min-w-[140px]">
-        <div className="flex items-center justify-center w-12 h-12 rounded-full bg-neutral-200 text-neutral-500 font-bold text-lg mb-3">
-          3
-        </div>
-        <h3 className="text-sm font-medium text-neutral-500 text-center">Finalize</h3>
-        <p className="text-xs text-neutral-400 text-center mt-1">Complete any intermediary steps</p>
-      </div>
-
-      {/* Connector Line */}
-      <div className="hidden md:block w-16 h-0.5 bg-neutral-300 -mt-8"></div>
-
-      {/* Step 4 - Pending */}
-      <div className="flex flex-col items-center min-w-[140px]">
-        <div className="flex items-center justify-center w-12 h-12 rounded-full bg-neutral-200 text-neutral-500 font-bold text-lg mb-3">
-          4
-        </div>
-        <h3 className="text-sm font-medium text-neutral-500 text-center">Payment</h3>
-        <p className="text-xs text-neutral-400 text-center mt-1">Make payment</p>
-      </div>
-
-      {/* Connector Line */}
-      <div className="hidden md:block w-16 h-0.5 bg-neutral-300 -mt-8"></div>
-
-      {/* Step 5 - Pending */}
-      <div className="flex flex-col items-center min-w-[140px]">
-        <div className="flex items-center justify-center w-12 h-12 rounded-full bg-neutral-200 text-neutral-500 font-bold text-lg mb-3">
-          5
-        </div>
-        <h3 className="text-sm font-medium text-neutral-500 text-center">Confirmation</h3>
-        <p className="text-xs text-neutral-400 text-center mt-1">Download your enrollment slip</p>
-      </div>
-
     </div>
-  </div>
 </section>
 
 
@@ -264,34 +273,39 @@ const Register = () => {
                                             </div>
 
                                             {/* CNIC */}
-                                            <div className="relative">
-                                                <CreditCard size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-primary" />
-                                                <input
-                                                    name="cnic"
-                                                    placeholder="CNIC (12345-1234567-1)"
-                                                    onChange={handleChange}
-                                                    value={form.cnic}
-                                                    required
-                                                    pattern="\d{5}-\d{7}-\d"
-                                                    title="CNIC format: 12345-1234567-1"
-                                                    className="w-full pl-10 pr-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-sm"
-                                                />
-                                            </div>
+<div className="relative">
+  <CreditCard size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-primary" />
+  <input
+    name="cnic"
+    placeholder="CNIC (e.g. 1234512345671)"
+    onChange={handleChange}
+    value={form.cnic}
+    required
+    pattern="\d{13}"
+    title="Enter 13 digit CNIC without hyphens"
+    maxLength={13}
+    className="w-full pl-10 pr-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-sm"
+    inputMode="numeric"
+  />
+</div>
 
-                                            {/* Mobile */}
-                                            <div className="relative">
-                                                <Phone size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-primary" />
-                                                <input
-                                                    name="mobile"
-                                                    placeholder="Mobile (0300-1234567)"
-                                                    onChange={handleChange}
-                                                    value={form.mobile}
-                                                    required
-                                                    pattern="03\d{2}-\d{7}"
-                                                    title="Mobile format: 0300-1234567"
-                                                    className="w-full pl-10 pr-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-sm"
-                                                />
-                                            </div>
+{/* Mobile */}
+<div className="relative">
+  <Phone size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-primary" />
+  <input
+    name="mobile"
+    placeholder="Mobile (e.g. 03001234567)"
+    onChange={handleChange}
+    value={form.mobile}
+    required
+    pattern="03\d{9}"
+    title="Enter 11 digit mobile number without hyphens"
+    maxLength={11}
+    className="w-full pl-10 pr-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-sm"
+    inputMode="numeric"
+  />
+</div>
+
                                         </>
                                     )}
 

@@ -52,86 +52,86 @@ const Onboarding = () => {
                 </div>
             </section>
             {/* Progress Steps */}
-            <section className="py-8 bg-white border-b border-neutral-200">
-                <div className="container mx-auto px-4">
-                    <div className="flex justify-center items-center space-x-8 overflow-x-auto">
-
-                        {/* Step 0 - Active */}
-                        <div className="flex flex-col items-center min-w-[140px]">
-                            <div className="relative flex items-center justify-center w-12 h-12 rounded-full bg-primary text-white font-bold text-lg mb-3 shadow-lg">
-                                0
-                                <div className="absolute -top-8 left-1/2 transform -translate-x-1/2">
-                                    <span className="bg-primary text-white text-xs px-2 py-1 rounded-full whitespace-nowrap">
-                                        Current Step
-                                    </span>
-                                </div>
-                            </div>
-                            <h3 className="text-sm font-semibold text-primary text-center">Start Your Journey</h3>
-                            <p className="text-xs text-neutral-600 text-center mt-1">Get an overview of the programme</p>
-                        </div>
-
-                        {/* Connector Line */}
-                        <div className="hidden md:block w-16 h-0.5 bg-neutral-300 -mt-8"></div>
-
-                        {/* Step 1 - Pending */}
-                        <div className="flex flex-col items-center min-w-[140px]">
-                            <div className="flex items-center justify-center w-12 h-12 rounded-full bg-neutral-200 text-neutral-500 font-bold text-lg mb-3">
-                                1
-                            </div>
-                            <h3 className="text-sm font-medium text-neutral-500 text-center">Create Your Profile</h3>
-                            <p className="text-xs text-neutral-400 text-center mt-1">Register with us</p>
-                        </div>
-
-                        {/* Connector Line */}
-                        <div className="hidden md:block w-16 h-0.5 bg-neutral-300 -mt-8"></div>
-
-                        {/* Step 2 - Pending */}
-                        <div className="flex flex-col items-center min-w-[140px]">
-                            <div className="flex items-center justify-center w-12 h-12 rounded-full bg-neutral-200 text-neutral-500 font-bold text-lg mb-3">
-                                2
-                            </div>
-                            <h3 className="text-sm font-medium text-neutral-500 text-center">Choose Your Track</h3>
-                            <p className="text-xs text-neutral-400 text-center mt-1">Select level or bundle</p>
-                        </div>
-
-                        {/* Connector Line */}
-                        <div className="hidden md:block w-16 h-0.5 bg-neutral-300 -mt-8"></div>
-
-                        {/* Step 3 - Pending */}
-                        <div className="flex flex-col items-center min-w-[140px]">
-                            <div className="flex items-center justify-center w-12 h-12 rounded-full bg-neutral-200 text-neutral-500 font-bold text-lg mb-3">
-                                3
-                            </div>
-                            <h3 className="text-sm font-medium text-neutral-500 text-center">Finalize</h3>
-                            <p className="text-xs text-neutral-400 text-center mt-1">Complete any intermediary steps</p>
-                        </div>
-
-                        {/* Connector Line */}
-                        <div className="hidden md:block w-16 h-0.5 bg-neutral-300 -mt-8"></div>
-
-                        {/* Step 4 - Pending */}
-                        <div className="flex flex-col items-center min-w-[140px]">
-                            <div className="flex items-center justify-center w-12 h-12 rounded-full bg-neutral-200 text-neutral-500 font-bold text-lg mb-3">
-                                4
-                            </div>
-                            <h3 className="text-sm font-medium text-neutral-500 text-center">Payment</h3>
-                            <p className="text-xs text-neutral-400 text-center mt-1">Make payment</p>
-                        </div>
-
-                        {/* Connector Line */}
-                        <div className="hidden md:block w-16 h-0.5 bg-neutral-300 -mt-8"></div>
-
-                        {/* Step 5 - Pending */}
-                        <div className="flex flex-col items-center min-w-[140px]">
-                            <div className="flex items-center justify-center w-12 h-12 rounded-full bg-neutral-200 text-neutral-500 font-bold text-lg mb-3">
-                                5
-                            </div>
-                            <h3 className="text-sm font-medium text-neutral-500 text-center">Confirmation</h3>
-                            <p className="text-xs text-neutral-400 text-center mt-1">Download your enrollment slip</p>
-                        </div>
+<section className="py-8 bg-white border-b border-neutral-200">
+    <div className="container mx-auto px-4">
+        <div className="flex justify-center items-center space-x-8 overflow-x-auto">
+            {/* Step 0 - Active */}
+            <div className="flex flex-col items-center min-w-[140px]">
+                <div className="relative flex items-center justify-center w-12 h-12 rounded-full bg-primary text-white font-bold text-lg mb-3 shadow-lg">
+                    0
+                    <div className="absolute -top-8 left-1/2 transform -translate-x-1/2">
+                        <span className="bg-primary text-white text-xs px-2 py-1 rounded-full whitespace-nowrap">
+                            Current Step
+                        </span>
                     </div>
                 </div>
-            </section>
+                <h3 className="text-sm font-semibold text-primary text-center">Start Your Journey</h3>
+                <p className="text-xs text-neutral-600 text-center mt-1">Get an overview</p>
+            </div>
+
+            {/* Connector Line */}
+            <div className="hidden md:block w-16 h-0.5 bg-neutral-300 -mt-8"></div>
+
+            {/* Step 1 - Locked */}
+            <div className="flex flex-col items-center min-w-[140px] opacity-50">
+                <div className="flex items-center justify-center w-12 h-12 rounded-full bg-neutral-200 text-neutral-500 font-bold text-lg mb-3">
+                    1
+                </div>
+                <h3 className="text-sm font-medium text-neutral-500 text-center">Create Your Profile</h3>
+                <p className="text-xs text-neutral-400 text-center mt-1">Register with us</p>
+            </div>
+
+            {/* Connector Line */}
+            <div className="hidden md:block w-16 h-0.5 bg-neutral-300 -mt-8"></div>
+
+            {/* Step 2 - Locked */}
+            <div className="flex flex-col items-center min-w-[140px] opacity-50">
+                <div className="flex items-center justify-center w-12 h-12 rounded-full bg-neutral-200 text-neutral-500 font-bold text-lg mb-3">
+                    2
+                </div>
+                <h3 className="text-sm font-medium text-neutral-500 text-center">Choose Your Track</h3>
+                <p className="text-xs text-neutral-400 text-center mt-1">Bundle or progressive</p>
+            </div>
+
+            {/* Connector Line */}
+            <div className="hidden md:block w-16 h-0.5 bg-neutral-300 -mt-8"></div>
+
+            {/* Step 3 - Locked */}
+            <div className="flex flex-col items-center min-w-[140px] opacity-50">
+                <div className="flex items-center justify-center w-12 h-12 rounded-full bg-neutral-200 text-neutral-500 font-bold text-lg mb-3">
+                    3
+                </div>
+                <h3 className="text-sm font-medium text-neutral-500 text-center">Confirm Your Track</h3>
+                <p className="text-xs text-neutral-400 text-center mt-1">Review your choice</p>
+            </div>
+
+            {/* Connector Line */}
+            <div className="hidden md:block w-16 h-0.5 bg-neutral-300 -mt-8"></div>
+
+            {/* Step 4 - Locked */}
+            <div className="flex flex-col items-center min-w-[140px] opacity-50">
+                <div className="flex items-center justify-center w-12 h-12 rounded-full bg-neutral-200 text-neutral-500 font-bold text-lg mb-3">
+                    4
+                </div>
+                <h3 className="text-sm font-medium text-neutral-500 text-center">Payment</h3>
+                <p className="text-xs text-neutral-400 text-center mt-1">Make payment</p>
+            </div>
+
+            {/* Connector Line */}
+            <div className="hidden md:block w-16 h-0.5 bg-neutral-300 -mt-8"></div>
+
+            {/* Step 5 - Locked */}
+            <div className="flex flex-col items-center min-w-[140px] opacity-50">
+                <div className="flex items-center justify-center w-12 h-12 rounded-full bg-neutral-200 text-neutral-500 font-bold text-lg mb-3">
+                    5
+                </div>
+                <h3 className="text-sm font-medium text-neutral-500 text-center">Confirmation</h3>
+                <p className="text-xs text-neutral-400 text-center mt-1">Download slip</p>
+            </div>
+        </div>
+    </div>
+</section>
+
 
             {/* Main Content */}
             <section className="py-16 bg-neutral-50">
@@ -139,9 +139,7 @@ const Onboarding = () => {
                     <div className="max-w-6xl mx-auto">
                         {/* Training Section */}
                         <div className="text-center mb-16">
-                            <h2 className="text-3xl md:text-4xl font-bold text-neutral-800 mb-6">
-                                Training
-                            </h2>
+                            
                             <p className="text-lg text-neutral-600 max-w-3xl mx-auto">
                                 Gain real-world skills with our immersive, industry-focused programs—designed for students and professionals ready to lead.
                             </p>
@@ -163,7 +161,7 @@ const Onboarding = () => {
                                         <Target className="w-8 h-8" />
                                     </div>
                                     <h3 className="text-2xl font-bold text-neutral-800 mb-4">
-                                        PCB Designer Programme
+                                        Certified PCB Design Professional
                                     </h3>
                                     <p className="text-neutral-700 text-lg">
                                         Build expertise in PCB design through structured, hands-on learning—from fundamentals to advanced practices.
