@@ -38,22 +38,40 @@ const PricePane = ({ selectedLevel, levels, onContinue, loading }) => {
                 <div className="p-6">
                     <h4 className="text-xl font-bold text-neutral-800 mb-2">{current.title}</h4>
                     
-                    {/* Pricing */}
-                    <div className="mb-6 p-4 bg-neutral-50 rounded-lg border border-neutral-200">
-                        <div className="text-3xl font-bold text-neutral-800 mb-2">
-                            {current.price}
-                        </div>
-                        <div className="flex items-center text-neutral-600 mb-3">
-                            <Clock className="w-4 h-4 mr-1" />
-                            <span className="text-sm">{current.duration}</span>
-                        </div>
-                        <div className="p-2 bg-primary/5 rounded border border-primary/20">
-                            <div className="flex items-center text-primary">
-                                <Info className="w-4 h-4 mr-1" />
-                                <span className="text-xs font-semibold">Pay per level as you progress</span>
-                            </div>
-                        </div>
-                    </div>
+                    {/* Pricing with Early Bird Discount */}
+<div className="mb-6 p-4 bg-gradient-to-br from-green-50 to-blue-50 rounded-lg border-2 border-green-200">
+    {/* Early Bird Banner */}
+    <div className="bg-gradient-to-r from-green-500 to-green-600 text-white px-3 py-1 rounded-full text-xs font-bold mb-3 text-center">
+        🎉 EARLY BIRD SPECIAL - 40% OFF
+    </div>
+    
+    {/* Original Price (Strikethrough) */}
+    <div className="text-lg text-neutral-500 line-through mb-1">
+        ₨5,000
+    </div>
+    
+    {/* Discounted Price */}
+    <div className="text-3xl font-bold text-green-600 mb-2 flex items-center">
+        ₨3,000
+        <span className="ml-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full font-semibold">
+            40% OFF
+        </span>
+    </div>
+    
+    {/* Savings Highlight */}
+    <div className="text-sm text-green-700 font-semibold mb-3">
+        You save ₨2,000!
+    </div>
+    
+    
+    <div className="p-2 bg-primary/5 rounded border border-primary/20">
+        <div className="flex items-center text-primary">
+            <Info className="w-4 h-4 mr-1" />
+            <span className="text-xs font-semibold">Pay per level as you progress</span>
+        </div>
+    </div>
+</div>
+
 
                     {/* Description */}
                     <p className="text-neutral-600 text-sm mb-4">{current.description}</p>
@@ -152,7 +170,6 @@ const ProgressivePathEnrollment = () => {
             id: "level-1",
             name: "Level 1 - Foundation",
             price: "₨5,000",
-            duration: "4 Weeks",
             description: "Foundations of schematic and PCB Design",
             features: [
                 "Introduction to PCB Design",
@@ -384,7 +401,7 @@ const ProgressivePathEnrollment = () => {
                                                         {level.name}
                                                     </h3>
                                                     <p className="text-neutral-600 text-sm mb-2">
-                                                        {level.selectable ? level.price + " • " + level.duration : level.requirement}
+                                                        {level.selectable ? level.price : level.requirement}
                                                     </p>
                                                     <p className="text-neutral-700 text-sm mb-4">{level.description}</p>
 
@@ -433,6 +450,7 @@ const ProgressivePathEnrollment = () => {
                                     loading={loading}
                                 />
                             </div>
+                            
                         </div>
 
                         {/* Mobile Price Summary */}

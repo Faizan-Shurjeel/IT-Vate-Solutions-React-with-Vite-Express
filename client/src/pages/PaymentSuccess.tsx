@@ -520,7 +520,7 @@ const PaymentSuccess = () => {
                     </div>
                 </div>
             </div>
-
+        
             {/* Training Schedule */}
             <div className="mt-6 bg-white rounded-lg p-4 border border-blue-100">
                 <div className="flex items-center mb-4">
@@ -572,7 +572,7 @@ const PaymentSuccess = () => {
                                             <div>
                                                 <h3 className="font-semibold text-neutral-800 mb-2">Payment Verification</h3>
                                                 <p className="text-neutral-600">
-                                                    Our team will verify your payment within 24 hours. You will receive an email confirmation once verified.
+                                                    Our team will verify your payment within 24 hours. 
                                                 </p>
                                             </div>
                                         </div>

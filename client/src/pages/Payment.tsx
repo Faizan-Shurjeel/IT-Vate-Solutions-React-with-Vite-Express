@@ -128,24 +128,28 @@ const Payment = () => {
                 }
             },
             progressive: {
-                id: "progressive-level-1",
-                name: "Progressive Path - Level 1",
-                subtitle: "Foundation Level",
-                price: "₨5,000",
-                priceValue: 5000,
-                duration: "4 Weeks",
-                description: "Build your foundation in PCB design with essential concepts and basic circuit design principles.",
-                icon: <BookOpen className="w-8 h-8" />,
-                features: [
-                    "Introduction to PCB Design",
-                    "Basic Circuit Principles",
-                    "Component Selection",
-                    "Schematic Design Basics",
-                    "Design Rules & Guidelines",
-                    "Hands-on Project",
-                    "IT-vate Certificate upon completion"
-                ]
-            },
+    id: "progressive-level-1",
+    name: "Progressive Path - Level 1",
+    subtitle: "Foundation Level - Early Bird Special",
+    price: "₨3,000",
+    priceValue: 3000,
+    originalPrice: "₨5,000",
+    discount: "40% OFF",
+    savings: "₨2,000",
+    duration: "4 Weeks",
+    description: "Build your foundation in PCB design with essential concepts and basic circuit design principles.",
+    icon: <BookOpen className="w-8 h-8" />,
+    features: [
+        "Introduction to PCB Design",
+        "Basic Circuit Principles", 
+        "Component Selection",
+        "Schematic Design Basics",
+        "Design Rules & Guidelines",
+        "Hands-on Project",
+        "IT-vate Certificate upon completion"
+    ]
+},
+
             direct: {
                 "level-1": {
                     id: "direct-level-1",
@@ -276,16 +280,16 @@ const Payment = () => {
         },
         {
             id: "bank",
-            name: "Meezan Bank",
+            name: "Habib Bank Limited (HBL)",
             icon: <Building2 size={24} className="text-blue-600" />,
             details: {
-                account: "1234567890123456",
-                accountName: "IT-vate Training Institute",
+                account: "PK71HABB0059167000071503",
+                accountName: "IT-vate Solutions",
                 instructions: [
                     "Visit your bank or use online banking",
-                    "Transfer to Account: 1234567890123456",
-                    "Account Title: IT-vate Training Institute",
-                    "Bank: Meezan Bank Limited",
+                    "Transfer to Account: PK71HABB0059167000071503",
+                    "Account Title: IT-vate Solutions",
+                    "Bank: Habib Bank Limited",
                     `Amount: ${packageDetails?.price || "₨5,000"}`,
                     "Take a screenshot or copy the transaction reference"
                 ]
