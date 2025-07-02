@@ -33,7 +33,7 @@ import {
     Image as ImageIcon,
     ExternalLink
 } from "lucide-react";
-import { collection, getDocs, doc, updateDoc, query, orderBy } from "firebase/firestore";
+import { collection, getDocs, doc, updateDoc, deleteDoc, query, orderBy } from "firebase/firestore";
 import { db } from "@/utils/firebase";
 import AdminLogin from "@/components/AdminLogin";
 
@@ -57,10 +57,143 @@ const StatsCard = ({ title, value, icon, color, change }) => (
     </div>
 );
 
-// User Detail Modal Component
-const UserDetailModal = ({ user, isOpen, onClose, onUpdateStatus }) => {
-    const [updating, setUpdating] = useState(false);
+// Edit User Form inside Modal
+const EditUserForm = ({ user, onSave, onCancel, saving }) => {
+    const [form, setForm] = useState({
+        firstName: user.firstName || "",
+        lastName: user.lastName || "",
+        email: user.email || "",
+        phoneNumber: user.phoneNumber || "",
+        selectedPackage: user.selectedPackage || "",
+        selectedLevel: user.selectedLevel || "",
+        selectedOption: user.selectedOption || "",
+        paymentAmount: user.paymentAmount || "",
+    });
 
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setForm((prev) => ({ ...prev, [name]: value }));
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        onSave(form);
+    };
+
+    return (
+        <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label className="block text-sm font-medium text-neutral-700">First Name</label>
+                    <input
+                        name="firstName"
+                        value={form.firstName}
+                        onChange={handleChange}
+                        className="mt-1 block w-full border border-neutral-300 rounded-md py-2 px-3"
+                        required
+                    />
+                </div>
+                <div>
+                    <label className="block text-sm font-medium text-neutral-700">Last Name</label>
+                    <input
+                        name="lastName"
+                        value={form.lastName}
+                        onChange={handleChange}
+                        className="mt-1 block w-full border border-neutral-300 rounded-md py-2 px-3"
+                        required
+                    />
+                </div>
+                <div>
+                    <label className="block text-sm font-medium text-neutral-700">Email</label>
+                    <input
+                        name="email"
+                        value={form.email}
+                        onChange={handleChange}
+                        className="mt-1 block w-full border border-neutral-300 rounded-md py-2 px-3"
+                        required
+                        type="email"
+                    />
+                </div>
+                <div>
+                    <label className="block text-sm font-medium text-neutral-700">Phone</label>
+                    <input
+                        name="phoneNumber"
+                        value={form.phoneNumber}
+                        onChange={handleChange}
+                        className="mt-1 block w-full border border-neutral-300 rounded-md py-2 px-3"
+                    />
+                </div>
+                <div>
+                    <label className="block text-sm font-medium text-neutral-700">Package</label>
+                    <select
+                        name="selectedPackage"
+                        value={form.selectedPackage}
+                        onChange={handleChange}
+                        className="mt-1 block w-full border border-neutral-300 rounded-md py-2 px-3"
+                        required
+                    >
+                        <option value="">Select...</option>
+                        <option value="complete">Complete Training</option>
+                        <option value="progressive">Progressive Path</option>
+                        <option value="direct">Direct Entry</option>
+                        <option value="special">Special Track</option>
+                    </select>
+                </div>
+                <div>
+                    <label className="block text-sm font-medium text-neutral-700">Level</label>
+                    <input
+                        name="selectedLevel"
+                        value={form.selectedLevel}
+                        onChange={handleChange}
+                        className="mt-1 block w-full border border-neutral-300 rounded-md py-2 px-3"
+                    />
+                </div>
+                <div>
+                    <label className="block text-sm font-medium text-neutral-700">Option</label>
+                    <input
+                        name="selectedOption"
+                        value={form.selectedOption}
+                        onChange={handleChange}
+                        className="mt-1 block w-full border border-neutral-300 rounded-md py-2 px-3"
+                    />
+                </div>
+                <div>
+                    <label className="block text-sm font-medium text-neutral-700">Payment Amount</label>
+                    <input
+                        name="paymentAmount"
+                        value={form.paymentAmount}
+                        onChange={handleChange}
+                        className="mt-1 block w-full border border-neutral-300 rounded-md py-2 px-3"
+                        type="number"
+                    />
+                </div>
+            </div>
+            <div className="flex space-x-3 pt-4">
+                <Button type="submit" className="bg-primary text-white" disabled={saving}>
+                    <CheckCircle className="w-4 h-4 mr-2" />
+                    Save
+                </Button>
+                <Button type="button" variant="outline" onClick={onCancel} disabled={saving}>
+                    <XCircle className="w-4 h-4 mr-2" />
+                    Cancel
+                </Button>
+            </div>
+        </form>
+    );
+};
+
+// User Detail Modal Component (with Edit & Delete)
+const UserDetailModal = ({
+    user,
+    isOpen,
+    onClose,
+    onUpdateStatus,
+    onDeleteUser,
+    onEditUser,
+}) => {
+    const [updating, setUpdating] = useState(false);
+    const [editing, setEditing] = useState(false);
+    const [savingEdit, setSavingEdit] = useState(false);
 
     if (!isOpen || !user) return null;
 
@@ -112,229 +245,268 @@ const UserDetailModal = ({ user, isOpen, onClose, onUpdateStatus }) => {
         }
     };
 
-    // Load screenshot from API or localStorage
-    
+    const handleDelete = async () => {
+        if (!window.confirm("Are you sure you want to delete this user? This action cannot be undone.")) return;
+        try {
+            await deleteDoc(doc(db, "users", user.id));
+            onDeleteUser(user.id);
+            onClose();
+        } catch (error) {
+            console.error("Error deleting user:", error);
+            alert("Failed to delete user");
+        }
+    };
 
- 
+    const handleEditSave = async (form) => {
+        setSavingEdit(true);
+        try {
+            await updateDoc(doc(db, "users", user.id), form);
+            onEditUser(user.id, form);
+            setEditing(false);
+        } catch (error) {
+            console.error("Error updating user:", error);
+            alert("Failed to update user");
+        } finally {
+            setSavingEdit(false);
+        }
+    };
 
+    // Modal content
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
             <div className="bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-                <div className="p-6 border-b border-neutral-200">
-                    <div className="flex items-center justify-between">
-                        <h2 className="text-2xl font-bold text-neutral-800">User Details</h2>
+                <div className="p-6 border-b border-neutral-200 flex items-center justify-between">
+                    <h2 className="text-2xl font-bold text-neutral-800">User Details</h2>
+                    <div className="flex space-x-2">
+                        <Button
+                            size="icon"
+                            variant="outline"
+                            onClick={() => setEditing(true)}
+                            className="border-blue-500 text-blue-600"
+                        >
+                            <Edit className="w-5 h-5" />
+                        </Button>
+                        <Button
+                            size="icon"
+                            variant="outline"
+                            onClick={handleDelete}
+                            className="border-red-500 text-red-600"
+                        >
+                            <Trash2 className="w-5 h-5" />
+                        </Button>
                         <button
                             onClick={onClose}
-                            className="text-neutral-500 hover:text-neutral-700"
+                            className="text-neutral-500 hover:text-neutral-700 ml-2"
                         >
                             <XCircle size={24} />
                         </button>
                     </div>
                 </div>
-
                 <div className="p-6 space-y-6">
-                    {/* Personal Information */}
-                    <div>
-                        <h3 className="text-lg font-semibold text-neutral-800 mb-4">Personal Information</h3>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div className="flex items-center">
-                                <User className="w-4 h-4 mr-2 text-neutral-400" />
-                                <span className="font-medium text-neutral-700 w-20">Name:</span>
-                                <span className="text-neutral-600">{user.firstName} {user.lastName}</span>
-                            </div>
-                            <div className="flex items-center">
-                                <Mail className="w-4 h-4 mr-2 text-neutral-400" />
-                                <span className="font-medium text-neutral-700 w-20">Email:</span>
-                                <span className="text-neutral-600">{user.email}</span>
-                            </div>
-                            <div className="flex items-center">
-                                <Phone className="w-4 h-4 mr-2 text-neutral-400" />
-                                <span className="font-medium text-neutral-700 w-20">Phone:</span>
-                                <span className="text-neutral-600">{user.phoneNumber || 'N/A'}</span>
-                            </div>
-                            <div className="flex items-center">
-                                <Calendar className="w-4 h-4 mr-2 text-neutral-400" />
-                                <span className="font-medium text-neutral-700 w-20">Joined:</span>
-                                <span className="text-neutral-600">
-                                    {user.createdAt ? new Date(user.createdAt.seconds * 1000).toLocaleDateString() : 'N/A'}
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Package Information */}
-                    <div>
-                        <h3 className="text-lg font-semibold text-neutral-800 mb-4">Package Information</h3>
-                        <div className="bg-neutral-50 p-4 rounded-lg">
-                            <div className="flex items-center mb-3">
-                                {getPackageIcon(user.selectedPackage, user.selectedLevel, user.selectedOption)}
-                                <span className="ml-2 font-semibold text-neutral-800">
-                                    {getPackageName(user.selectedPackage, user.selectedLevel, user.selectedOption)}
-                                </span>
-                            </div>
-                            <div className="grid grid-cols-2 gap-4 text-sm">
-                                <div>
-                                    <span className="font-medium text-neutral-700">Package:</span>
-                                    <span className="ml-2 text-neutral-600">{user.selectedPackage || 'N/A'}</span>
-                                </div>
-                                <div>
-                                    <span className="font-medium text-neutral-700">Level:</span>
-                                    <span className="ml-2 text-neutral-600">{user.selectedLevel || 'N/A'}</span>
-                                </div>
-                                <div>
-                                    <span className="font-medium text-neutral-700">Option:</span>
-                                    <span className="ml-2 text-neutral-600">{user.selectedOption || 'N/A'}</span>
-                                </div>
-                                <div>
-                                    <span className="font-medium text-neutral-700">Amount:</span>
-                                    <span className="ml-2 text-neutral-600">₨{user.paymentAmount || 'N/A'}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Payment Information */}
-                    {user.paymentMethod && (
-                        <div>
-                            <h3 className="text-lg font-semibold text-neutral-800 mb-4">Payment Information</h3>
-                            <div className="bg-neutral-50 p-4 rounded-lg">
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm mb-4">
-                                    <div>
-                                        <span className="font-medium text-neutral-700">Method:</span>
-                                        <span className="ml-2 text-neutral-600 capitalize">{user.paymentMethod}</span>
+                    {editing ? (
+                        <EditUserForm
+                            user={user}
+                            onSave={handleEditSave}
+                            onCancel={() => setEditing(false)}
+                            saving={savingEdit}
+                        />
+                    ) : (
+                        <>
+                            {/* Personal Information */}
+                            <div>
+                                <h3 className="text-lg font-semibold text-neutral-800 mb-4">Personal Information</h3>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div className="flex items-center">
+                                        <User className="w-4 h-4 mr-2 text-neutral-400" />
+                                        <span className="font-medium text-neutral-700 w-20">Name:</span>
+                                        <span className="text-neutral-600">{user.firstName} {user.lastName}</span>
                                     </div>
-                                    <div>
-                                        <span className="font-medium text-neutral-700">Transaction ID:</span>
-                                        <span className="ml-2 text-neutral-600 font-mono">{user.transactionId || 'N/A'}</span>
+                                    <div className="flex items-center">
+                                        <Mail className="w-4 h-4 mr-2 text-neutral-400" />
+                                        <span className="font-medium text-neutral-700 w-20">Email:</span>
+                                        <span className="text-neutral-600">{user.email}</span>
                                     </div>
-                                    <div>
-                                        <span className="font-medium text-neutral-700">Status:</span>
-                                        <span className={`ml-2 px-2 py-1 rounded-full text-xs ${
-                                            user.paymentStatus === 'verified' ? 'bg-green-100 text-green-800' :
-                                            user.paymentStatus === 'pending_verification' ? 'bg-yellow-100 text-yellow-800' :
-                                            'bg-red-100 text-red-800'
-                                        }`}>
-                                            {user.paymentStatus || 'pending'}
-                                        </span>
+                                    <div className="flex items-center">
+                                        <Phone className="w-4 h-4 mr-2 text-neutral-400" />
+                                        <span className="font-medium text-neutral-700 w-20">Phone:</span>
+                                        <span className="text-neutral-600">{user.phoneNumber || 'N/A'}</span>
                                     </div>
-                                    <div>
-                                        <span className="font-medium text-neutral-700">Submitted:</span>
-                                        <span className="ml-2 text-neutral-600">
-                                            {user.paymentSubmittedAt ? 
-                                                new Date(user.paymentSubmittedAt.seconds * 1000).toLocaleString() : 
-                                                'N/A'
-                                            }
+                                    <div className="flex items-center">
+                                        <Calendar className="w-4 h-4 mr-2 text-neutral-400" />
+                                        <span className="font-medium text-neutral-700 w-20">Joined:</span>
+                                        <span className="text-neutral-600">
+                                            {user.createdAt ? new Date(user.createdAt.seconds * 1000).toLocaleDateString() : 'N/A'}
                                         </span>
                                     </div>
                                 </div>
-
-                                {/* Payment Screenshot */}
-{user.paymentScreenshot && (
-    <div className="border-t border-neutral-200 pt-4">
-        <div className="flex items-center mb-3">
-            <ImageIcon className="w-4 h-4 mr-2 text-primary" />
-            <span className="font-medium text-neutral-700">Payment Screenshot:</span>
-        </div>
-        
-        {/* Direct image display without loading state complexity */}
-        <div className="space-y-2">
-            <img 
-                src={`http://localhost:3001/api/payment-screenshots/${user.paymentScreenshot}`}
-                alt="Payment Screenshot" 
-                className="max-w-md h-auto rounded-lg border border-neutral-200 cursor-pointer hover:shadow-lg transition-shadow"
-                onClick={() => window.open(`http://localhost:3001/api/payment-screenshots/${user.paymentScreenshot}`, '_blank')}
-                onError={(e) => {
-                    // If server image fails, try localStorage
-                    const localData = localStorage.getItem(`payment_screenshot_${user.id}`);
-                    if (localData) {
-                        const parsed = JSON.parse(localData);
-                        e.target.src = parsed.base64;
-                    } else {
-                        e.target.style.display = 'none';
-                        e.target.nextElementSibling.style.display = 'block';
-                    }
-                }}
-            />
-            <div style={{display: 'none'}} className="flex items-center justify-center h-32 bg-neutral-100 rounded-lg">
-                <div className="text-center">
-                    <ImageIcon className="w-8 h-8 text-neutral-400 mx-auto mb-2" />
-                    <span className="text-neutral-500 text-sm">Screenshot not available</span>
-                    <p className="text-xs text-neutral-400 mt-1">File: {user.paymentScreenshot}</p>
-                </div>
-            </div>
-            <div className="flex items-center space-x-2">
-                <span className="text-xs text-neutral-500">File: {user.paymentScreenshot}</span>
-                <button
-                    onClick={() => window.open(`http://localhost:3001/api/payment-screenshots/${user.paymentScreenshot}`, '_blank')}
-                    className="text-xs text-primary hover:text-primary/80 flex items-center"
-                >
-                    <ExternalLink className="w-3 h-3 mr-1" />
-                    Open Full Size
-                </button>
-            </div>
-        </div>
-    </div>
-)}
-
                             </div>
-                        </div>
-                    )}
-
-                    {/* Assessment Results */}
-                    {user.assessmentResults && (
-                        <div>
-                            <h3 className="text-lg font-semibold text-neutral-800 mb-4">Assessment Results</h3>
-                            <div className="bg-neutral-50 p-4 rounded-lg">
-                                <div className="grid grid-cols-3 gap-4 text-center">
-                                    <div>
-                                        <div className="text-2xl font-bold text-primary">{user.assessmentResults.percentage}%</div>
-                                        <div className="text-sm text-neutral-600">Score</div>
+                            {/* Package Information */}
+                            <div>
+                                <h3 className="text-lg font-semibold text-neutral-800 mb-4">Package Information</h3>
+                                <div className="bg-neutral-50 p-4 rounded-lg">
+                                    <div className="flex items-center mb-3">
+                                        {getPackageIcon(user.selectedPackage, user.selectedLevel, user.selectedOption)}
+                                        <span className="ml-2 font-semibold text-neutral-800">
+                                            {getPackageName(user.selectedPackage, user.selectedLevel, user.selectedOption)}
+                                        </span>
                                     </div>
-                                    <div>
-                                        <div className="text-2xl font-bold text-blue-600">
-                                            {user.assessmentResults.score}/{user.assessmentResults.totalQuestions}
+                                    <div className="grid grid-cols-2 gap-4 text-sm">
+                                        <div>
+                                            <span className="font-medium text-neutral-700">Package:</span>
+                                            <span className="ml-2 text-neutral-600">{user.selectedPackage || 'N/A'}</span>
                                         </div>
-                                        <div className="text-sm text-neutral-600">Correct</div>
-                                    </div>
-                                    <div>
-                                        <div className="text-2xl font-bold text-green-600">{user.assessmentResults.level}</div>
-                                        <div className="text-sm text-neutral-600">Recommended</div>
+                                        <div>
+                                            <span className="font-medium text-neutral-700">Level:</span>
+                                            <span className="ml-2 text-neutral-600">{user.selectedLevel || 'N/A'}</span>
+                                        </div>
+                                        <div>
+                                            <span className="font-medium text-neutral-700">Option:</span>
+                                            <span className="ml-2 text-neutral-600">{user.selectedOption || 'N/A'}</span>
+                                        </div>
+                                        <div>
+                                            <span className="font-medium text-neutral-700">Amount:</span>
+                                            <span className="ml-2 text-neutral-600">₨{user.paymentAmount || 'N/A'}</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                            {/* Payment Information */}
+                            {user.paymentMethod && (
+                                <div>
+                                    <h3 className="text-lg font-semibold text-neutral-800 mb-4">Payment Information</h3>
+                                    <div className="bg-neutral-50 p-4 rounded-lg">
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm mb-4">
+                                            <div>
+                                                <span className="font-medium text-neutral-700">Method:</span>
+                                                <span className="ml-2 text-neutral-600 capitalize">{user.paymentMethod}</span>
+                                            </div>
+                                            <div>
+                                                <span className="font-medium text-neutral-700">Transaction ID:</span>
+                                                <span className="ml-2 text-neutral-600 font-mono">{user.transactionId || 'N/A'}</span>
+                                            </div>
+                                            <div>
+                                                <span className="font-medium text-neutral-700">Status:</span>
+                                                <span className={`ml-2 px-2 py-1 rounded-full text-xs ${
+                                                    user.paymentStatus === 'verified' ? 'bg-green-100 text-green-800' :
+                                                    user.paymentStatus === 'pending_verification' ? 'bg-yellow-100 text-yellow-800' :
+                                                    'bg-red-100 text-red-800'
+                                                }`}>
+                                                    {user.paymentStatus || 'pending'}
+                                                </span>
+                                            </div>
+                                            <div>
+                                                <span className="font-medium text-neutral-700">Submitted:</span>
+                                                <span className="ml-2 text-neutral-600">
+                                                    {user.paymentSubmittedAt ? 
+                                                        new Date(user.paymentSubmittedAt.seconds * 1000).toLocaleString() : 
+                                                        'N/A'
+                                                    }
+                                                </span>
+                                            </div>
+                                        </div>
+                                        {/* Payment Screenshot */}
+                                        {user.paymentScreenshot && (
+                                            <div className="border-t border-neutral-200 pt-4">
+                                                <div className="flex items-center mb-3">
+                                                    <ImageIcon className="w-4 h-4 mr-2 text-primary" />
+                                                    <span className="font-medium text-neutral-700">Payment Screenshot:</span>
+                                                </div>
+                                                <div className="space-y-2">
+                                                    <img 
+                                                        src={`http://itvate.habeel.xyz/api/payment-screenshots/${user.paymentScreenshot}`}
+                                                        alt="Payment Screenshot" 
+                                                        className="max-w-md h-auto rounded-lg border border-neutral-200 cursor-pointer hover:shadow-lg transition-shadow"
+                                                        onClick={() => window.open(`http://itvate.habeel.xyz/api/payment-screenshots/${user.paymentScreenshot}`, '_blank')}
+                                                        onError={(e) => {
+                                                            const localData = localStorage.getItem(`payment_screenshot_${user.id}`);
+                                                            if (localData) {
+                                                                const parsed = JSON.parse(localData);
+                                                                e.target.src = parsed.base64;
+                                                            } else {
+                                                                e.target.style.display = 'none';
+                                                                e.target.nextElementSibling.style.display = 'block';
+                                                            }
+                                                        }}
+                                                    />
+                                                    <div style={{display: 'none'}} className="flex items-center justify-center h-32 bg-neutral-100 rounded-lg">
+                                                        <div className="text-center">
+                                                            <ImageIcon className="w-8 h-8 text-neutral-400 mx-auto mb-2" />
+                                                            <span className="text-neutral-500 text-sm">Screenshot not available</span>
+                                                            <p className="text-xs text-neutral-400 mt-1">File: {user.paymentScreenshot}</p>
+                                                        </div>
+                                                    </div>
+                                                    <div className="flex items-center space-x-2">
+                                                        <span className="text-xs text-neutral-500">File: {user.paymentScreenshot}</span>
+                                                        <button
+                                                            onClick={() => window.open(`http://itvate.habeel.xyz/api/payment-screenshots/${user.paymentScreenshot}`, '_blank')}
+                                                            className="text-xs text-primary hover:text-primary/80 flex items-center"
+                                                        >
+                                                            <ExternalLink className="w-3 h-3 mr-1" />
+                                                            Open Full Size
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            )}
+                            {/* Assessment Results */}
+                            {user.assessmentResults && (
+                                <div>
+                                    <h3 className="text-lg font-semibold text-neutral-800 mb-4">Assessment Results</h3>
+                                    <div className="bg-neutral-50 p-4 rounded-lg">
+                                        <div className="grid grid-cols-3 gap-4 text-center">
+                                            <div>
+                                                <div className="text-2xl font-bold text-primary">{user.assessmentResults.percentage}%</div>
+                                                <div className="text-sm text-neutral-600">Score</div>
+                                            </div>
+                                            <div>
+                                                <div className="text-2xl font-bold text-blue-600">
+                                                    {user.assessmentResults.score}/{user.assessmentResults.totalQuestions}
+                                                </div>
+                                                <div className="text-sm text-neutral-600">Correct</div>
+                                            </div>
+                                            <div>
+                                                <div className="text-2xl font-bold text-green-600">{user.assessmentResults.level}</div>
+                                                <div className="text-sm text-neutral-600">Recommended</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+                            {/* Status Update Actions */}
+                            <div>
+                                <h3 className="text-lg font-semibold text-neutral-800 mb-4">Update Payment Status</h3>
+                                <div className="flex space-x-3">
+                                    <Button
+                                        onClick={() => handleStatusUpdate('verified')}
+                                        disabled={updating}
+                                        className="bg-green-600 hover:bg-green-700 text-white"
+                                    >
+                                        <CheckCircle className="w-4 h-4 mr-2" />
+                                        Verify Payment
+                                    </Button>
+                                    <Button
+                                        onClick={() => handleStatusUpdate('rejected')}
+                                        disabled={updating}
+                                        className="bg-red-600 hover:bg-red-700 text-white"
+                                    >
+                                        <XCircle className="w-4 h-4 mr-2" />
+                                        Reject Payment
+                                    </Button>
+                                    <Button
+                                        onClick={() => handleStatusUpdate('pending_verification')}
+                                        disabled={updating}
+                                        className="bg-yellow-600 hover:bg-yellow-700 text-white"
+                                    >
+                                        <Clock className="w-4 h-4 mr-2" />
+                                        Mark Pending
+                                    </Button>
+                                </div>
+                            </div>
+                        </>
                     )}
-
-                    {/* Status Update Actions */}
-                    <div>
-                        <h3 className="text-lg font-semibold text-neutral-800 mb-4">Update Payment Status</h3>
-                        <div className="flex space-x-3">
-                            <Button
-                                onClick={() => handleStatusUpdate('verified')}
-                                disabled={updating}
-                                className="bg-green-600 hover:bg-green-700 text-white"
-                            >
-                                <CheckCircle className="w-4 h-4 mr-2" />
-                                Verify Payment
-                            </Button>
-                            <Button
-                                onClick={() => handleStatusUpdate('rejected')}
-                                disabled={updating}
-                                className="bg-red-600 hover:bg-red-700 text-white"
-                            >
-                                <XCircle className="w-4 h-4 mr-2" />
-                                Reject Payment
-                            </Button>
-                            <Button
-                                onClick={() => handleStatusUpdate('pending_verification')}
-                                disabled={updating}
-                                className="bg-yellow-600 hover:bg-yellow-700 text-white"
-                            >
-                                <Clock className="w-4 h-4 mr-2" />
-                                Mark Pending
-                            </Button>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -358,12 +530,9 @@ const AdminPanel = () => {
     });
 
     useEffect(() => {
-        // Check if already authenticated
         const isAuth = sessionStorage.getItem('admin_authenticated');
         const loginTime = sessionStorage.getItem('admin_login_time');
-        
         if (isAuth && loginTime) {
-            // Check if session is still valid (24 hours)
             const timeDiff = Date.now() - parseInt(loginTime);
             if (timeDiff < 24 * 60 * 60 * 1000) {
                 setIsAuthenticated(true);
@@ -384,7 +553,6 @@ const AdminPanel = () => {
             const usersRef = collection(db, "users");
             const q = query(usersRef, orderBy("createdAt", "desc"));
             const querySnapshot = await getDocs(q);
-            
             const usersData = [];
             querySnapshot.forEach((doc) => {
                 usersData.push({
@@ -392,7 +560,6 @@ const AdminPanel = () => {
                     ...doc.data()
                 });
             });
-            
             setUsers(usersData);
             calculateStats(usersData);
         } catch (error) {
@@ -413,8 +580,6 @@ const AdminPanel = () => {
 
     const filterUsers = () => {
         let filtered = users;
-
-        // Search filter
         if (searchTerm) {
             filtered = filtered.filter(user => 
                 user.firstName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -423,17 +588,12 @@ const AdminPanel = () => {
                 user.transactionId?.toLowerCase().includes(searchTerm.toLowerCase())
             );
         }
-
-        // Status filter
         if (statusFilter !== "all") {
             filtered = filtered.filter(user => user.paymentStatus === statusFilter);
         }
-
-        // Package filter
         if (packageFilter !== "all") {
             filtered = filtered.filter(user => user.selectedPackage === packageFilter);
         }
-
         setFilteredUsers(filtered);
     };
 
@@ -450,6 +610,21 @@ const AdminPanel = () => {
         calculateStats(users);
     };
 
+    const handleUserDelete = (userId) => {
+        setUsers(prev => prev.filter(user => user.id !== userId));
+        setFilteredUsers(prev => prev.filter(user => user.id !== userId));
+        calculateStats(users.filter(user => user.id !== userId));
+    };
+
+    const handleUserEdit = (userId, updatedFields) => {
+        setUsers(prev => prev.map(user =>
+            user.id === userId ? { ...user, ...updatedFields } : user
+        ));
+        setFilteredUsers(prev => prev.map(user =>
+            user.id === userId ? { ...user, ...updatedFields } : user
+        ));
+    };
+
     const exportData = () => {
         const csvData = filteredUsers.map(user => ({
             'Name': `${user.firstName} ${user.lastName}`,
@@ -464,12 +639,10 @@ const AdminPanel = () => {
             'Status': user.paymentStatus || 'N/A',
             'Joined Date': user.createdAt ? new Date(user.createdAt.seconds * 1000).toLocaleDateString() : 'N/A'
         }));
-
         const csvContent = [
             Object.keys(csvData[0] || {}).join(','),
             ...csvData.map(row => Object.values(row).join(','))
         ].join('\n');
-
         const blob = new Blob([csvContent], { type: 'text/csv' });
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -516,7 +689,6 @@ const AdminPanel = () => {
                     </div>
                 </div>
             </header>
-
             {/* Stats Dashboard */}
             <section className="container mx-auto px-4 py-8">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
@@ -539,7 +711,6 @@ const AdminPanel = () => {
                         color="bg-green-600"
                     />
                 </div>
-
                 {/* Filters and Controls */}
                 <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
                     <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
@@ -555,7 +726,6 @@ const AdminPanel = () => {
                                     className="pl-10 pr-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent w-64"
                                 />
                             </div>
-
                             {/* Status Filter */}
                             <select
                                 value={statusFilter}
@@ -567,7 +737,6 @@ const AdminPanel = () => {
                                 <option value="verified">Verified</option>
                                 <option value="rejected">Rejected</option>
                             </select>
-
                             {/* Package Filter */}
                             <select
                                 value={packageFilter}
@@ -581,7 +750,6 @@ const AdminPanel = () => {
                                 <option value="special">Special Track</option>
                             </select>
                         </div>
-
                         <div className="flex space-x-3">
                             <Button
                                 onClick={exportData}
@@ -594,7 +762,6 @@ const AdminPanel = () => {
                         </div>
                     </div>
                 </div>
-
                 {/* Users Table */}
                 <div className="bg-white rounded-xl shadow-lg overflow-hidden">
                     <div className="overflow-x-auto">
@@ -706,7 +873,7 @@ const AdminPanel = () => {
                                                     'N/A'
                                                 }
                                             </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                            <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium flex space-x-2">
                                                 <Button
                                                     onClick={() => {
                                                         setSelectedUser(user);
@@ -719,6 +886,23 @@ const AdminPanel = () => {
                                                     <Eye className="w-4 h-4 mr-1" />
                                                     View
                                                 </Button>
+                                                <Button
+                                                    onClick={async () => {
+                                                        if (!window.confirm("Are you sure you want to delete this user? This action cannot be undone.")) return;
+                                                        try {
+                                                            await deleteDoc(doc(db, "users", user.id));
+                                                            handleUserDelete(user.id);
+                                                        } catch (error) {
+                                                            alert("Failed to delete user");
+                                                        }
+                                                    }}
+                                                    variant="outline"
+                                                    size="sm"
+                                                    className="text-red-600 border-red-300 hover:bg-red-50"
+                                                >
+                                                    <Trash2 className="w-4 h-4 mr-1" />
+                                                    Delete
+                                                </Button>
                                             </td>
                                         </tr>
                                     ))
@@ -727,13 +911,11 @@ const AdminPanel = () => {
                         </table>
                     </div>
                 </div>
-
                 {/* Summary */}
                 <div className="mt-6 text-center text-sm text-neutral-600">
                     Showing {filteredUsers.length} of {users.length} users
                 </div>
             </section>
-
             {/* User Detail Modal */}
             <UserDetailModal
                 user={selectedUser}
@@ -743,6 +925,8 @@ const AdminPanel = () => {
                     setSelectedUser(null);
                 }}
                 onUpdateStatus={handleUserStatusUpdate}
+                onDeleteUser={handleUserDelete}
+                onEditUser={handleUserEdit}
             />
         </main>
     );

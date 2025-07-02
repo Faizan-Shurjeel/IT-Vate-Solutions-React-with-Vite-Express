@@ -60,6 +60,7 @@ const Packages = () => {
             name: "Expert Track",
             subtitle: "Levels 1-3, 20% off",
             price: "₨12,000",
+            originalPrice: "₨15,000",
             duration: "All Levels",
             description: "Register once, attend all 3 levels with 20% discount",
             features: [
@@ -81,13 +82,14 @@ const Packages = () => {
             id: "progressive",
             name: "Progressive Track",
             subtitle: "Start at Level 1",
-            price: "₨5,000",
-            duration: "Per Level",
+            price: "₨3,000",
+            originalPrice: "₨5,000",
+            duration: "Level 1 Only",
             description: "Start at Level 1, unlock the next level after each IT-vate certificate",
             features: [
                 "Start from Level 1",
                 "Unlock Next Level After Certificate",
-                "₨5,000 per level",
+                "40% OFF for Level 1",
                 "Step-by-Step Learning"
             ],
             cta: "Select Progressive Track",
@@ -96,8 +98,8 @@ const Packages = () => {
             icon: <BookOpen className="w-8 h-8" />,
             color: "border-primary hover:border-primary/80 ring-2 ring-primary/20",
             hasDiscount: true,
-            discountText: "Early Bird 40% OFF",
-            discountSubtext: "Limited Time Offer!"
+            discountText: "40% OFF Level 1",
+            discountSubtext: "Limited Time!"
         },
         {
             id: "direct",
@@ -120,7 +122,8 @@ const Packages = () => {
             popular: false,
             badge: "Fast-Track for Pros",
             icon: <Zap className="w-8 h-8" />,
-            color: "border-primary hover:border-primary/80 ring-2 ring-primary/20"
+            color: "border-primary hover:border-primary/80 ring-2 ring-primary/20",
+            locked: true
         },
         {
             id: "special",
@@ -139,7 +142,8 @@ const Packages = () => {
             popular: false,
             badge: "Personalized Training",
             icon: <User className="w-8 h-8" />,
-            color: "border-primary hover:border-primary/80 ring-2 ring-primary/20"
+            color: "border-primary hover:border-primary/80 ring-2 ring-primary/20",
+            locked: true
         }
     ];
 
@@ -267,11 +271,9 @@ const Packages = () => {
                                     key={pkg.id}
                                     className="relative"
                                 >
-                                    {/* Main card with conditional blur */}
+                                    {/* Main card - always fully visible */}
                                     <div
-                                        className={`relative bg-white rounded-xl shadow-lg border-2 ${pkg.color} transition-all duration-300 hover:shadow-xl group flex flex-col h-full ${
-                                            (pkg.id === 'direct' || pkg.id === 'special') ? 'blur-sm pointer-events-none' : ''
-                                        }`}
+                                        className={`relative bg-white rounded-xl shadow-lg border-2 ${pkg.color} transition-all duration-300 hover:shadow-xl group flex flex-col h-full`}
                                     >
                                         {/* Top badges - Recommended and Best for Students */}
                                         {pkg.popular && (
@@ -298,29 +300,23 @@ const Packages = () => {
                                             </div>
                                         )}
 
-                                        {/* Discount Banner for cards 1 and 2 - Positioned to not overlap */}
+                                        {/* Discount Banner - positioned inside card at top right */}
                                         {pkg.hasDiscount && (
-                                            <div className="absolute -top-2 -right-3 z-10">
+                                            <div className="absolute top-4 right-4 z-10">
                                                 <div className="relative">
                                                     <div className={`${
                                                         pkg.id === 'complete' 
                                                             ? 'bg-gradient-to-r from-green-500 to-green-600' 
                                                             : 'bg-gradient-to-r from-orange-500 to-red-500'
-                                                    } text-white px-3 py-1.5 rounded-lg shadow-lg transform rotate-12 hover:rotate-6 transition-transform duration-300`}>
+                                                    } text-white px-2.5 py-1 rounded-lg shadow-lg transform rotate-12 hover:rotate-6 transition-transform duration-300`}>
                                                         <div className="text-center">
                                                             <div className="text-xs font-bold leading-tight">
                                                                 {pkg.discountText}
                                                             </div>
-                                                            <div className="text-[10px] opacity-90">
+                                                            <div className="text-[9px] opacity-90">
                                                                 {pkg.discountSubtext}
                                                             </div>
                                                         </div>
-                                                        {/* Banner tail */}
-                                                        <div className={`absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-3 border-r-3 border-t-3 border-transparent ${
-                                                            pkg.id === 'complete' 
-                                                                ? 'border-t-green-600' 
-                                                                : 'border-t-red-500'
-                                                        }`}></div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -345,6 +341,11 @@ const Packages = () => {
                                             <div className="text-center mb-6 p-4 bg-neutral-50 rounded-lg">
                                                 <div className="text-2xl font-bold text-neutral-800 mb-1">
                                                     {pkg.price}
+                                                    {pkg.originalPrice && (
+                                                        <span className="text-sm text-neutral-500 line-through ml-2">
+                                                            {pkg.originalPrice}
+                                                        </span>
+                                                    )}
                                                 </div>
                                                 <div className="flex items-center justify-center text-neutral-600 text-sm">
                                                     <Clock className="w-3 h-3 mr-1" />
@@ -383,20 +384,33 @@ const Packages = () => {
                                             </div>
 
                                             {/* CTA - This will be pushed to bottom */}
-                                            <div className="text-center mt-auto">
+                                            <div className="text-center mt-auto relative">
                                                 <Button
                                                     onClick={() => handleSelectPackage(pkg.id)}
-                                                    disabled={loading || (pkg.id === 'direct' || pkg.id === 'special')}
+                                                    disabled={loading || pkg.locked}
                                                     className={`w-full py-2 text-sm font-semibold rounded-lg transition-all duration-300 ${
                                                         pkg.popular 
                                                             ? 'bg-primary hover:bg-primary/90 text-white shadow-lg' 
                                                             : 'bg-primary hover:bg-primary/90 text-white'
-                                                    } ${loading && selectedPackage === pkg.id ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                                    } ${
+                                                        pkg.locked 
+                                                            ? 'opacity-50 cursor-not-allowed' 
+                                                            : ''
+                                                    } ${
+                                                        loading && selectedPackage === pkg.id 
+                                                            ? 'opacity-50 cursor-not-allowed' 
+                                                            : ''
+                                                    }`}
                                                 >
                                                     {loading && selectedPackage === pkg.id ? (
                                                         <>
                                                             <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
                                                             Processing...
+                                                        </>
+                                                    ) : pkg.locked ? (
+                                                        <>
+                                                            <Lock className="w-4 h-4 mr-2" />
+                                                            Coming Soon
                                                         </>
                                                     ) : (
                                                         <>
@@ -408,13 +422,6 @@ const Packages = () => {
                                             </div>
                                         </div>
                                     </div>
-
-                                    {/* Lock overlay for cards 3 and 4 - OUTSIDE the blurred div */}
-                                    {(pkg.id === 'direct' || pkg.id === 'special') && (
-                                        <div className="absolute inset-0 bg-white bg-opacity-70 flex items-center justify-center rounded-xl z-30 pointer-events-none">
-                                            <Lock className="w-12 h-12 text-gray-400" />
-                                        </div>
-                                    )}
                                 </div>
                             ))}
                         </div>

@@ -3,7 +3,7 @@ import {
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
 } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, getDoc } from "firebase/firestore";
 import { auth, db } from "@/utils/firebase";
 import { Button } from "@/components/ui/button";
 import { Check } from "lucide-react";
@@ -27,12 +27,49 @@ const Register = () => {
     const [, setLocation] = useLocation();
     const [isLogin, setIsLogin] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
+    const [checkingPayment, setCheckingPayment] = useState(false);
 
     useEffect(() => {
         if (!authLoading && user) {
-            setLocation("/packages");
+            checkUserPaymentStatus();
         }
     }, [authLoading, user, setLocation]);
+
+    const checkUserPaymentStatus = async () => {
+        if (!user) return;
+        
+        setCheckingPayment(true);
+        try {
+            const userDoc = await getDoc(doc(db, "users", user.uid));
+            if (userDoc.exists()) {
+                const userData = userDoc.data();
+                
+                // Check if user has made payment (has transactionId or paymentStatus)
+                if (userData.transactionId || userData.paymentStatus) {
+                    setLocation("/payment-success");
+                    return;
+                }
+                
+                // Check if user has selected a package
+                if (userData.selectedPackage) {
+                    setLocation("/payment");
+                    return;
+                }
+                
+                // Otherwise, go to packages
+                setLocation("/packages");
+            } else {
+                // New user, go to packages
+                setLocation("/packages");
+            }
+        } catch (error) {
+            console.error("Error checking payment status:", error);
+            // On error, default to packages
+            setLocation("/packages");
+        } finally {
+            setCheckingPayment(false);
+        }
+    };
 
     const [form, setForm] = useState({
         fullName: "",
@@ -46,16 +83,15 @@ const Register = () => {
     const [error, setError] = useState("");
 
     const handleChange = (e) => {
-  const { name, value } = e.target;
-  if (name === "cnic" || name === "mobile") {
-    // Remove all non-digit characters
-    const digitsOnly = value.replace(/\D/g, "");
-    setForm({ ...form, [name]: digitsOnly });
-  } else {
-    setForm({ ...form, [name]: value });
-  }
-};
-
+        const { name, value } = e.target;
+        if (name === "cnic" || name === "mobile") {
+            // Remove all non-digit characters
+            const digitsOnly = value.replace(/\D/g, "");
+            setForm({ ...form, [name]: digitsOnly });
+        } else {
+            setForm({ ...form, [name]: value });
+        }
+    };
 
     const handleToggle = () => {
         setIsLogin(!isLogin);
@@ -82,8 +118,28 @@ const Register = () => {
             }
 
             try {
-                await signInWithEmailAndPassword(auth, form.email, form.password);
+                const { user: loggedInUser } = await signInWithEmailAndPassword(auth, form.email, form.password);
                 setForm({ fullName: "", cnic: "", mobile: "", email: "", password: "" });
+                
+                // Check payment status after login
+                const userDoc = await getDoc(doc(db, "users", loggedInUser.uid));
+                if (userDoc.exists()) {
+                    const userData = userDoc.data();
+                    
+                    // Check if user has made payment
+                    if (userData.transactionId || userData.paymentStatus) {
+                        setLocation("/payment-success");
+                        return;
+                    }
+                    
+                    // Check if user has selected a package
+                    if (userData.selectedPackage) {
+                        setLocation("/payment");
+                        return;
+                    }
+                }
+                
+                // Default to packages
                 setLocation("/packages");
             } catch (error) {
                 setError(error.message);
@@ -102,15 +158,29 @@ const Register = () => {
                 return;
             }
 
+            // Validate CNIC format
+            if (form.cnic.length !== 13) {
+                setError("CNIC must be exactly 13 digits.");
+                setLoading(false);
+                return;
+            }
+
+            // Validate mobile format
+            if (form.mobile.length !== 11 || !form.mobile.startsWith('03')) {
+                setError("Mobile number must be 11 digits starting with 03.");
+                setLoading(false);
+                return;
+            }
+
             try {
-                const { user } = await createUserWithEmailAndPassword(auth, form.email, form.password);
+                const { user: newUser } = await createUserWithEmailAndPassword(auth, form.email, form.password);
 
                 // Split full name into first and last name
                 const nameParts = form.fullName.trim().split(' ');
                 const firstName = nameParts[0] || '';
                 const lastName = nameParts.slice(1).join(' ') || '';
 
-                await setDoc(doc(db, "users", user.uid), {
+                await setDoc(doc(db, "users", newUser.uid), {
                     firstName: firstName,
                     lastName: lastName,
                     fullName: form.fullName,
@@ -120,17 +190,43 @@ const Register = () => {
                     createdAt: new Date(),
                     testCompleted: false,
                     level: "undetermined",
+                    // Initialize payment-related fields
+                    selectedPackage: null,
+                    selectedLevel: null,
+                    selectedOption: null,
+                    transactionId: null,
+                    paymentStatus: null,
                 });
 
                 setForm({ fullName: "", cnic: "", mobile: "", email: "", password: "" });
                 setLocation("/packages");
             } catch (error) {
-                setError(error.message);
+                if (error.code === 'auth/email-already-in-use') {
+                    setError("This email is already registered. Please sign in instead.");
+                } else if (error.code === 'auth/weak-password') {
+                    setError("Password is too weak. Please choose a stronger password.");
+                } else if (error.code === 'auth/invalid-email') {
+                    setError("Please enter a valid email address.");
+                } else {
+                    setError(error.message);
+                }
             } finally {
                 setLoading(false);
             }
         }
     };
+
+    // Show loading screen while checking payment status
+    if (checkingPayment) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-neutral-50">
+                <div className="text-center">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+                    <p className="text-neutral-600">Checking your account status...</p>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <main className="min-h-screen bg-neutral-50">
@@ -151,89 +247,86 @@ const Register = () => {
                 </div>
             </section>
 
-         
-          
-{/* Progress Steps */}
-<section className="py-8 bg-white border-b border-neutral-200">
-    <div className="container mx-auto px-4">
-        <div className="flex justify-center items-center space-x-8 overflow-x-auto">
-            {/* Step 0 - Complete */}
-            <div className="flex flex-col items-center min-w-[140px]">
-                <div className="flex items-center justify-center w-12 h-12 rounded-full bg-green-500 text-white font-bold text-lg mb-3 shadow-lg">
-                    ✓
-                </div>
-                <h3 className="text-sm font-semibold text-green-600 text-center">Start Your Journey</h3>
-                <p className="text-xs text-neutral-600 text-center mt-1">Completed</p>
-            </div>
+            {/* Progress Steps */}
+            <section className="py-8 bg-white border-b border-neutral-200">
+                <div className="container mx-auto px-4">
+                    <div className="flex justify-center items-center space-x-8 overflow-x-auto">
+                        {/* Step 0 - Complete */}
+                        <div className="flex flex-col items-center min-w-[140px]">
+                            <div className="flex items-center justify-center w-12 h-12 rounded-full bg-green-500 text-white font-bold text-lg mb-3 shadow-lg">
+                                ✓
+                            </div>
+                            <h3 className="text-sm font-semibold text-green-600 text-center">Start Your Journey</h3>
+                            <p className="text-xs text-neutral-600 text-center mt-1">Completed</p>
+                        </div>
 
-            {/* Connector Line */}
-            <div className="hidden md:block w-16 h-0.5 bg-green-300 -mt-8"></div>
+                        {/* Connector Line */}
+                        <div className="hidden md:block w-16 h-0.5 bg-green-300 -mt-8"></div>
 
-            {/* Step 1 - Active */}
-            <div className="flex flex-col items-center min-w-[140px]">
-                <div className="relative flex items-center justify-center w-12 h-12 rounded-full bg-primary text-white font-bold text-lg mb-3 shadow-lg">
-                    1
-                    <div className="absolute -top-8 left-1/2 transform -translate-x-1/2">
-                        <span className="bg-primary text-white text-xs px-2 py-1 rounded-full whitespace-nowrap">
-                            Current Step
-                        </span>
+                        {/* Step 1 - Active */}
+                        <div className="flex flex-col items-center min-w-[140px]">
+                            <div className="relative flex items-center justify-center w-12 h-12 rounded-full bg-primary text-white font-bold text-lg mb-3 shadow-lg">
+                                1
+                                <div className="absolute -top-8 left-1/2 transform -translate-x-1/2">
+                                    <span className="bg-primary text-white text-xs px-2 py-1 rounded-full whitespace-nowrap">
+                                        Current Step
+                                    </span>
+                                </div>
+                            </div>
+                            <h3 className="text-sm font-semibold text-primary text-center">Create Your Profile</h3>
+                            <p className="text-xs text-neutral-600 text-center mt-1">Register with us</p>
+                        </div>
+
+                        {/* Connector Line */}
+                        <div className="hidden md:block w-16 h-0.5 bg-neutral-300 -mt-8"></div>
+
+                        {/* Step 2 - Locked */}
+                        <div className="flex flex-col items-center min-w-[140px] opacity-50">
+                            <div className="flex items-center justify-center w-12 h-12 rounded-full bg-neutral-200 text-neutral-500 font-bold text-lg mb-3">
+                                2
+                            </div>
+                            <h3 className="text-sm font-medium text-neutral-500 text-center">Choose Your Track</h3>
+                            <p className="text-xs text-neutral-400 text-center mt-1">Bundle or progressive</p>
+                        </div>
+
+                        {/* Connector Line */}
+                        <div className="hidden md:block w-16 h-0.5 bg-neutral-300 -mt-8"></div>
+
+                        {/* Step 3 - Locked */}
+                        <div className="flex flex-col items-center min-w-[140px] opacity-50">
+                            <div className="flex items-center justify-center w-12 h-12 rounded-full bg-neutral-200 text-neutral-500 font-bold text-lg mb-3">
+                                3
+                            </div>
+                            <h3 className="text-sm font-medium text-neutral-500 text-center">Confirm Your Track</h3>
+                            <p className="text-xs text-neutral-400 text-center mt-1">Review your choice</p>
+                        </div>
+
+                        {/* Connector Line */}
+                        <div className="hidden md:block w-16 h-0.5 bg-neutral-300 -mt-8"></div>
+
+                        {/* Step 4 - Locked */}
+                        <div className="flex flex-col items-center min-w-[140px] opacity-50">
+                            <div className="flex items-center justify-center w-12 h-12 rounded-full bg-neutral-200 text-neutral-500 font-bold text-lg mb-3">
+                                4
+                            </div>
+                            <h3 className="text-sm font-medium text-neutral-500 text-center">Payment</h3>
+                            <p className="text-xs text-neutral-400 text-center mt-1">Make payment</p>
+                        </div>
+
+                        {/* Connector Line */}
+                        <div className="hidden md:block w-16 h-0.5 bg-neutral-300 -mt-8"></div>
+
+                        {/* Step 5 - Locked */}
+                        <div className="flex flex-col items-center min-w-[140px] opacity-50">
+                            <div className="flex items-center justify-center w-12 h-12 rounded-full bg-neutral-200 text-neutral-500 font-bold text-lg mb-3">
+                                5
+                            </div>
+                            <h3 className="text-sm font-medium text-neutral-500 text-center">Confirmation</h3>
+                            <p className="text-xs text-neutral-400 text-center mt-1">Download slip</p>
+                        </div>
                     </div>
                 </div>
-                <h3 className="text-sm font-semibold text-primary text-center">Create Your Profile</h3>
-                <p className="text-xs text-neutral-600 text-center mt-1">Register with us</p>
-            </div>
-
-            {/* Connector Line */}
-            <div className="hidden md:block w-16 h-0.5 bg-neutral-300 -mt-8"></div>
-
-            {/* Step 2 - Locked */}
-            <div className="flex flex-col items-center min-w-[140px] opacity-50">
-                <div className="flex items-center justify-center w-12 h-12 rounded-full bg-neutral-200 text-neutral-500 font-bold text-lg mb-3">
-                    2
-                </div>
-                <h3 className="text-sm font-medium text-neutral-500 text-center">Choose Your Track</h3>
-                <p className="text-xs text-neutral-400 text-center mt-1">Bundle or progressive</p>
-            </div>
-
-            {/* Connector Line */}
-            <div className="hidden md:block w-16 h-0.5 bg-neutral-300 -mt-8"></div>
-
-            {/* Step 3 - Locked */}
-            <div className="flex flex-col items-center min-w-[140px] opacity-50">
-                <div className="flex items-center justify-center w-12 h-12 rounded-full bg-neutral-200 text-neutral-500 font-bold text-lg mb-3">
-                    3
-                </div>
-                <h3 className="text-sm font-medium text-neutral-500 text-center">Confirm Your Track</h3>
-                <p className="text-xs text-neutral-400 text-center mt-1">Review your choice</p>
-            </div>
-
-            {/* Connector Line */}
-            <div className="hidden md:block w-16 h-0.5 bg-neutral-300 -mt-8"></div>
-
-            {/* Step 4 - Locked */}
-            <div className="flex flex-col items-center min-w-[140px] opacity-50">
-                <div className="flex items-center justify-center w-12 h-12 rounded-full bg-neutral-200 text-neutral-500 font-bold text-lg mb-3">
-                    4
-                </div>
-                <h3 className="text-sm font-medium text-neutral-500 text-center">Payment</h3>
-                <p className="text-xs text-neutral-400 text-center mt-1">Make payment</p>
-            </div>
-
-            {/* Connector Line */}
-            <div className="hidden md:block w-16 h-0.5 bg-neutral-300 -mt-8"></div>
-
-            {/* Step 5 - Locked */}
-            <div className="flex flex-col items-center min-w-[140px] opacity-50">
-                <div className="flex items-center justify-center w-12 h-12 rounded-full bg-neutral-200 text-neutral-500 font-bold text-lg mb-3">
-                    5
-                </div>
-                <h3 className="text-sm font-medium text-neutral-500 text-center">Confirmation</h3>
-                <p className="text-xs text-neutral-400 text-center mt-1">Download slip</p>
-            </div>
-        </div>
-    </div>
-</section>
-
+            </section>
 
             {/* Registration Form */}
             <section className="py-16">
@@ -273,39 +366,38 @@ const Register = () => {
                                             </div>
 
                                             {/* CNIC */}
-<div className="relative">
-  <CreditCard size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-primary" />
-  <input
-    name="cnic"
-    placeholder="CNIC (e.g. 1234512345671)"
-    onChange={handleChange}
-    value={form.cnic}
-    required
-    pattern="\d{13}"
-    title="Enter 13 digit CNIC without hyphens"
-    maxLength={13}
-    className="w-full pl-10 pr-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-sm"
-    inputMode="numeric"
-  />
-</div>
+                                            <div className="relative">
+                                                <CreditCard size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-primary" />
+                                                <input
+                                                    name="cnic"
+                                                    placeholder="CNIC (e.g. 1234512345671)"
+                                                    onChange={handleChange}
+                                                    value={form.cnic}
+                                                    required
+                                                    pattern="\d{13}"
+                                                    title="Enter 13 digit CNIC without hyphens"
+                                                    maxLength={13}
+                                                    className="w-full pl-10 pr-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-sm"
+                                                    inputMode="numeric"
+                                                />
+                                            </div>
 
-{/* Mobile */}
-<div className="relative">
-  <Phone size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-primary" />
-  <input
-    name="mobile"
-    placeholder="Mobile (e.g. 03001234567)"
-    onChange={handleChange}
-    value={form.mobile}
-    required
-    pattern="03\d{9}"
-    title="Enter 11 digit mobile number without hyphens"
-    maxLength={11}
-    className="w-full pl-10 pr-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-sm"
-    inputMode="numeric"
-  />
-</div>
-
+                                            {/* Mobile */}
+                                            <div className="relative">
+                                                <Phone size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-primary" />
+                                                <input
+                                                    name="mobile"
+                                                    placeholder="Mobile (e.g. 03001234567)"
+                                                    onChange={handleChange}
+                                                    value={form.mobile}
+                                                    required
+                                                    pattern="03\d{9}"
+                                                    title="Enter 11 digit mobile number starting with 03"
+                                                    maxLength={11}
+                                                    className="w-full pl-10 pr-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-sm"
+                                                    inputMode="numeric"
+                                                />
+                                            </div>
                                         </>
                                     )}
 
@@ -388,8 +480,6 @@ const Register = () => {
                     </div>
                 </div>
             </section>
-
-            
         </main>
     );
 };

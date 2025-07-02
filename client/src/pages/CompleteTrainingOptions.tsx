@@ -21,8 +21,6 @@ const PricePane = ({ selectedOption, options, onContinue, loading }) => {
                     "Level 1: PCB Design Fundamentals",
                     "Level 2: Advanced PCB Techniques", 
                     "Level 3: Professional PCB Mastery",
-                    "All Course Materials Included",
-                    "Lifetime Access to Resources",
                     "Certificate for Each Level",
                     "Direct Instructor Support",
                     "Project-Based Learning"
@@ -130,15 +128,7 @@ const PricePane = ({ selectedOption, options, onContinue, loading }) => {
                         </div>
                     </div>
 
-                    {/* Level Breakdown */}
-                    <div className="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
-                        <h5 className="font-semibold text-blue-800 mb-2 text-sm">Level Breakdown:</h5>
-                        <div className="space-y-1 text-xs text-blue-700">
-                            <div>• <strong>Level 1:</strong> Fundamentals & Basics</div>
-                            <div>• <strong>Level 2:</strong> Advanced Techniques</div>
-                            <div>• <strong>Level 3:</strong> Professional Mastery</div>
-                        </div>
-                    </div>
+                  
 
                     {/* Continue Button */}
                     <div className="pt-4 border-t border-neutral-200">
@@ -220,11 +210,9 @@ const CompleteTrainingOptions = () => {
                 "Level 1: PCB Design Fundamentals",
                 "Level 2: Advanced PCB Techniques", 
                 "Level 3: Professional PCB Mastery",
-                "All Course Materials Included",
-                "Lifetime Access to Resources",
+               
                 "Certificate for Each Level",
                 "Direct Instructor Support",
-                "Project-Based Learning",
                 "Industry-Standard Tools Training",
                 "Real-World Project Portfolio"
             ],
@@ -399,40 +387,28 @@ const CompleteTrainingOptions = () => {
                                         <div className="border border-neutral-200 rounded-lg p-4">
                                             <h4 className="font-semibold text-neutral-800 mb-2 flex items-center">
                                                 <div className="w-6 h-6 bg-primary text-white rounded-full flex items-center justify-center text-xs font-bold mr-2">1</div>
-                                                Level 1: PCB Design Fundamentals
+                                                Level 1: Beginner
                                             </h4>
-                                            <p className="text-sm text-neutral-600 mb-2">Master the basics of PCB design, component placement, and routing principles.</p>
-                                            <div className="flex flex-wrap gap-2">
-                                                <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">Circuit Design</span>
-                                                <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">Component Selection</span>
-                                                <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">Basic Routing</span>
-                                            </div>
+                                            <p className="text-sm text-neutral-600 mb-2">Foundations of Schematic and PCB Design</p>
+                                           
                                         </div>
 
                                         <div className="border border-neutral-200 rounded-lg p-4">
                                             <h4 className="font-semibold text-neutral-800 mb-2 flex items-center">
                                                 <div className="w-6 h-6 bg-primary text-white rounded-full flex items-center justify-center text-xs font-bold mr-2">2</div>
-                                                Level 2: Advanced PCB Techniques
+                                                Level 2: Intermediate
                                             </h4>
-                                            <p className="text-sm text-neutral-600 mb-2">Learn advanced routing, signal integrity, and multi-layer board design.</p>
-                                            <div className="flex flex-wrap gap-2">
-                                                <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">Multi-layer Design</span>
-                                                <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">Signal Integrity</span>
-                                                <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">EMI/EMC</span>
-                                            </div>
+                                            <p className="text-sm text-neutral-600 mb-2">Intermediate PCB Design and Manufacturing Readiness</p>
+                                            
                                         </div>
 
                                         <div className="border border-neutral-200 rounded-lg p-4">
                                             <h4 className="font-semibold text-neutral-800 mb-2 flex items-center">
                                                 <div className="w-6 h-6 bg-primary text-white rounded-full flex items-center justify-center text-xs font-bold mr-2">3</div>
-                                                Level 3: Professional PCB Mastery
+                                                Level 3: Advanced
                                             </h4>
-                                            <p className="text-sm text-neutral-600 mb-2">Master professional-grade techniques, manufacturing considerations, and industry standards.</p>
-                                            <div className="flex flex-wrap gap-2">
-                                                <span className="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded">DFM/DFA</span>
-                                                <span className="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded">High-Speed Design</span>
-                                                <span className="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded">Industry Standards</span>
-                                            </div>
+                                            <p className="text-sm text-neutral-600 mb-2">Advanced PCB Design and System Integration</p>
+                                           
                                         </div>
                                     </div>
 

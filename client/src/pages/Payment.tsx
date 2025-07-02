@@ -276,7 +276,7 @@ const Payment = () => {
         },
         {
             id: "bank",
-            name: "Bank Transfer",
+            name: "Meezan Bank",
             icon: <Building2 size={24} className="text-blue-600" />,
             details: {
                 account: "1234567890123456",
@@ -317,7 +317,7 @@ const Payment = () => {
             
             console.log('Uploading file to API server...');
             
-            const response = await fetch('http://localhost:3001/api/upload-payment-screenshot', {
+            const response = await fetch('https://itvate.habeel.xyz/api/upload-payment-screenshot', {
                 method: 'POST',
                 body: formData,
             });
@@ -768,23 +768,29 @@ const Payment = () => {
                             <h3 className="text-2xl font-bold text-neutral-800 mb-6">Select Payment Method</h3>
                             
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-                                {paymentMethods.map((method) => (
-                                    <button
-                                        key={method.id}
-                                        onClick={() => setSelectedMethod(method.id)}
-                                        className={`p-4 rounded-lg border-2 transition-all ${
-                                            selectedMethod === method.id
-                                                ? 'border-primary bg-primary/5'
-                                                : 'border-neutral-200 hover:border-neutral-300'
-                                        }`}
-                                    >
-                                        <div className="flex flex-col items-center">
-                                            {method.icon}
-                                            <span className="mt-2 font-semibold">{method.name}</span>
-                                        </div>
-                                    </button>
-                                ))}
-                            </div>
+    {paymentMethods.map((method) => (
+        <button
+            key={method.id}
+            onClick={() => setSelectedMethod(method.id)}
+            disabled={method.id === 'easypaisa' || method.id === 'jazzcash'}
+            className={`p-4 rounded-lg border-2 transition-all ${
+                selectedMethod === method.id
+                    ? 'border-primary bg-primary/5'
+                    : 'border-neutral-200 hover:border-neutral-300'
+            } ${
+                method.id === 'easypaisa' || method.id === 'jazzcash' 
+                    ? 'opacity-50 cursor-not-allowed' 
+                    : ''
+            }`}
+        >
+            <div className="flex flex-col items-center">
+                {method.icon}
+                <span className="mt-2 font-semibold">{method.name}</span>
+            </div>
+        </button>
+    ))}
+</div>
+
 
                             {/* Payment Instructions */}
                             {selectedPaymentMethod && (
