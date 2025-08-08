@@ -5,6 +5,8 @@ import SustainabilitySection from "@/components/SustainabilitySection";
 import BlogCard from "@/components/BlogCard";
 import { Link } from "wouter";
 import { expertiseAreas, blogPosts, testimonials } from "@/lib/data";
+import { Gallery } from "@/components/Gallery";
+import { homepageHighlights } from "@/data/gallery";
 
 const Home = () => {
   return (
@@ -92,6 +94,17 @@ const Home = () => {
               </Link>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Highlights / Gallery */}
+      <section className="py-16 bg-white">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold text-center text-neutral-800 mb-12">
+            Highlights
+          </h2>
+
+          <Gallery title="Highlights" items={homepageHighlights} maxItems={6} />
         </div>
       </section>
 

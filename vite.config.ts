@@ -21,4 +21,7 @@ export default defineConfig({
       },
     },
   },
+  preview: {
+    allowedHosts: true, // ✅ This allows any host like *.share.zrok.io
+  },
 });
