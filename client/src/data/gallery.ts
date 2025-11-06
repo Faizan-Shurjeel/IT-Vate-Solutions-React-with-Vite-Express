@@ -31,4 +31,9 @@ export const homepageHighlights: GalleryItem[] = [
     src: "/gallery/6.jpg",
     title: "Image 6",
   },
+  {
+    type: "image",
+    src: "/gallery/7.jpg",
+    title: "Image 7",
+  },
 ];
