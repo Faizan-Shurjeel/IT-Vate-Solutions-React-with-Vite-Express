@@ -104,7 +104,7 @@ const Home = () => {
             Highlights
           </h2>
 
-          <Gallery title="Highlights" items={homepageHighlights} maxItems={6} />
+          <Gallery items={homepageHighlights} maxItems={6} />
         </div>
       </section>
 
