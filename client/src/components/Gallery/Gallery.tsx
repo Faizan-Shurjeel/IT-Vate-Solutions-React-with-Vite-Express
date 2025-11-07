@@ -3,7 +3,7 @@ import type { GalleryItem, GalleryProps } from "./types";
 
 export default function Gallery({
   items,
-  maxItems = 6,
+  maxItems = 8,
   className,
 }: GalleryProps) {
   const [active, setActive] = useState<GalleryItem | null>(null);
@@ -12,9 +12,6 @@ export default function Gallery({
     if (!Array.isArray(items)) return [];
     return items.filter((item) => item.type === "image").slice(0, Math.max(1, maxItems));
   }, [items, maxItems]);
-
-  // Duplicate items for seamless scrolling
-  const carouselItems = [...visibleItems, ...visibleItems];
 
   const onKeyDown = useCallback((e: KeyboardEvent) => {
     if (e.key === "Escape") setActive(null);
@@ -27,38 +24,47 @@ export default function Gallery({
     }
   }, [active, onKeyDown]);
 
+  const animationDuration = `${visibleItems.length * 4}s`; // Adjust multiplier for speed
+
+  const renderItems = (isDuplicate = false) =>
+    visibleItems.map((item, idx) => (
+      <div
+        key={`${item.src}-${idx}${isDuplicate ? "-dup" : ""}`}
+        className="flex-shrink-0 w-48 h-32 sm:w-64 sm:h-48 mr-4 rounded-xl overflow-hidden bg-neutral-100 cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-lg"
+        onClick={() => setActive(item)}
+      >
+        <img
+          src={item.src}
+          alt={item.title || "Image"}
+          loading="lazy"
+          className="w-full h-full object-cover"
+        />
+      </div>
+    ));
+
   return (
     <section className={["w-full", className].filter(Boolean).join(" ")}>
-      <div className="relative overflow-hidden">
+      <div className="relative overflow-hidden group" style={{ maskImage: "linear-gradient(to right, transparent, black 5%, black 95%, transparent)" }}>
         <style>
           {`
             @keyframes scroll {
-              0% { transform: translateX(0%); }
-              100% { transform: translateX(-50%); }
+              from { transform: translateX(0); }
+              to { transform: translateX(-100%); }
             }
             .animate-scroll {
-              animation: scroll 20s linear infinite;
+              animation: scroll var(--animation-duration, 40s) linear infinite;
             }
-            .animate-scroll:hover {
+            .group:hover .animate-scroll {
               animation-play-state: paused;
             }
           `}
         </style>
-        <div className="flex animate-scroll">
-          {carouselItems.map((item, idx) => (
-            <div
-              key={idx}
-              className="flex-shrink-0 w-48 h-32 sm:w-64 sm:h-48 mr-4 rounded-xl overflow-hidden bg-neutral-100 cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-lg"
-              onClick={() => setActive(item)}
-            >
-              <img
-                src={item.src}
-                alt={item.title || "Image"}
-                loading="lazy"
-                className="w-full h-full object-cover"
-              />
-            </div>
-          ))}
+        <div
+          className="flex flex-nowrap"
+          style={{ "--animation-duration": animationDuration } as React.CSSProperties}
+        >
+          <div className="flex flex-nowrap animate-scroll">{renderItems()}</div>
+          <div className="flex flex-nowrap animate-scroll" aria-hidden="true">{renderItems(true)}</div>
         </div>
       </div>
 
