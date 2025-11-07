@@ -30,7 +30,7 @@ export default function Gallery({
     visibleItems.map((item, idx) => (
       <div
         key={`${item.src}-${idx}${isDuplicate ? "-dup" : ""}`}
-        className="flex-shrink-0 w-48 h-32 sm:w-64 sm:h-48 mr-4 rounded-xl overflow-hidden bg-neutral-100 cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-lg"
+        className="flex-shrink-0 w-48 h-32 sm:w-64 sm:h-48 rounded-xl overflow-hidden bg-neutral-100 cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-lg"
         onClick={() => setActive(item)}
       >
         <img
@@ -44,7 +44,7 @@ export default function Gallery({
 
   return (
     <section className={["w-full", className].filter(Boolean).join(" ")}>
-      <div className="relative overflow-hidden group" style={{ maskImage: "linear-gradient(to right, transparent, black 5%, black 95%, transparent)" }}>
+      <div className="relative overflow-hidden group">
         <style>
           {`
             @keyframes scroll {
@@ -63,8 +63,8 @@ export default function Gallery({
           className="flex flex-nowrap"
           style={{ "--animation-duration": animationDuration } as React.CSSProperties}
         >
-          <div className="flex flex-nowrap animate-scroll">{renderItems()}</div>
-          <div className="flex flex-nowrap animate-scroll" aria-hidden="true">{renderItems(true)}</div>
+          <div className="flex flex-nowrap animate-scroll gap-4 pr-4">{renderItems()}</div>
+          <div className="flex flex-nowrap animate-scroll gap-4 pr-4" aria-hidden="true">{renderItems(true)}</div>
         </div>
       </div>
 

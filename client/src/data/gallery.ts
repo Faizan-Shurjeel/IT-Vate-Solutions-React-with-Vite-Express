@@ -40,15 +40,15 @@ export const homepageHighlights: GalleryItem[] = [
     type: "image",
     src: "/gallery/8.jpg",
     title: "Image 8",
-  },
-  {
-    type: "image",
-    src: "/gallery/9.jpg",
-    title: "Image 9",
-  },
-  {
-    type: "image",
-    src: "/gallery/10.jpg",
-    title: "Image 10",
-  }
+  }//,
+  // {
+  //   type: "image",
+  //   src: "/gallery/9.jpg",
+  //   title: "Image 9",
+  // },
+  // {
+  //   type: "image",
+  //   src: "/gallery/10.jpg",
+  //   title: "Image 10",
+  // }
 ];
